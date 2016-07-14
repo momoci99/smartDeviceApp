@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- 레이아웃이 서로 다르면 아이디가 중복되어도 상관없다. -->
+    <TextView
+        android:id="@+id/tv_device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:text="Galaxy Nexus"
+        android:layout_marginTop="85dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/tv_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="000000000"
+        android:layout_below="@+id/tv_device_name"
+        android:layout_alignStart="@+id/tv_device_name" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="연결"
+        android:id="@+id/btn_connect"
+        android:layout_alignTop="@+id/btn_pair"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="50dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PAIR"
+        android:id="@+id/btn_pair"
+        android:layout_marginTop="29dp"
+        android:layout_below="@+id/tv_data"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="73dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bletest"
+        android:id="@+id/btn_bletest"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/btn_connect" />
+
+</RelativeLayout>
