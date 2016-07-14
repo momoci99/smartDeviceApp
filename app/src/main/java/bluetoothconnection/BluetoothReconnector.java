@@ -50,6 +50,7 @@ public class BluetoothReconnector implements Runnable {
 
     }
 
+    //재연결 처리
     public synchronized void processReconnection() {
         String targetDeviceAddress = mReconnectStandingQueue.poll();
 
