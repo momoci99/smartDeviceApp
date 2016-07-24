@@ -134,6 +134,7 @@ public class BlueToothSocketConnector implements Runnable {
 
     /*기기와 연결이 끊어지면 소켓 및 스트림이 끊어진다. 자동으로 복구는 안됨     */
     public void processData() {
+
         while (mBluetoothSocket != null) {
 
 
@@ -167,7 +168,7 @@ public class BlueToothSocketConnector implements Runnable {
                         byte[] encodedBytes = new byte[mReadBufferPosition];
                         System.arraycopy(mReadBuffer, 0, encodedBytes, 0, encodedBytes.length);
 
-                        Log.d(mBluetoothDevice.getAddress(), "주소");
+                        //Log.d(mBluetoothDevice.getAddress(), "주소");
                         sendAliveSignal();
                         accumulateByte(encodedBytes);
                         parseBytes();
