@@ -13,12 +13,6 @@ import com.example.notemel.deviceappalphav02.R;
 
 import java.util.List;
 
-/**
- * Device list adapter.
- * 
- * @author Lorensius W. L. T <lorenz@londatiga.net>
- *
- */
 public class SearchedDeviceListAdapter extends BaseAdapter {
 
 

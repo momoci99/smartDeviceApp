@@ -49,7 +49,7 @@ public class BluetoothLeConnector
         implements Runnable {
     private final static String TAG = BluetoothLeConnector.class.getSimpleName();
 
-    //private BluetoothConnectionMonitor mBluetoothConnectionMonitor = new BluetoothConnectionMonitor();
+    private BluetoothConnectionMonitor mBluetoothConnectionMonitor = new BluetoothConnectionMonitor();
 
 
     private BluetoothManager mBluetoothManager;
@@ -124,7 +124,7 @@ public class BluetoothLeConnector
                 slicedBytes.add(data);
                 sendParserAndGetResult();
 
-                Log.d("compact", "good");
+                //Log.d("compact", "good");
                 break;
             } else if ((data.compareTo(EOF) != 0) == (isFirstEOF == true)) {
                 distanceEOF2EOF++;
@@ -142,11 +142,11 @@ public class BluetoothLeConnector
     public void sendParserAndGetResult() {
 
         //mParser.setReceivedFrame(slicedBytes);
-        Log.d("slicedBytes", slicedBytes.size() + "");
+        //Log.d("slicedBytes", slicedBytes.size() + "");
 
         mParser.initializeParser(slicedBytes, mBluetoothAdapter.getRemoteDevice(mBluetoothDeviceAddress));
         if (mParser.checkValid()) {
-            Log.d(TAG, "파서 good");
+            //Log.d(TAG, "파서 good");
 
             mParser.parseFrame();
             mTransactionForm.setName(mParser.getDeviceName());
@@ -399,7 +399,7 @@ public class BluetoothLeConnector
     }
 
     public void sendAliveSignal() {
-        //mBluetoothConnectionMonitor.sendAliveSignalQueue(mBluetoothDeviceAddress);
+        mBluetoothConnectionMonitor.sendAliveSignalQueue(mBluetoothDeviceAddress);
 
     }
 }

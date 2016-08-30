@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
+
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,7 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import adapter.ConnectedDeviceListAdapter;
 import bluetoothconnection.BluetoothConnectionMonitor;
 import bluetoothconnection.BluetoothReconnector;
 import system.ThreadManager;
@@ -27,9 +29,23 @@ public class MainActivity extends AppCompatActivity
     private String TAG = "MainActivity";
     static final int STATUS_UPDATE = 55;
 
-    private ThreadManager mThreadManager  = ThreadManager.getInstance();;
-    //private BluetoothConnectionMonitor mBlueToothConnectionMonitor  = new BluetoothConnectionMonitor();
+    /*UI Components*/
+    static ListView connectedDeiceListView;
+    static ConnectedDeviceListAdapter listAdapter;
+
+    private ThreadManager mThreadManager = ThreadManager.getInstance();
+    private BluetoothConnectionMonitor mBlueToothConnectionMonitor = BluetoothConnectionMonitor.getInstance();
     private BluetoothReconnector mBluetoothReconnector = new BluetoothReconnector();
+
+
+    static StatusReceiverHandler mStatusReceiverHandler = new StatusReceiverHandler();
+
+    //모든 기기 목록(연결이 살아있든 죽어있든간에 일단 등록)
+    static CopyOnWriteArrayList<String> mTotalDeviceList = new CopyOnWriteArrayList<>();
+
+    //모든 기기 연결 상태 Table
+    static ConcurrentHashMap<String, String> mConnectionStatusTable = new ConcurrentHashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +63,18 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        connectedDeiceListView = (ListView) findViewById(R.id.lv_connectionstatus);
+        listAdapter = new ConnectedDeviceListAdapter(this);
+        connectedDeiceListView.setAdapter(listAdapter);
+
+
         //모니터 쓰레드에 메인 액티비티 핸들러등록
-        //mBlueToothConnectionMonitor.setTargetActivityHandler(mStatusReceiverHandler);
+        mBlueToothConnectionMonitor.setTargetActivityHandler(mStatusReceiverHandler);
 
 
         //커넥션 모니터 시작
-        //mThreadManager.ActiveThread(mBlueToothConnectionMonitor);
+        mThreadManager.ActiveThread(mBlueToothConnectionMonitor);
+
 
         //리커넥터 시작
         //mThreadManager.ActiveThread(mBluetoothReconnector);
@@ -116,7 +138,14 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    private class StatusReceiverHandler extends Handler
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mStatusReceiverHandler.updateConnectedDeviceList();
+
+    }
+    private static class StatusReceiverHandler extends Handler
     {
 
         @Override
@@ -126,31 +155,32 @@ public class MainActivity extends AppCompatActivity
                 case 0:
                     break;
                 case STATUS_UPDATE:
-                    //당장 날려버려야하고 바뀌어야함.
-                    // mTotalDeviceList = mBlueToothConnectionMonitor.getTotalDeviceList();
-                    //mConnectionStatusTable = mBlueToothConnectionMonitor.getConnectionStatusTable();
-                    /*
-                    if((mTotalDeviceList.size()> 0) && (mConnectionStatusTable.size()>0))
-                    {
-                        Log.e(TAG,"중복 확인용 - 전체 디바이스 갯수 : " + mTotalDeviceList.size());
-                        Log.e(TAG,"중복 확인용 - 상태 목록 갯수 : " + mConnectionStatusTable.size());
-                        listAdapter.setData(mTotalDeviceList,mConnectionStatusTable);
-                        listAdapter.notifyDataSetChanged();
-                    }
-                    else
-                    {
-                        Log.e(TAG,"갯수에러");
-                        Log.e(TAG,"전체 디바이스 갯수 : " + mTotalDeviceList.size());
-                        Log.e(TAG,"상태 목록 갯수 : " + mConnectionStatusTable.size());
-                    }*/
-
+                    copyData();
+                    updateConnectedDeviceList();
                     break;
-
                 default:
                     break;
 
             }
+        }
+        private void copyData() {
+            for (int i = 0; i < BluetoothConnectionMonitor.getTotalDeviceList().size(); i++) {
+                String MACAddress = BluetoothConnectionMonitor.getTotalDeviceList().get(i);
+                mTotalDeviceList.add(MACAddress);
+                mConnectionStatusTable.put(MACAddress,
+                        BluetoothConnectionMonitor.getConnectionStatusTable().get(MACAddress));
+
+            }
+        }
+
+        public void updateConnectedDeviceList() {
+            if(mTotalDeviceList.size()>0)
+            {
+                listAdapter.setData(mTotalDeviceList, mConnectionStatusTable);
+                listAdapter.notifyDataSetChanged();
+            }
 
         }
     }
+
 }

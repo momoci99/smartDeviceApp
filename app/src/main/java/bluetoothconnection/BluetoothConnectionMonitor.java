@@ -26,6 +26,23 @@ public class BluetoothConnectionMonitor implements Runnable {
 
     private long mLastStatusSentTime = 0;
 
+
+
+    private volatile static BluetoothConnectionMonitor objectInstance;
+
+
+    public static BluetoothConnectionMonitor getInstance(){
+        if(objectInstance == null){
+            synchronized (BluetoothConnectionMonitor.class) {
+                if(objectInstance == null){
+                    objectInstance = new BluetoothConnectionMonitor();
+
+                }
+            }
+        }
+        return objectInstance;
+    }
+
     //생존신호 큐
     static ConcurrentLinkedQueue<String> mAliveSignalQueue = new ConcurrentLinkedQueue<>();
 
@@ -303,11 +320,11 @@ public class BluetoothConnectionMonitor implements Runnable {
     //메인 액티비티로 상태변경을 알림
     public synchronized void sendStatusChangedSignalToMainActivity()
     {
-        /*
+
         Message SignalMessage = Message.obtain();
         SignalMessage.what = STATUS_UPDATE;
         mTargetActivityHandler.sendMessage(SignalMessage);
-        */
+
     }
     public synchronized void signalSender()
     {
