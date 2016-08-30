@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Created by noteMel on 2016-07-04.
  */
-public class SocketTemp implements Runnable {
+public class SocketTemp implements Runnable{
 
     private final UUID mUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
