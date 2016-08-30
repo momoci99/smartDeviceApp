@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity
     private String TAG = "MainActivity";
     static final int STATUS_UPDATE = 55;
 
-    private ThreadManager mThreadManager;
-    private BluetoothConnectionMonitor mBlueToothConnectionMonitor  = new BluetoothConnectionMonitor();
+    private ThreadManager mThreadManager  = ThreadManager.getInstance();;
+    //private BluetoothConnectionMonitor mBlueToothConnectionMonitor  = new BluetoothConnectionMonitor();
     private BluetoothReconnector mBluetoothReconnector = new BluetoothReconnector();
 
     @Override
@@ -47,16 +47,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mThreadManager = ThreadManager.getInstance();
         //모니터 쓰레드에 메인 액티비티 핸들러등록
         //mBlueToothConnectionMonitor.setTargetActivityHandler(mStatusReceiverHandler);
 
 
         //커넥션 모니터 시작
-        mThreadManager.ActiveThread(mBlueToothConnectionMonitor);
+        //mThreadManager.ActiveThread(mBlueToothConnectionMonitor);
 
         //리커넥터 시작
-        mThreadManager.ActiveThread(mBluetoothReconnector);
+        //mThreadManager.ActiveThread(mBluetoothReconnector);
     }
 
     @Override

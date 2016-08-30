@@ -1,5 +1,7 @@
 package transation;
 
+import android.util.Log;
+
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -37,10 +39,8 @@ public class TransactionMaster implements Runnable {
         if(transactionFormData!=null)
         mTransactionQueue.offer(transactionFormData);
         //Log.d(TAG,"큐의 크기 : " +mTransactionQueue.size());
-        if(mTransactionQueue.size()>200)
-        {
-            mTransactionQueue.clear();//메모리 낭비방지를 위해 비워둠
-        }
+        Log.d(TAG,mTransactionQueue.poll().getName());
+
     }
 
     @Override

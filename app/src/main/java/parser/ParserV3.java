@@ -15,31 +15,31 @@ import java.util.ArrayList;
  * ex ) 1개 센서 -> 10Byte
  * 2개 센서 -> 15Byte
  * 3개 센서 -> 20Byte
- * <p/>
+ * <p>
  * 센서필드의 위치는
  * 4,9,14,19...n+5 순이다.
  * List나 배열에서는 3,8,13,18..순
- * <p/>
+ * <p>
  * 0번 필드 - 프로토콜 버젼
  * 1번 필드 - 보드 버젼
  * 2번 필드 - 센서 갯수
- * <p/>
+ * <p>
  * 센서 ID (1Byte)
  * Data (4Byte)
- *
+ * <p>
  * v2 -> v3 변경점
  * 코드 옵티마이징
- *
  */
-public  class  ParserV3 {
+public class ParserV3 {
 
     //파싱하는데 필요한 변수들
 
     //프로토콜 버젼(for future)
-    static final byte PROTOCOL_VER1  = 0x01;//일반 블루투스 장치용
-    static final byte PROTOCOL_VER2  = 0x02;//BLE 장치용
+    static final byte PROTOCOL_VER1 = 0x01;//일반 블루투스 장치용
+    static final byte PROTOCOL_VER2 = 0x02;//BLE 장치용
 
     static ArrayList<Byte> PROTOCOL_VER_LIST = new ArrayList<Byte>();
+
     static {
         PROTOCOL_VER_LIST.add(PROTOCOL_VER1);
         PROTOCOL_VER_LIST.add(PROTOCOL_VER2);
@@ -47,10 +47,9 @@ public  class  ParserV3 {
     }
 
 
-
-    static final byte BOARD_TYPE1  = 0x01;//일반 블루투스 장치용
-    static final byte BOARD_TYPE2  = 0x02;//BLE 장치용
-    static final byte BOARD_TYPE3  = 0x03;
+    static final byte BOARD_TYPE1 = 0x01;//일반 블루투스 장치용
+    static final byte BOARD_TYPE2 = 0x02;//BLE 장치용
+    static final byte BOARD_TYPE3 = 0x03;
     static ArrayList<Byte> BOARD_TYPE_LIST = new ArrayList<Byte>();
 
     static {
@@ -64,7 +63,6 @@ public  class  ParserV3 {
 
     static final int StartIndexOfSensorID = 3;
     static final int StartIndexOfSensorDATA = 4;
-
 
 
     private int mProtocolVer = 0;
@@ -92,27 +90,23 @@ public  class  ParserV3 {
 
     private BluetoothDevice mConnectedDevice;
 
-    public void initializeParser(ArrayList<Byte> rawFrame, BluetoothDevice connectedDevice)
-    {
+    public void initializeParser(ArrayList<Byte> rawFrame, BluetoothDevice connectedDevice) {
         mRawFrame = rawFrame;
         mConnectedDevice = connectedDevice;
         mMACAddress = connectedDevice.getAddress();
         mDeviceName = connectedDevice.getName();
 
     }
-    public boolean isValidProtocolVer(Byte protocolVer)
-    {
+
+    public boolean isValidProtocolVer(Byte protocolVer) {
         boolean matchFound = false;
-        for(int i =0; i<PROTOCOL_VER_LIST.size(); i++)
-        {
-            if(PROTOCOL_VER_LIST.get(i).compareTo(protocolVer) == 0)
-            {
+        for (int i = 0; i < PROTOCOL_VER_LIST.size(); i++) {
+            if (PROTOCOL_VER_LIST.get(i).compareTo(protocolVer) == 0) {
                 matchFound = true;
             }
         }
         return matchFound;
     }
-
 
 
     //센서 ID 리스트 저장
@@ -126,13 +120,10 @@ public  class  ParserV3 {
     private ArrayList<Byte> mRawFrame = new ArrayList<>();
 
 
-
-    public boolean isLengthValid(Byte sensorCount, int frameLength)
-    {
+    public boolean isLengthValid(Byte sensorCount, int frameLength) {
         boolean valid = false;
         int expectedLength = 5 + (sensorCount * 5);
-        if(expectedLength == frameLength)
-        {
+        if (expectedLength == frameLength) {
             valid = true;
         }
         return valid;
@@ -140,8 +131,7 @@ public  class  ParserV3 {
 
     //프로토콜 버젼과 프레임 길이를 검사
     //올바르지 않은 값이 검출되면 false를 반환
-    public boolean checkValid()
-    {
+    public boolean checkValid() {
 
         try {
             //프로토콜 버젼 검사
@@ -150,7 +140,7 @@ public  class  ParserV3 {
             }
             //mSensorCount = mRawFrame.get(2).intValue();
 
-            if (!isLengthValid(mRawFrame.get(2),mRawFrame.size())) {
+            if (!isLengthValid(mRawFrame.get(2), mRawFrame.size())) {
                 return false;
             } else {
                 return true;
@@ -161,19 +151,17 @@ public  class  ParserV3 {
         }
     }
 
-    public String getMACAddress()
-    {
-       return mMACAddress ;
-    }
-    public String getDeviceName()
-    {
-        return mDeviceName ;
+    public String getMACAddress() {
+        return mMACAddress;
     }
 
-    private void parserProtocolV1()
-    {
+    public String getDeviceName() {
+        return mDeviceName;
+    }
+
+    private void parserProtocolV1() {
         //프로토콜 버젼
-        mProtocolVer =mRawFrame.get(0).intValue();
+        mProtocolVer = mRawFrame.get(0).intValue();
 
         //보드버젼
         mBoardType = mRawFrame.get(1).intValue();
@@ -215,7 +203,7 @@ public  class  ParserV3 {
             else if (i % 5 == StartIndexOfSensorDATA) {
                 if (0 != mRawFrame.get(i).compareTo(EOF) && 0 != mRawFrame.get(i + 1).compareTo(EOF)) {
                     if (0 == mRawFrame.get(i).compareTo(ZERO) && 0 == mRawFrame.get(i + 1).compareTo(ZERO)) {
-                        Log.d("INT", "INT로 변환");
+                        //Log.d("INT", "INT로 변환");
                         byte[] tRawInt = new byte[4];
                         tRawInt[0] = mRawFrame.get(i);
                         tRawInt[1] = mRawFrame.get(i + 1);
@@ -245,10 +233,10 @@ public  class  ParserV3 {
 
         }
     }
-    private void parserProtocolV2()
-    {
+
+    private void parserProtocolV2() {
         //프로토콜 버젼
-        mProtocolVer =mRawFrame.get(0).intValue();
+        mProtocolVer = mRawFrame.get(0).intValue();
 
         //보드버젼
         mBoardType = mRawFrame.get(1).intValue();
@@ -329,7 +317,7 @@ public  class  ParserV3 {
                     break;
             }
 
-            }
+        }
 
     }
 

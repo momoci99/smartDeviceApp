@@ -46,10 +46,10 @@ import transation.TransactionMaster;
  * given Bluetooth LE device.
  */
 public class BluetoothLeConnector
-         implements Runnable {
+        implements Runnable {
     private final static String TAG = BluetoothLeConnector.class.getSimpleName();
 
-    private BluetoothConnectionMonitor mBluetoothConnectionMonitor = new BluetoothConnectionMonitor();
+    //private BluetoothConnectionMonitor mBluetoothConnectionMonitor = new BluetoothConnectionMonitor();
 
 
     private BluetoothManager mBluetoothManager;
@@ -74,7 +74,6 @@ public class BluetoothLeConnector
             "com.example.bluetooth.le.EXTRA_DATA";
 
 
-
     private ArrayList<Byte> slicedBytes = new ArrayList<>();
     private ByteBuffer accByteBuffer = ByteBuffer.allocate(1024);
 
@@ -89,9 +88,8 @@ public class BluetoothLeConnector
 
     private Context mContext;
 
-    public BluetoothLeConnector (Context context)
-    {
-        mContext =context;
+    public BluetoothLeConnector(Context context) {
+        mContext = context;
     }
 
     public void accumulateByte(byte[] bytePiece) {
@@ -146,7 +144,7 @@ public class BluetoothLeConnector
         //mParser.setReceivedFrame(slicedBytes);
         Log.d("slicedBytes", slicedBytes.size() + "");
 
-        mParser.initializeParser(slicedBytes,mBluetoothAdapter.getRemoteDevice(mBluetoothDeviceAddress));
+        mParser.initializeParser(slicedBytes, mBluetoothAdapter.getRemoteDevice(mBluetoothDeviceAddress));
         if (mParser.checkValid()) {
             Log.d(TAG, "파서 good");
 
@@ -204,7 +202,7 @@ public class BluetoothLeConnector
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.e("찾은 uuid",characteristic.getUuid().toString());
+                Log.e("찾은 uuid", characteristic.getUuid().toString());
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
         }
@@ -224,8 +222,6 @@ public class BluetoothLeConnector
     }
 
 
-    //byte[]
-
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         //Log.d(TAG, "브로드캐스트 업데이트");
@@ -237,7 +233,7 @@ public class BluetoothLeConnector
         if (BLE_DEVICE_CHARACTERISTIC_UUID.equals(characteristic.getUuid())) {
 
             final byte[] heartRate = characteristic.getValue();
-            Log.d(TAG,""+heartRate.length);
+            Log.d(TAG, "" + heartRate.length);
             accumulateByte(heartRate);
             parseBytes();
             sendAliveSignal();
@@ -249,17 +245,17 @@ public class BluetoothLeConnector
     //run 코드가 비워져 있으면 쓰레드가 바로 죽는다.
     public void run() {
         long currentMillis;
-        long previousMillis =0;
+        long previousMillis = 0;
         while (true) {
             currentMillis = System.currentTimeMillis();
             if (currentMillis - previousMillis >= 2000) {
-                Log.d(TAG,"Alive!");
+                Log.d(TAG, "Alive!");
                 previousMillis = currentMillis;
             }
         }
     }
 
-     /**
+    /**
      * Initializes a reference to the local Bluetooth adapter.
      *
      * @return Return true if the initialization is successful.
@@ -280,11 +276,10 @@ public class BluetoothLeConnector
      * Connects to the GATT server hosted on the Bluetooth LE device.
      *
      * @param address The device address of the destination device.
-     *
      * @return Return true if the connection is initiated successfully. The connection result
-     *         is reported asynchronously through the
-     *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-     *         callback.
+     * is reported asynchronously through the
+     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     * callback.
      */
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
@@ -366,7 +361,7 @@ public class BluetoothLeConnector
      * Enables or disables notification on a give characteristic.
      *
      * @param characteristic Characteristic to act on.
-     * @param enabled If true, enable notification.  False otherwise.
+     * @param enabled        If true, enable notification.  False otherwise.
      */
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
                                               boolean enabled) {
@@ -382,8 +377,8 @@ public class BluetoothLeConnector
             BluetoothGattDescriptor descriptor
                     = characteristic.getDescriptor(UUID.fromString(PresetUUIDList.CLIENT_CHARACTERISTIC_CONFIG));
 
-            for (BluetoothGattDescriptor descriptors:characteristic.getDescriptors()){
-                Log.e(TAG, "BluetoothGattDescriptor: "+descriptors.getUuid().toString());
+            for (BluetoothGattDescriptor descriptors : characteristic.getDescriptors()) {
+                Log.e(TAG, "BluetoothGattDescriptor: " + descriptors.getUuid().toString());
             }
 
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
@@ -402,8 +397,9 @@ public class BluetoothLeConnector
 
         return mBluetoothGatt.getServices();
     }
+
     public void sendAliveSignal() {
-        mBluetoothConnectionMonitor.sendAliveSignalQueue(mBluetoothDeviceAddress);
+        //mBluetoothConnectionMonitor.sendAliveSignalQueue(mBluetoothDeviceAddress);
 
     }
 }

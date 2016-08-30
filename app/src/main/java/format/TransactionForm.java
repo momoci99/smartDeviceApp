@@ -11,6 +11,28 @@ public class TransactionForm {
     private int[] mIntData;
     private float[] mFloatData;
 
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String[] getSID() {
+        return mSID;
+    }
+
+    public int[] getIntData() {
+        return mIntData;
+    }
+
+    public float[] getFloatData() {
+        return mFloatData;
+    }
+
+
     public void reset()
     {
         address = null;
