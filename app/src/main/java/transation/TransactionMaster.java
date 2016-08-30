@@ -1,7 +1,5 @@
 package transation;
 
-import android.util.Log;
-
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -15,7 +13,7 @@ import format.TransactionForm;
     //쓰레드 마스터 코어 갯수 변경하기(책참고)
     //서비스쪽 느려지면 아두이노쪽 코드 변경하기
 
-public class TransactionMaster implements Runnable{
+public class TransactionMaster implements Runnable {
     static String TAG = "트랜잭션마스터";
     static Queue<TransactionForm> mTransactionQueue = new ConcurrentLinkedQueue<>();
     /*

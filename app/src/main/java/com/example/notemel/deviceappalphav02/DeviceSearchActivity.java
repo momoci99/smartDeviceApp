@@ -1,4 +1,4 @@
-package com.example.notemel.deviceappalpha;
+package com.example.notemel.deviceappalphav02;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -27,7 +26,7 @@ import adapter.SearchedDeviceListAdapter;
 /**
  * Created by noteMel on 2016-07-03.
  */
-public class DeviceSearchActivity extends AppCompatActivity{
+public class DeviceSearchActivity extends AppCompatActivity {
 
     /*UI Components*/
     private Button searchBtn;

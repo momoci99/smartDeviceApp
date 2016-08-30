@@ -1,4 +1,4 @@
-package com.example.notemel.deviceappalpha;
+package com.example.notemel.deviceappalphav02;
 
 import org.junit.Test;
 

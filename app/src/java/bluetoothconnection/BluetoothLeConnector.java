@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
@@ -16,11 +15,6 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import format.TransactionForm;
-import parser.ParserV3;
-import transation.TransactionMaster;
 
 /**
  * Created by noteMel on 2016-07-06.
@@ -41,12 +35,19 @@ import transation.TransactionMaster;
  * limitations under the License.
  */
 
+import android.bluetooth.BluetoothGattDescriptor;
+import java.util.UUID;
+
+import format.TransactionForm;
+import parser.ParserV3;
+import transation.TransactionMaster;
+
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
  * given Bluetooth LE device.
  */
 public class BluetoothLeConnector
-         implements Runnable {
+         implements Runnable{
     private final static String TAG = BluetoothLeConnector.class.getSimpleName();
 
     private BluetoothConnectionMonitor mBluetoothConnectionMonitor = new BluetoothConnectionMonitor();
