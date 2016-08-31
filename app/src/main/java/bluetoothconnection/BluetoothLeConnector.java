@@ -233,7 +233,7 @@ public class BluetoothLeConnector
         if (BLE_DEVICE_CHARACTERISTIC_UUID.equals(characteristic.getUuid())) {
 
             final byte[] heartRate = characteristic.getValue();
-            Log.d(TAG, "" + heartRate.length);
+            //Log.d(TAG, "" + heartRate.length);
             accumulateByte(heartRate);
             parseBytes();
             sendAliveSignal();

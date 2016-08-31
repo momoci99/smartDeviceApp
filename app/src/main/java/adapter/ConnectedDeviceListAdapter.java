@@ -1,6 +1,7 @@
 package adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class ConnectedDeviceListAdapter extends BaseAdapter {
 
+    private static String TAG = "ConnectedDeviceListAdapter";
     private String WATCHING = "WATCHING";
     private String RETRYING = "RETRYING";
     private String LOSTCONNECT = "LOSTCONNECT";
@@ -33,7 +35,7 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
     }
 
 
-    //모든 기기 목록(연결이 살아있든 죽어있든간에 일단 등록)
+    //모든 기기 목록
     private CopyOnWriteArrayList<String> mTotalDeviceList = new CopyOnWriteArrayList<>();
 
     //모든 기기 연결 상태 Table
@@ -41,6 +43,7 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 
 
     public void setData(CopyOnWriteArrayList<String> totalDeviceList, ConcurrentHashMap<String, String> connectionStatusTable) {
+        Log.e(TAG,"setData mTotalDeviceList : "+ mTotalDeviceList.size());
         mTotalDeviceList = totalDeviceList;
         mConnectionStatusTable = connectionStatusTable;
 
@@ -71,7 +74,8 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item_connected_device, null);
+            //convertView = mInflater.inflate(R.layout.list_item_connected_device, null);
+            convertView = mInflater.inflate(R.layout.list_item_connected_device,parent,false);
 
             holder = new ViewHolder();
 

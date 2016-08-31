@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -26,7 +27,7 @@ import system.ThreadManager;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private String TAG = "MainActivity";
+    private static String TAG = "MainActivity";
     static final int STATUS_UPDATE = 55;
 
     /*UI Components*/
@@ -164,6 +165,11 @@ public class MainActivity extends AppCompatActivity
             }
         }
         private void copyData() {
+            //Log.e(TAG,"기기목록갯수 beforeCopy : "+ mTotalDeviceList.size());
+
+            //Prevent Duplication
+            mTotalDeviceList.clear();
+
             for (int i = 0; i < BluetoothConnectionMonitor.getTotalDeviceList().size(); i++) {
                 String MACAddress = BluetoothConnectionMonitor.getTotalDeviceList().get(i);
                 mTotalDeviceList.add(MACAddress);
@@ -171,14 +177,19 @@ public class MainActivity extends AppCompatActivity
                         BluetoothConnectionMonitor.getConnectionStatusTable().get(MACAddress));
 
             }
+            //Log.e(TAG,"기기목록갯수 endCopy : "+ mTotalDeviceList.size());
         }
 
         public void updateConnectedDeviceList() {
+            //Log.e(TAG,"기기목록갯수 beforeUpdate : "+ mTotalDeviceList.size());
             if(mTotalDeviceList.size()>0)
             {
                 listAdapter.setData(mTotalDeviceList, mConnectionStatusTable);
                 listAdapter.notifyDataSetChanged();
+
+                //Log.e(TAG,"기기목록갯수 : "+ mTotalDeviceList.size());
             }
+            //Log.e(TAG,"기기목록갯수 endUpdate : "+ mTotalDeviceList.size());
 
         }
     }
