@@ -18,46 +18,55 @@ public class BluetoothConnectionMonitor implements Runnable {
     //TODO : singleton 으로의 전환 고려
     static final String TAG = "커넥션모니터";
 
-    private String WATCHING ="WATCHING";
-    private String RETRYING ="RETRYING";
+    private String WATCHING = "WATCHING";
+    private String RETRYING = "RETRYING";
     private String LOSTCONNECT = "LOSTCONNECT";
     private String ALIVE = "ALIVE";
     static final int STATUS_UPDATE = 55;
 
     private long mLastStatusSentTime = 0;
 
+
+    private volatile static BluetoothConnectionMonitor objectInstance;
+
+
+    public static BluetoothConnectionMonitor getInstance() {
+        if (objectInstance == null) {
+            synchronized (BluetoothConnectionMonitor.class) {
+                if (objectInstance == null) {
+                    objectInstance = new BluetoothConnectionMonitor();
+
+                }
+            }
+        }
+        return objectInstance;
+    }
+
     //생존신호 큐
-    static ConcurrentLinkedQueue<String> mAliveSignalQueue = new ConcurrentLinkedQueue<>();
+    private static ConcurrentLinkedQueue<String> mAliveSignalQueue = new ConcurrentLinkedQueue<>();
 
     //마지막으로 신호를 받은 시간
-    static ConcurrentHashMap<String, Long> mLatestReceivedTimeTable = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, Long> mLatestReceivedTimeTable = new ConcurrentHashMap<>();
 
     //현재 살아있는 장치 목록
-    static CopyOnWriteArrayList<String> mAliveDeviceList = new CopyOnWriteArrayList<String>(); //현재 살아있는 장치 목록
-
-
+    private static CopyOnWriteArrayList<String> mAliveDeviceList = new CopyOnWriteArrayList<String>(); //현재 살아있는 장치 목록
 
 
     //재연결 시도중인 기기 리스트
-    static CopyOnWriteArrayList<String> mRetryingConnectionList = new CopyOnWriteArrayList<String>();
+    private static CopyOnWriteArrayList<String> mRetryingConnectionList = new CopyOnWriteArrayList<String>();
 
     //마지막으로 재시도후 경과한 시간
-    static ConcurrentHashMap<String, Long> mRetryElapseTimeTable = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, Long> mRetryElapseTimeTable = new ConcurrentHashMap<>();
 
     //기기별 재시도 횟수
-    static ConcurrentHashMap<String, Integer> mRetryCount = new ConcurrentHashMap<>();
-
-
-
+    private static ConcurrentHashMap<String, Integer> mRetryCount = new ConcurrentHashMap<>();
 
 
     //모든 기기 목록(연결이 살아있든 죽어있든간에 일단 등록)
-    static CopyOnWriteArrayList<String> mTotalDeviceList =new CopyOnWriteArrayList<>();
+    private static CopyOnWriteArrayList<String> mTotalDeviceList = new CopyOnWriteArrayList<>();
 
     //모든 기기 연결 상태 Table
-    static ConcurrentHashMap<String, String> mConnectionStatusTable = new ConcurrentHashMap<>();
-
-
+    private static ConcurrentHashMap<String, String> mConnectionStatusTable = new ConcurrentHashMap<>();
 
 
     public void setTargetActivityHandler(Handler mTargetHandler) {
@@ -84,9 +93,7 @@ public class BluetoothConnectionMonitor implements Runnable {
             long lastedTriedTime = 0;
             try {
                 lastedTriedTime = mRetryElapseTimeTable.get(MACAddress);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -104,19 +111,15 @@ public class BluetoothConnectionMonitor implements Runnable {
                 tryReconnect(mRetryingConnectionList.get(i));
 
                 //마지막 재연결 시간 갱신
-                mRetryElapseTimeTable.put(MACAddress,currentTime);
+                mRetryElapseTimeTable.put(MACAddress, currentTime);
 
                 //재시도 횟수 감소
                 mRetryCount.put(MACAddress, RETRY_COUNT - 1);
 
 
-            }
-            else if(pastTime > RETRY_INTERVAL_TIME && RETRY_COUNT <=0)
-            {
+            } else if (pastTime > RETRY_INTERVAL_TIME && RETRY_COUNT <= 0) {
                 Log.e(TAG, MACAddress + "장치 연결 복구 횟수를 초과하였습니다. 완전히 끊어진것같습니다.");
-                //야 관리자야 장치 완전히 끊어졌어 ㅅㅂ;;;;;;;;
-                //서버에 통보하는 알고리즘 필요
-                //이 장치는 글러먹은 장치니까.. ㅈㅈ
+
                 mRetryingConnectionList.remove(MACAddress);
                 mRetryElapseTimeTable.remove(MACAddress);
                 mRetryCount.remove(MACAddress);
@@ -143,9 +146,9 @@ public class BluetoothConnectionMonitor implements Runnable {
             if (pastTime >= WARNING_TIME_BOUND && pastTime < DISCONNECTED_TIME_BOUND) {
 
                 if (!mWarningActivatedFlag) {
-                    Log.e(TAG,"mAliveDeviceList 사이즈 갯수 : "+mAliveDeviceList.size());
+                    //Log.e(TAG,"mAliveDeviceList 사이즈 갯수 : "+mAliveDeviceList.size());
                     Log.e(TAG, MACAddress + "에서 데이터를 보내지 않습니다.");
-                    updateConnectionStatusTable(MACAddress,WATCHING);
+                    updateConnectionStatusTable(MACAddress, WATCHING);
                     sendStatusChangedSignalToMainActivity();
                     mWarningActivatedFlag = true;
                 }
@@ -172,14 +175,12 @@ public class BluetoothConnectionMonitor implements Runnable {
                 mRetryingConnectionList.add(MACAddress);
 
                 tryReconnect(MACAddress);
-                updateConnectionStatusTable(MACAddress,RETRYING);
+                updateConnectionStatusTable(MACAddress, RETRYING);
                 sendStatusChangedSignalToMainActivity();
                 break;
-            }
-            else
-            {
+            } else {
                 //정상적인 - 살아있는경우
-                updateConnectionStatusTable(MACAddress,ALIVE );
+                updateConnectionStatusTable(MACAddress, ALIVE);
                 //sendStatusChangedSignalToMainActivity();
             }
         }
@@ -193,16 +194,15 @@ public class BluetoothConnectionMonitor implements Runnable {
             //Log.d(TAG, "시그널 큐 크기" + mAliveSignalQueue.size());
 
             registerAndUpdateConnectedDevice(receivedSignal);
-
-
         }
     }
 
-    private void registerAndUpdateConnectedDevice(String MACAddress) {
+    private synchronized void registerAndUpdateConnectedDevice(String MACAddress) {
         boolean isDuplicate = false;
         boolean isReConnected = false;
         long registeredTime;
 
+        //Check Duplicated Device
         for (int i = 0; i < mAliveDeviceList.size(); i++) {
             if (MACAddress.equals(mAliveDeviceList.get(i))) {
                 isDuplicate = true;
@@ -213,23 +213,20 @@ public class BluetoothConnectionMonitor implements Runnable {
         if (!isDuplicate) {
 
             //연결이 복구된 기기인지 확인한다.
-            for(int i =0; i<mTotalDeviceList.size(); i++)
-            {
-                if(MACAddress.equals(mTotalDeviceList.get(i)))
-                {
+            for (int i = 0; i < mTotalDeviceList.size(); i++) {
+                if (MACAddress.equals(mTotalDeviceList.get(i))) {
                     isReConnected = true;
                 }
             }
-            if(!isReConnected)
-            {
+            if (!isReConnected) {
                 mTotalDeviceList.add(MACAddress);
 
             }
             registerDevice(MACAddress);
-            Log.e(TAG,"mTotalDeviceList 사이즈는 : "+mTotalDeviceList.size());
+
 
             //기존기기
-        } else if (isDuplicate) {
+        } else {
 
             registeredTime = mLatestReceivedTimeTable.get(MACAddress);
             long currentTime = System.currentTimeMillis();
@@ -241,11 +238,11 @@ public class BluetoothConnectionMonitor implements Runnable {
             }
 
         }
-
+        //Log.e(TAG, "mTotalDeviceList 사이즈는 : " + mTotalDeviceList.size());
     }
-    private void updateConnectedDevice(String MACAddress)
-    {
-        Log.d(TAG, MACAddress + "의 연결상태 : 정상");
+
+    private synchronized void updateConnectedDevice(String MACAddress) {
+        //Log.d(TAG, MACAddress + "의 연결상태 : 정상");
         mLatestReceivedTimeTable.put(MACAddress, System.currentTimeMillis());
 
         //정상적인 연결이 확인되었으므로 재시도 연결 리스트에서 해당 기기 제거
@@ -254,15 +251,15 @@ public class BluetoothConnectionMonitor implements Runnable {
             mRetryElapseTimeTable.remove(MACAddress);
             mRetryCount.remove(MACAddress);
 
-            updateConnectionStatusTable(MACAddress,ALIVE);
+            updateConnectionStatusTable(MACAddress, ALIVE);
             sendStatusChangedSignalToMainActivity();
         }
     }
-    private void registerDevice(String MACAddress)
-    {
+
+    private synchronized void registerDevice(String MACAddress) {
         mAliveDeviceList.add(MACAddress);
         mLatestReceivedTimeTable.put(MACAddress, System.currentTimeMillis());
-        updateConnectionStatusTable(MACAddress,ALIVE);
+        updateConnectionStatusTable(MACAddress, ALIVE);
 
 
         sendStatusChangedSignalToMainActivity();
@@ -270,55 +267,48 @@ public class BluetoothConnectionMonitor implements Runnable {
     }
 
 
-
-    private void tryReconnect(String MACAddress) {
+    private synchronized void tryReconnect(String MACAddress) {
         mBluetoothReconnector.sendReconnectRequest(MACAddress);
     }
 
-    private void updateConnectionStatusTable(String MACAddress, String Status)
-    {
-        mConnectionStatusTable.put(MACAddress,Status);
+    private synchronized void updateConnectionStatusTable(String MACAddress, String Status) {
+        mConnectionStatusTable.put(MACAddress, Status);
     }
 
 
-    public CopyOnWriteArrayList getAliveDeviceList()
-    {
+    public CopyOnWriteArrayList getAliveDeviceList() {
         return mAliveDeviceList;
     }
 
 
-
-    public static CopyOnWriteArrayList<String> getTotalDeviceList() {
+    public static synchronized CopyOnWriteArrayList<String> getTotalDeviceList() {
         return mTotalDeviceList;
     }
 
-    public static ConcurrentHashMap<String, String> getConnectionStatusTable() {
-        if(mConnectionStatusTable.size()==0)
-        {
-            Log.e(TAG,"mConnectionStatusTable 갯수가 0개입니다.");
+    public static synchronized ConcurrentHashMap<String, String> getConnectionStatusTable() {
+        if (mConnectionStatusTable.size() == 0) {
+            Log.e(TAG, "mConnectionStatusTable 갯수가 0개입니다.");
         }
         return mConnectionStatusTable;
     }
 
     //메인 액티비티로 상태변경을 알림
-    public synchronized void sendStatusChangedSignalToMainActivity()
-    {
-        /*
+    public synchronized void sendStatusChangedSignalToMainActivity() {
+
         Message SignalMessage = Message.obtain();
         SignalMessage.what = STATUS_UPDATE;
         mTargetActivityHandler.sendMessage(SignalMessage);
-        */
+
     }
-    public synchronized void signalSender()
-    {
+
+    public synchronized void signalSender() {
         long currentTime = System.currentTimeMillis();
 
 
         //일반적인경우 30초 간격으로 업데이트
         //단 WATCHING,RETRYING,LOSTCONNECT, 재연결의 경우 바로 업데이트한다.
-        if((currentTime - mLastStatusSentTime > 30000) &&  (mTotalDeviceList.size() > 0) && (mConnectionStatusTable.size() > 0))
-        {
-            Log.e(TAG,"signalSender() 내부 if문 동작함");
+        if ((currentTime - mLastStatusSentTime > 30000) && (mTotalDeviceList.size() > 0) && (mConnectionStatusTable.size() > 0)) {
+            Log.e(TAG,"Updated");
             sendStatusChangedSignalToMainActivity();
 
         }
@@ -326,7 +316,8 @@ public class BluetoothConnectionMonitor implements Runnable {
 
 
     }
-    public void sendAliveSignalQueue(String mMACAddress) {
+
+    public synchronized void sendAliveSignalQueue(String mMACAddress) {
         mAliveSignalQueue.offer(mMACAddress);
     }
 

@@ -237,7 +237,7 @@ public class BlueToothSocketConnector implements Runnable {
                 slicedBytes.add(data);
                 sendParserAndGetResult();
 
-                Log.d("compact", "good");
+                //Log.d("compact", "good");
                 break;
             } else if ((data.compareTo(EOF) != 0) == (isFirstEOF == true)) {
                 distanceEOF2EOF++;
@@ -261,7 +261,7 @@ public class BlueToothSocketConnector implements Runnable {
 
         //Log.d("slicedBytes", slicedBytes.size() + "");
         if (mParser.checkValid()) {
-            Log.d(TAG, "파서 good");
+            //Log.d(TAG, "파서 good");
 
             mParser.parseFrame();
             mTransactionForm.setName(mParser.getDeviceName());
