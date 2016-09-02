@@ -8,6 +8,16 @@ public class TransactionForm {
     private String address;
     private String name;
     private String[] mSID;
+
+    public int getBoardVer() {
+        return mBoardVer;
+    }
+
+    public void setBoardVer(int mBoardVer) {
+        this.mBoardVer = mBoardVer;
+    }
+
+    private int mBoardVer;
     private int[] mIntData;
     private float[] mFloatData;
 
@@ -37,6 +47,7 @@ public class TransactionForm {
     {
         address = null;
         name = null;
+        mBoardVer = -1;
         mSID = null;
         mIntData = null;
         mFloatData = null;

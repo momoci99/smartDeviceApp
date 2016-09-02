@@ -5,4 +5,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="query_create_device_list">CREATE TABLE DEVICE_LIST(MACADDRESS TEXT PRIMARY KEY,  TIME TIMESTAMP DEFAULT CURRENT_TIMESTAMP);</string>
+    <string name="table_name_device_list">DEVICE_LIST</string>
 </resources>

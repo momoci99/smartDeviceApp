@@ -185,7 +185,7 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
 
                         mProgressDialog = new ProgressDialog(SelectedDeviceInfoActivity.this);
                         mProgressDialog.setCancelable(false);
-                        mProgressDialog.setMessage(mTargetDevice.getName().toString() + "과(와) 연결중입니다.");
+                        mProgressDialog.setMessage(mTargetDevice.getName() + "과(와) 연결중입니다.");
                         mProgressDialog.show();
                     }
                 }

@@ -15,7 +15,6 @@ public class BluetoothConnectionMonitor implements Runnable {
 
 
     //TODO : 메서드 이름정리
-    //TODO : singleton 으로의 전환 고려
     static final String TAG = "커넥션모니터";
 
     private String WATCHING = "WATCHING";
