@@ -20,7 +20,7 @@ import transation.TransactionMaster;
 /**
  * Created by noteMel on 2016-07-04.
  */
-public class BlueToothSocketConnector implements Runnable {
+public class BlueToothSocketConnector extends Connector implements Runnable {
 
     //통신을 위한 객체
 
@@ -38,6 +38,8 @@ public class BlueToothSocketConnector implements Runnable {
     private byte[] mReadBuffer = new byte[1024];
     private int mReadBufferPosition;
     private int mReceivedFrameLength = 0;
+
+
     private ArrayList<Byte> slicedBytes = new ArrayList<>();
     private ByteBuffer accByteBuffer = ByteBuffer.allocate(1024);
 
@@ -56,7 +58,6 @@ public class BlueToothSocketConnector implements Runnable {
 
     private Handler mTargetActivityHandler = null;
 
-    //private BlueToothConnectionMonitor mBlueToothConnectionMonitor;
 
 
     private boolean isNormalConnection = false;
@@ -160,7 +161,6 @@ public class BlueToothSocketConnector implements Runnable {
 
                 int i = 0;
                 while (true) {
-;
 
                     //읽어들인 Data를 모두 readBuffer에 저장했다면
                     if (i >= bytesAvailable) {
@@ -169,7 +169,7 @@ public class BlueToothSocketConnector implements Runnable {
                         System.arraycopy(mReadBuffer, 0, encodedBytes, 0, encodedBytes.length);
 
                         //Log.d(mBluetoothDevice.getAddress(), "주소");
-                        sendAliveSignal();
+                        sendAliveSignalToMonitor(mBluetoothDevice.getAddress());
                         accumulateByte(encodedBytes);
                         parseBytes();
 
@@ -187,94 +187,6 @@ public class BlueToothSocketConnector implements Runnable {
         }
 
     }
-
-    public void showThreadInfo() {
-        Log.e(TAG, "현재 쓰레드 이름" + Thread.currentThread().getName());
-        Log.e(TAG, "현재 쓰레드 상태" + Thread.currentThread().getState());
-    }
-
-    public void sendAliveSignal() {
-        mBluetoothConnectionMonitor.sendAliveSignalQueue(mBluetoothDevice.getAddress());
-
-    }
-
-    public void accumulateByte(byte[] bytePiece) {
-
-        try {
-            accByteBuffer.put(bytePiece);
-            //Log.d("accumulateByte","포지션 : " + accByteBuffer.position());
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            Log.e("accByteBuffer", accByteBuffer.position() + ":포지션");
-            Log.e("bytePiece", bytePiece.length + ":길이");
-        }
-
-    }
-
-
-    /*A ByteBuffer is normally ready for read() (or for put()).
-
-    flip() makes it ready for write() (or for get()).
-
-    rewind() and compact() and clear() make it ready for read()/put() again after write() (or get()).
-
-    */
-    public void parseBytes() {
-        /*되는지확인 - get 작업후 compact 사용하고 get 작업전에는 flip 사용*/
-
-        //Log.d("CopyEOF","good");
-        boolean isFirstEOF = false;
-        int distanceEOF2EOF = 0;
-        accByteBuffer.flip();
-
-
-        for (int i = 0; i < accByteBuffer.limit(); i++) {
-            Byte data = accByteBuffer.get();
-            if ((data.compareTo(EOF) == 0) && distanceEOF2EOF == 1) {
-                distanceEOF2EOF = 0;
-                isFirstEOF = false;
-                slicedBytes.add(data);
-                sendParserAndGetResult();
-
-                //Log.d("compact", "good");
-                break;
-            } else if ((data.compareTo(EOF) != 0) == (isFirstEOF == true)) {
-                distanceEOF2EOF++;
-                slicedBytes.add(data);
-            } else if (data.compareTo(EOF) == 0) {
-                isFirstEOF = true;
-                slicedBytes.add(data);
-            } else {
-                slicedBytes.add(data);
-            }
-        }
-        accByteBuffer.compact(); //get 사용후 compact 호출
-    }
-
-
-    public void sendParserAndGetResult() {
-
-
-        mParser.initializeParser(slicedBytes, mBluetoothDevice);
-
-
-        //Log.d("slicedBytes", slicedBytes.size() + "");
-        if (mParser.checkValid()) {
-            //Log.d(TAG, "파서 good");
-
-            mParser.parseFrame();
-            mTransactionForm.setName(mParser.getDeviceName());
-            mTransactionForm.setAddress(mParser.getMACAddress());
-            mTransactionForm.setFloatData(mParser.getFloatData());
-            mTransactionForm.setIntData(mParser.getIntData());
-            mTransactionForm.setSID(mParser.getSID());
-            mTransactionMaster.offerQueue(mTransactionForm);
-            mTransactionForm.reset();
-        }
-        slicedBytes.clear();
-    }
-
     public void SendSignalToActivity(int Signal) {
         Message SignalMessage = Message.obtain();
         SignalMessage.what = Signal;
@@ -285,6 +197,8 @@ public class BlueToothSocketConnector implements Runnable {
     @Override
     public void run() {
         if (createConnection()) {
+
+            initConnector(mBluetoothDevice);
             processData();
         } else {
             if (mTargetActivityHandler != null) {

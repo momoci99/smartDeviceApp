@@ -47,15 +47,14 @@ public class ParserV3 {
     }
 
 
-    static final byte BOARD_TYPE1 = 0x01;//일반 블루투스 장치용
-    static final byte BOARD_TYPE2 = 0x02;//BLE 장치용
-    static final byte BOARD_TYPE3 = 0x03;
+    static final byte BOARD_VER1 = 0x01;//일반 블루투스 장치용
+    static final byte BOARD_VER2 = 0x02;//BLE 장치용
     static ArrayList<Byte> BOARD_TYPE_LIST = new ArrayList<Byte>();
 
     static {
-        BOARD_TYPE_LIST.add(BOARD_TYPE1);
-        BOARD_TYPE_LIST.add(BOARD_TYPE2);
-        BOARD_TYPE_LIST.add(BOARD_TYPE3);
+        BOARD_TYPE_LIST.add(BOARD_VER1);
+        BOARD_TYPE_LIST.add(BOARD_VER2);
+
     }
 
     static final byte ZERO = 0x00;
@@ -64,9 +63,12 @@ public class ParserV3 {
     static final int StartIndexOfSensorID = 3;
     static final int StartIndexOfSensorDATA = 4;
 
+    public int getBoardVer() {
+        return mBoardVer;
+    }
 
+    private int mBoardVer;
     private int mProtocolVer = 0;
-    private int mBoardType = 0;
     private int mSensorCount = 0;
 
     public String[] getSID() {
@@ -88,11 +90,10 @@ public class ParserV3 {
     private String mMACAddress;
     private String mDeviceName;
 
-    private BluetoothDevice mConnectedDevice;
 
     public void initializeParser(ArrayList<Byte> rawFrame, BluetoothDevice connectedDevice) {
         mRawFrame = rawFrame;
-        mConnectedDevice = connectedDevice;
+
         mMACAddress = connectedDevice.getAddress();
         mDeviceName = connectedDevice.getName();
 
@@ -164,7 +165,7 @@ public class ParserV3 {
         mProtocolVer = mRawFrame.get(0).intValue();
 
         //보드버젼
-        mBoardType = mRawFrame.get(1).intValue();
+        mBoardVer = mRawFrame.get(1).intValue();
 
         //센서 갯수
         mSensorCount = mRawFrame.get(2).intValue();
@@ -183,7 +184,7 @@ public class ParserV3 {
         for (int i = 1; i < mRawFrame.size(); i++) {
             if (i == 1) {
                 //보드타입
-                mBoardType = mRawFrame.get(i).intValue();
+                mBoardVer = mRawFrame.get(i).intValue();
             } else if (i % 5 == StartIndexOfSensorID && 0 != mRawFrame.get(i).compareTo(EOF)) {
                 //센서ID
                 mSID[DataFieldCounter] = mSensorIDList.checkID(mRawFrame.get(i));
@@ -239,7 +240,7 @@ public class ParserV3 {
         mProtocolVer = mRawFrame.get(0).intValue();
 
         //보드버젼
-        mBoardType = mRawFrame.get(1).intValue();
+        mBoardVer = mRawFrame.get(1).intValue();
 
         //센서 갯수
         mSensorCount = mRawFrame.get(2).intValue();
@@ -252,7 +253,7 @@ public class ParserV3 {
         for (int i = 1; i < mRawFrame.size(); i++) {
             if (i == 1) {
                 //보드버젼
-                mBoardType = mRawFrame.get(i).intValue();
+                mBoardVer = mRawFrame.get(i).intValue();
             } else if (i % 5 == StartIndexOfSensorID && 0 != mRawFrame.get(i).compareTo(EOF)) {
                 //센서ID
                 mSID[DataFieldCounter] = mSensorIDList.checkID(mRawFrame.get(i));

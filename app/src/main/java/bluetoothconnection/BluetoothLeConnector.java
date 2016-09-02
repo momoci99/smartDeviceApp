@@ -13,14 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import format.TransactionForm;
-import parser.ParserV3;
-import transation.TransactionMaster;
 
 /**
  * Created by noteMel on 2016-07-06.
@@ -45,7 +39,7 @@ import transation.TransactionMaster;
  * Service for managing connection and data communication with a GATT server hosted on a
  * given Bluetooth LE device.
  */
-public class BluetoothLeConnector
+public class BluetoothLeConnector extends Connector
         implements Runnable {
     private final static String TAG = BluetoothLeConnector.class.getSimpleName();
 
@@ -74,93 +68,13 @@ public class BluetoothLeConnector
             "com.example.bluetooth.le.EXTRA_DATA";
 
 
-    private ArrayList<Byte> slicedBytes = new ArrayList<>();
-    private ByteBuffer accByteBuffer = ByteBuffer.allocate(1024);
-
-    //0xFF,0xFF 감지용 변수
-    private final byte EOF = (byte) 0xFF;
-    private ParserV3 mParser = new ParserV3();
-
-
-    private TransactionForm mTransactionForm = new TransactionForm();
-    private TransactionMaster mTransactionMaster = new TransactionMaster();
-
-
     private Context mContext;
 
     public BluetoothLeConnector(Context context) {
         mContext = context;
     }
 
-    public void accumulateByte(byte[] bytePiece) {
-
-        try {
-            accByteBuffer.put(bytePiece);
-            //Log.d("accumulateByte","포지션 : " + accByteBuffer.position());
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            Log.e("accByteBuffer", accByteBuffer.position() + ":포지션");
-            Log.e("bytePiece", bytePiece.length + ":길이");
-        }
-
-        //System.arraycopy(bytePiece, 0, accByteArray, 0, bytePiece.length);
-    }
-
-    public void parseBytes() {
-        /*되는지확인 - get 작업후 compact 사용하고 get 작업전에는 flip 사용*/
-
-        //Log.d("CopyEOF","good");
-        boolean isFirstEOF = false;
-        int distanceEOF2EOF = 0;
-        accByteBuffer.flip();
-
-
-        for (int i = 0; i < accByteBuffer.limit(); i++) {
-            Byte data = accByteBuffer.get();
-            if ((data.compareTo(EOF) == 0) && distanceEOF2EOF == 1) {
-                distanceEOF2EOF = 0;
-                isFirstEOF = false;
-                slicedBytes.add(data);
-                sendParserAndGetResult();
-
-                //Log.d("compact", "good");
-                break;
-            } else if ((data.compareTo(EOF) != 0) == (isFirstEOF == true)) {
-                distanceEOF2EOF++;
-                slicedBytes.add(data);
-            } else if (data.compareTo(EOF) == 0) {
-                isFirstEOF = true;
-                slicedBytes.add(data);
-            } else {
-                slicedBytes.add(data);
-            }
-        }
-        accByteBuffer.compact(); //get 사용후 compact 호출
-    }
-
-    public void sendParserAndGetResult() {
-
-        //mParser.setReceivedFrame(slicedBytes);
-        //Log.d("slicedBytes", slicedBytes.size() + "");
-
-        mParser.initializeParser(slicedBytes, mBluetoothAdapter.getRemoteDevice(mBluetoothDeviceAddress));
-        if (mParser.checkValid()) {
-            //Log.d(TAG, "파서 good");
-
-            mParser.parseFrame();
-            mTransactionForm.setName(mParser.getDeviceName());
-            mTransactionForm.setAddress(mParser.getMACAddress());
-            mTransactionForm.setFloatData(mParser.getFloatData());
-            mTransactionForm.setIntData(mParser.getIntData());
-            mTransactionForm.setSID(mParser.getSID());
-            mTransactionMaster.offerQueue(mTransactionForm);
-            mTransactionForm.reset();
-        }
-        slicedBytes.clear();
-    }
-
-    public final static UUID BLE_DEVICE_CHARACTERISTIC_UUID =
+     public final static UUID BLE_DEVICE_CHARACTERISTIC_UUID =
             UUID.fromString(PresetUUIDList.BLE_DEVICE_CHARACTERISTIC_UUID);
 
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -236,7 +150,7 @@ public class BluetoothLeConnector
             //Log.d(TAG, "" + heartRate.length);
             accumulateByte(heartRate);
             parseBytes();
-            sendAliveSignal();
+            sendAliveSignalToMonitor(mBluetoothDeviceAddress);
         }
         mContext.sendBroadcast(intent);
     }
@@ -269,6 +183,7 @@ public class BluetoothLeConnector
             return false;
         }
 
+
         return true;
     }
 
@@ -292,6 +207,7 @@ public class BluetoothLeConnector
                 && mBluetoothGatt != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
+
                 mConnectionState = STATE_CONNECTING;
                 return true;
             } else {
@@ -313,6 +229,10 @@ public class BluetoothLeConnector
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
+
+        initConnector(mBluetoothAdapter,mBluetoothDeviceAddress);
+        Log.e(TAG,"initConnector");
+
         return true;
     }
 
@@ -398,8 +318,4 @@ public class BluetoothLeConnector
         return mBluetoothGatt.getServices();
     }
 
-    public void sendAliveSignal() {
-        mBluetoothConnectionMonitor.sendAliveSignalQueue(mBluetoothDeviceAddress);
-
-    }
 }

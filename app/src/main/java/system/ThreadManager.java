@@ -17,7 +17,7 @@ public class ThreadManager  {
     private final int NUMBER_OF_MAX_POOL_SIZE = 20;
     private final int KEEP_ALIVE_TIME = 15;
 
-    private volatile static ThreadManager objectInstance;
+
 
     private final BlockingQueue<Runnable> mWorkQueue = new LinkedBlockingQueue<Runnable>();
 
@@ -28,6 +28,8 @@ public class ThreadManager  {
             KEEP_ALIVE_TIME,
             TimeUnit.SECONDS,
             mWorkQueue  );
+
+    private volatile static ThreadManager objectInstance;
 
     public static ThreadManager getInstance(){
         if(objectInstance == null){
