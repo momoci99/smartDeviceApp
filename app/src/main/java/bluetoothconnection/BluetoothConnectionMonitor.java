@@ -1,5 +1,6 @@
 package bluetoothconnection;
 
+import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -8,10 +9,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import db.DBHandler;
+
 /**
  * Created by noteMel on 2016-07-12.
  */
 public class BluetoothConnectionMonitor implements Runnable {
+
+    private DBHandler mDBDbHandler = DBHandler.getInstance();
+    private BluetoothAdapter mBluetoothAdapter;
+
 
 
     //TODO : 메서드 이름정리
@@ -28,6 +35,10 @@ public class BluetoothConnectionMonitor implements Runnable {
 
     private volatile static BluetoothConnectionMonitor objectInstance;
 
+    public void initMonitor()
+    {
+        mBluetoothAdapter =  BluetoothAdapter.getDefaultAdapter();
+    }
 
     public static BluetoothConnectionMonitor getInstance() {
         if (objectInstance == null) {
@@ -85,6 +96,8 @@ public class BluetoothConnectionMonitor implements Runnable {
 
     private boolean mWarningActivatedFlag = false;
 
+    private boolean mExecuteUpdateFlag = false;
+
     private synchronized void checkRetryingDevice() {
         for (int i = 0; i < mRetryingConnectionList.size(); i++) {
             String MACAddress = mRetryingConnectionList.get(i);
@@ -122,8 +135,7 @@ public class BluetoothConnectionMonitor implements Runnable {
                 mRetryingConnectionList.remove(MACAddress);
                 mRetryElapseTimeTable.remove(MACAddress);
                 mRetryCount.remove(MACAddress);
-                //mTotalDeviceList.add(MACAddress);
-                updateConnectionStatusTable(MACAddress, LOSTCONNECT);
+                updateStatusTable(MACAddress, LOSTCONNECT);
 
             }
 
@@ -147,8 +159,9 @@ public class BluetoothConnectionMonitor implements Runnable {
                 if (!mWarningActivatedFlag) {
                     //Log.e(TAG,"mAliveDeviceList 사이즈 갯수 : "+mAliveDeviceList.size());
                     Log.e(TAG, MACAddress + "에서 데이터를 보내지 않습니다.");
-                    updateConnectionStatusTable(MACAddress, WATCHING);
-                    sendStatusChangedSignalToMainActivity();
+                    updateStatusTable(MACAddress, WATCHING);
+                    mExecuteUpdateFlag = true;
+
                     mWarningActivatedFlag = true;
                 }
 
@@ -174,13 +187,12 @@ public class BluetoothConnectionMonitor implements Runnable {
                 mRetryingConnectionList.add(MACAddress);
 
                 tryReconnect(MACAddress);
-                updateConnectionStatusTable(MACAddress, RETRYING);
-                sendStatusChangedSignalToMainActivity();
+                updateStatusTable(MACAddress, RETRYING);
+                mExecuteUpdateFlag = true;
                 break;
             } else {
                 //정상적인 - 살아있는경우
-                updateConnectionStatusTable(MACAddress, ALIVE);
-                //sendStatusChangedSignalToMainActivity();
+
             }
         }
 
@@ -223,8 +235,7 @@ public class BluetoothConnectionMonitor implements Runnable {
             }
             registerDevice(MACAddress);
 
-
-            //기존기기
+        //기존기기
         } else {
 
             registeredTime = mLatestReceivedTimeTable.get(MACAddress);
@@ -240,6 +251,15 @@ public class BluetoothConnectionMonitor implements Runnable {
         //Log.e(TAG, "mTotalDeviceList 사이즈는 : " + mTotalDeviceList.size());
     }
 
+    private synchronized void registerDevice(String MACAddress) {
+        mAliveDeviceList.add(MACAddress);
+        mLatestReceivedTimeTable.put(MACAddress, System.currentTimeMillis());
+        updateStatusTable(MACAddress, ALIVE);
+        mExecuteUpdateFlag = true;
+
+
+    }
+
     private synchronized void updateConnectedDevice(String MACAddress) {
         //Log.d(TAG, MACAddress + "의 연결상태 : 정상");
         mLatestReceivedTimeTable.put(MACAddress, System.currentTimeMillis());
@@ -250,19 +270,10 @@ public class BluetoothConnectionMonitor implements Runnable {
             mRetryElapseTimeTable.remove(MACAddress);
             mRetryCount.remove(MACAddress);
 
-            updateConnectionStatusTable(MACAddress, ALIVE);
-            sendStatusChangedSignalToMainActivity();
+            updateStatusTable(MACAddress, ALIVE);
+            mExecuteUpdateFlag = true;
+
         }
-    }
-
-    private synchronized void registerDevice(String MACAddress) {
-        mAliveDeviceList.add(MACAddress);
-        mLatestReceivedTimeTable.put(MACAddress, System.currentTimeMillis());
-        updateConnectionStatusTable(MACAddress, ALIVE);
-
-
-        sendStatusChangedSignalToMainActivity();
-
     }
 
 
@@ -270,7 +281,12 @@ public class BluetoothConnectionMonitor implements Runnable {
         mBluetoothReconnector.sendReconnectRequest(MACAddress);
     }
 
-    private synchronized void updateConnectionStatusTable(String MACAddress, String Status) {
+    private synchronized void updateStatusTable(String MACAddress, String Status) {
+
+        if(Status.compareTo(ALIVE) == 0)
+        {
+            updateTotalDeviceListDB();
+        }
         mConnectionStatusTable.put(MACAddress, Status);
     }
 
@@ -294,9 +310,12 @@ public class BluetoothConnectionMonitor implements Runnable {
     //메인 액티비티로 상태변경을 알림
     public synchronized void sendStatusChangedSignalToMainActivity() {
 
-        Message SignalMessage = Message.obtain();
-        SignalMessage.what = STATUS_UPDATE;
-        mTargetActivityHandler.sendMessage(SignalMessage);
+        if(mExecuteUpdateFlag) {
+            Message SignalMessage = Message.obtain();
+            SignalMessage.what = STATUS_UPDATE;
+            mTargetActivityHandler.sendMessage(SignalMessage);
+            mExecuteUpdateFlag = false;
+        }
 
     }
 
@@ -306,18 +325,33 @@ public class BluetoothConnectionMonitor implements Runnable {
 
         //일반적인경우 30초 간격으로 업데이트
         //단 WATCHING,RETRYING,LOSTCONNECT, 재연결의 경우 바로 업데이트한다.
+        //Log.e(TAG,"토탈디바이스 리스트크기 :" + mTotalDeviceList.size() + "  스테이더스 테이블 크기 : "+  mConnectionStatusTable.size() );
+
         if ((currentTime - mLastStatusSentTime > 30000) && (mTotalDeviceList.size() > 0) && (mConnectionStatusTable.size() > 0)) {
-            Log.e(TAG,"Updated");
-            sendStatusChangedSignalToMainActivity();
-
+            Log.d(TAG, "signalSenderActivated");
+            mExecuteUpdateFlag = true;
+            mLastStatusSentTime = currentTime;
         }
-        mLastStatusSentTime = currentTime;
-
 
     }
 
     public synchronized void sendAliveSignalQueue(String mMACAddress) {
         mAliveSignalQueue.offer(mMACAddress);
+    }
+
+    private synchronized void updateTotalDeviceListDB() {
+        CopyOnWriteArrayList<String> nameList = new CopyOnWriteArrayList<>();
+
+        for(int i=0; i<mTotalDeviceList.size(); i++)
+        {
+            nameList.add(mBluetoothAdapter.getRemoteDevice(mTotalDeviceList.get(i)).getAddress());
+        }
+
+        if (mTotalDeviceList.size() != 0) {
+
+            mDBDbHandler.insertRow_DeviceList(nameList);
+        }
+
     }
 
     @Override
@@ -327,6 +361,7 @@ public class BluetoothConnectionMonitor implements Runnable {
             checkAliveDevice();
             checkRetryingDevice();
             signalSender();
+            sendStatusChangedSignalToMainActivity();
 
         }
     }

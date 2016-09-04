@@ -171,7 +171,7 @@ public class BlueToothSocketConnector extends Connector implements Runnable {
                         //Log.d(mBluetoothDevice.getAddress(), "주소");
                         sendAliveSignalToMonitor(mBluetoothDevice.getAddress());
                         accumulateByte(encodedBytes);
-                        parseBytes();
+                        parseBytesAndUpdateDB();
 
 
                         mReadBufferPosition = 0;

@@ -9,6 +9,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import db.DBHandler;
 import format.TransactionForm;
 import parser.ParserV3;
 import transation.TransactionMaster;
@@ -34,12 +35,14 @@ public class Connector {
 
     private BluetoothDevice mBluetoothDevice;
 
+    private DBHandler mDBHandler = DBHandler.getInstance();
 
     /**
      * @param bluetoothDevice for Bluetooth Classic
      */
     public void initConnector(BluetoothDevice bluetoothDevice) {
         mBluetoothDevice = bluetoothDevice;
+        mDBHandler.createDataTable(bluetoothDevice.getName());
 
     }
 
@@ -51,7 +54,7 @@ public class Connector {
      */
     public void initConnector(BluetoothAdapter bluetoothAdapter, String bluetoothDeviceAddress) {
         mBluetoothDevice = bluetoothAdapter.getRemoteDevice(bluetoothDeviceAddress);
-
+        mDBHandler.createDataTable(mBluetoothDevice.getName());
 
     }
 
@@ -83,7 +86,7 @@ public class Connector {
             mTransactionForm.setSID(mParser.getSID());
             mTransactionForm.setBoardVer(mParser.getBoardVer());
             mTransactionMaster.offerQueue(mTransactionForm);
-            mTransactionForm.reset();
+            //mTransactionForm.reset();
         }
         slicedBytes.clear();
     }
@@ -96,7 +99,7 @@ public class Connector {
    rewind() and compact() and clear() make it ready for read()/put() again after write() (or get()).
 
    */
-    public void parseBytes() {
+    public void parseBytesAndUpdateDB() {
         /*되는지확인 - get 작업후 compact 사용하고 get 작업전에는 flip 사용*/
 
         //Log.d("CopyEOF","good");
@@ -112,7 +115,7 @@ public class Connector {
                 isFirstEOF = false;
                 slicedBytes.add(data);
                 sendParserAndGetResult(mBluetoothDevice);
-
+                updateTransactionToDB();
                 //Log.d("compact", "good");
                 break;
             } else if ((data.compareTo(EOF) != 0) == (isFirstEOF == true)) {
@@ -126,6 +129,11 @@ public class Connector {
             }
         }
         accByteBuffer.compact(); //get 사용후 compact 호출
+    }
+    private void updateTransactionToDB()
+    {
+        mDBHandler.insertRow_SensorTable(mTransactionForm);
+        mTransactionForm.reset();
     }
 
 }
