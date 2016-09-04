@@ -149,7 +149,7 @@ public class BluetoothLeConnector extends Connector
             final byte[] heartRate = characteristic.getValue();
             //Log.d(TAG, "" + heartRate.length);
             accumulateByte(heartRate);
-            parseBytes();
+            parseBytesAndUpdateDB();
             sendAliveSignalToMonitor(mBluetoothDeviceAddress);
         }
         mContext.sendBroadcast(intent);

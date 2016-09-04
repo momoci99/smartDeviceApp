@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import adapter.ConnectedDeviceListAdapter;
 import bluetoothconnection.BluetoothConnectionMonitor;
 import bluetoothconnection.BluetoothReconnector;
+import db.DBHandler;
 import system.ThreadManager;
 
 public class MainActivity extends AppCompatActivity
@@ -39,14 +40,15 @@ public class MainActivity extends AppCompatActivity
     private BluetoothReconnector mBluetoothReconnector = new BluetoothReconnector();
 
 
-    static StatusReceiverHandler mStatusReceiverHandler = new StatusReceiverHandler();
+    private static StatusReceiverHandler mStatusReceiverHandler = new StatusReceiverHandler();
 
     //모든 기기 목록(연결이 살아있든 죽어있든간에 일단 등록)
-    static CopyOnWriteArrayList<String> mTotalDeviceList = new CopyOnWriteArrayList<>();
+    private static CopyOnWriteArrayList<String> mTotalDeviceList = new CopyOnWriteArrayList<>();
 
     //모든 기기 연결 상태 Table
-    static ConcurrentHashMap<String, String> mConnectionStatusTable = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, String> mConnectionStatusTable = new ConcurrentHashMap<>();
 
+    private DBHandler mDBHandler = DBHandler.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +72,15 @@ public class MainActivity extends AppCompatActivity
 
 
         //모니터 쓰레드에 메인 액티비티 핸들러등록
+        mBlueToothConnectionMonitor.initMonitor();
         mBlueToothConnectionMonitor.setTargetActivityHandler(mStatusReceiverHandler);
 
 
         //커넥션 모니터 시작
         mThreadManager.ActiveThread(mBlueToothConnectionMonitor);
 
+
+        mDBHandler.InitDB(this);
 
         //리커넥터 시작
         //mThreadManager.ActiveThread(mBluetoothReconnector);
