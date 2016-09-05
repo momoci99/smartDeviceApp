@@ -344,7 +344,7 @@ public class BluetoothConnectionMonitor implements Runnable {
 
         for(int i=0; i<mTotalDeviceList.size(); i++)
         {
-            nameList.add(mBluetoothAdapter.getRemoteDevice(mTotalDeviceList.get(i)).getAddress());
+            nameList.add(mBluetoothAdapter.getRemoteDevice(mTotalDeviceList.get(i)).getName());
         }
 
         if (mTotalDeviceList.size() != 0) {
