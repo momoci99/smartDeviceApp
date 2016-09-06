@@ -41,12 +41,14 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
     //모든 기기 연결 상태 Table
     private ConcurrentHashMap<String, String> mConnectionStatusTable = new ConcurrentHashMap<>();
 
+    //모든 기기 목록 - Name
+    private static CopyOnWriteArrayList<String> mTotalDeviceNameList = new CopyOnWriteArrayList<>();
 
-    public void setData(CopyOnWriteArrayList<String> totalDeviceList, ConcurrentHashMap<String, String> connectionStatusTable) {
+    public void setData(CopyOnWriteArrayList<String> totalDeviceList, CopyOnWriteArrayList<String> totalDeviceNameList,ConcurrentHashMap<String, String> connectionStatusTable) {
         Log.e(TAG,"setData mTotalDeviceList : "+ mTotalDeviceList.size());
         mTotalDeviceList = totalDeviceList;
         mConnectionStatusTable = connectionStatusTable;
-
+        mTotalDeviceNameList = totalDeviceNameList;
     }
 
 
@@ -88,17 +90,17 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        String deviceName = mTotalDeviceList.get(position);
-
+        String deviceName = mTotalDeviceNameList.get(position);
+        String deviceAddress = mTotalDeviceList.get(position);
         //상황에 맞게 변경이 필요함
         holder.nameTv.setText(deviceName);
-        if (mConnectionStatusTable.get(deviceName).equals(ALIVE)) {
+        if (mConnectionStatusTable.get(deviceAddress).equals(ALIVE)) {
             holder.connection_status_Img.setBackgroundResource(R.drawable.connected);
-        } else if (mConnectionStatusTable.get(deviceName).equals(WATCHING)) {
+        } else if (mConnectionStatusTable.get(deviceAddress).equals(WATCHING)) {
             holder.connection_status_Img.setBackgroundResource(R.drawable.watching);
-        } else if (mConnectionStatusTable.get(deviceName).equals(RETRYING)) {
+        } else if (mConnectionStatusTable.get(deviceAddress).equals(RETRYING)) {
             holder.connection_status_Img.setBackgroundResource(R.drawable.retrying);
-        } else if (mConnectionStatusTable.get(deviceName).equals(LOSTCONNECT)) {
+        } else if (mConnectionStatusTable.get(deviceAddress).equals(LOSTCONNECT)) {
             holder.connection_status_Img.setBackgroundResource(R.drawable.lostconnect);
         }
         //holder.connection_status_Img.setBackgroundResource();

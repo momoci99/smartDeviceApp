@@ -86,7 +86,7 @@ public class Connector {
             mTransactionForm.setSID(mParser.getSID());
             mTransactionForm.setBoardVer(mParser.getBoardVer());
             mTransactionMaster.offerQueue(mTransactionForm);
-            //mTransactionForm.reset();
+
         }
         slicedBytes.clear();
     }

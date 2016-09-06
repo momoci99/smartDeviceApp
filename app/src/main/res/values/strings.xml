@@ -8,4 +8,14 @@
     <string name="query_create_device_list">CREATE TABLE IF NOT EXISTS DEVICE_LIST (DEVICENAME TEXT PRIMARY KEY,  TIME TIMESTAMP DEFAULT CURRENT_TIMESTAMP);</string>
     <string name="table_name_device_list">DEVICE_LIST</string>
     <string name="query_create_data_table">(LOGNUMBER INTEGER PRIMARY KEY AUTOINCREMENT, DEVICENAME TEXT, BOARD_VER INTEGER, SNAME_1 TEXT, DATA_1 REAL, SNAME_2 TEXT, DATA_2 REAL, SNAME_3 TEXT, DATA_3 REAL, SNAME_4 TEXT, DATA_4 REAL, TIME TIMESTAMP DEFAULT CURRENT_TIMESTAMP );</string>
+
+
+    <!-- for activity_detaildeviceinfo.xml !-->
+    <string name="LastReceivedTime">LastReceivedTime</string>
+    <string name="ConnectionStatus">ConnectionStatus</string>
+    <string name="SensorCount">SensorCount</string>
+    <string name="Disconnect">Disconnect</string>
+
+    <!-- for IntentKey !-->
+    <string name="MainToDetailDeviceInfo.String">MainToDetailDeviceInfo.String</string>
 </resources>

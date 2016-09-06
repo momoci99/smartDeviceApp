@@ -2,6 +2,7 @@ package db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.transition.Transition;
@@ -17,7 +18,7 @@ import format.TransactionForm;
  * Created by Melchior_S on 2016-09-02.
  */
 
-//ContentValues 찾아보기
+
 public class DBHandler {
 
     private static final String TAG = "DBHandler";
@@ -77,11 +78,11 @@ public class DBHandler {
         Log.d(TAG, mCreateTableDeviceList_Query);
         mDB.execSQL(mCreateTableDeviceList_Query);
     }
-    public void createDataTable(String deviceName)
-    {
+
+    public void createDataTable(String deviceName) {
         String createDataTableQuery = "";
         createDataTableQuery += "CREATE TABLE IF NOT EXISTS ";
-        createDataTableQuery +=   deviceName + " ";
+        createDataTableQuery += deviceName + " ";
         createDataTableQuery += mCreateDataTableQuery;
 
         Log.d(TAG, createDataTableQuery);
@@ -94,7 +95,7 @@ public class DBHandler {
         for (int i = 0; i < deviceList.size(); i++) {
             insertDeviceList_Query = "INSERT OR REPLACE INTO DEVICE_LIST (DEVICENAME) VALUES ";
             insertDeviceList_Query += "(";
-            insertDeviceList_Query += "\""+ deviceList.get(i) + "\"";
+            insertDeviceList_Query += "\"" + deviceList.get(i) + "\"";
             insertDeviceList_Query += ")";
         }
         Log.d(TAG, insertDeviceList_Query);
@@ -103,55 +104,94 @@ public class DBHandler {
     }
 
     public void insertRow_SensorTable(TransactionForm transactionForm) {
-        String insertSensorData_Query = "";
-        insertSensorData_Query += "INSERT INTO ";
-        insertSensorData_Query += transactionForm.getName();
-        insertSensorData_Query += " (DEVICENAME, BOARD_VER, SNAME_1, DATA_1, SNAME_2,DATA_2,SNAME_3,DATA_3,SNAME_4,DATA_4) VALUES (";
-        insertSensorData_Query += "\"" + transactionForm.getAddress() + "\"";
+        ContentValues newValues = new ContentValues();
+        newValues.put("DEVICENAME", transactionForm.getName());
+        newValues.put("BOARD_VER", transactionForm.getBoardVer());
 
-        insertSensorData_Query += ", ";
-
-        insertSensorData_Query += transactionForm.getBoardVer();
-
-        insertSensorData_Query += ", ";
-
+        String stringSNAME = "SNAME_";
+        String stringDATA = "DATA_";
 
         for (int i = 0; i < transactionForm.getSID().length; i++) {
+            newValues.put(stringSNAME + (String.valueOf(i + 1)), transactionForm.getSID()[i]);
 
-            insertSensorData_Query += "\"" + transactionForm.getSID()[i] + "\"" + ", ";
-
-            //for (int j = 0; j < transactionForm.getSID().length; j++) {
             if (transactionForm.getIntData()[i] == -1) {
-                insertSensorData_Query += Double.toString(transactionForm.getFloatData()[i]);
-                if (i != transactionForm.getSID().length - 1) {
-                    insertSensorData_Query += ", ";
-                }
+                newValues.put(stringDATA + (String.valueOf(i + 1)), transactionForm.getFloatData()[i]);
             } else if (transactionForm.getFloatData()[i] == -1) {
-                insertSensorData_Query += Integer.toString(transactionForm.getIntData()[i]);
-                if (i != transactionForm.getSID().length - 1) {
-                    insertSensorData_Query += ", ";
-                }
-
+                newValues.put(stringDATA + (String.valueOf(i + 1)), transactionForm.getIntData()[i]);
             }
         }
-        if(transactionForm.getSID().length<4)
-        {
-            insertSensorData_Query += ", ";
-            for(int i=0; i<4-transactionForm.getSID().length; i++)
-            {
-                insertSensorData_Query += "null";
-                insertSensorData_Query += ", ";
-                insertSensorData_Query += Integer.toString(-1);
-                if (i != (4-transactionForm.getSID().length)-1) {
-                    insertSensorData_Query += ", ";
-                }
-            }
-        }
-        insertSensorData_Query += "); ";
-
-        Log.d(TAG, insertSensorData_Query);
-        mDB.execSQL(insertSensorData_Query);
+        //Log.d(TAG, newValues.toString());
+        mDB.insert(transactionForm.getName(), null, newValues);
 
 
     }
+
+    public void showDeviceList() {
+        String[] columns = {"DEVICENAME", "TIME"};
+        Cursor result = mDB.query("DEVICE_LIST", columns, null, null, null, null, null);
+        while (result.moveToNext()) {
+            String name = result.getString(0);
+            String time = result.getString(1);
+            Log.e(TAG, "Device Name : " + name + "  time : " + time);
+        }
+        //result.close();
+    }
+
+    public void showAllDeviceData() {
+        String[] deviceColumns = {"DEVICENAME", "TIME"};
+        String[] columns = {"LOGNUMBER",
+                "DEVICENAME",
+                "BOARD_VER",
+                "SNAME_1", "DATA_1",
+                "SNAME_2", "DATA_2",
+                "SNAME_3", "DATA_3",
+                "SNAME_4", "DATA_4",
+                "TIME"};
+
+        Cursor result = mDB.query("DEVICE_LIST", deviceColumns, null, null, null, null, null);
+
+
+        while (result.moveToNext()) {
+            String name = result.getString(0);
+            Cursor dataQueryResult = mDB.query(name, columns, null, null, null, null, null);
+
+            while (dataQueryResult.moveToNext()) {
+                int logNumber = dataQueryResult.getInt(0);
+
+                String devicename = dataQueryResult.getString(1);
+                int BoardVer = dataQueryResult.getInt(2);
+                String SNAME_1 = dataQueryResult.getString(3);
+                double DATA_1 = dataQueryResult.getDouble(4);
+
+                String SNAME_2 = dataQueryResult.getString(5);
+                double DATA_2 = dataQueryResult.getDouble(6);
+
+                String SNAME_3 = dataQueryResult.getString(7);
+                double DATA_3 = dataQueryResult.getDouble(8);
+
+                String SNAME_4 = dataQueryResult.getString(9);
+                double DATA_4 = dataQueryResult.getDouble(10);
+
+                String time = dataQueryResult.getString(11);
+
+                String stringResult = String.valueOf(logNumber)
+                        + devicename
+                        + String.valueOf(BoardVer)
+                        + SNAME_1
+                        + String.valueOf(DATA_1)
+                        + SNAME_2
+                        + String.valueOf(DATA_2)
+                        + SNAME_3
+                        + String.valueOf(DATA_3)
+                        + SNAME_4
+                        + String.valueOf(DATA_4)
+                        + time;
+
+                Log.e(TAG,stringResult);
+            }
+        }
+
+    }
+
+
 }

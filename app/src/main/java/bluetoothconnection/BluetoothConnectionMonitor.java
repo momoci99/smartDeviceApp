@@ -72,8 +72,11 @@ public class BluetoothConnectionMonitor implements Runnable {
     private static ConcurrentHashMap<String, Integer> mRetryCount = new ConcurrentHashMap<>();
 
 
-    //모든 기기 목록(연결이 살아있든 죽어있든간에 일단 등록)
+    //모든 기기 목록 - MACAddress
     private static CopyOnWriteArrayList<String> mTotalDeviceList = new CopyOnWriteArrayList<>();
+
+    //모든 기기 목록 - Name
+    private static CopyOnWriteArrayList<String> mTotalDeviceNameList = new CopyOnWriteArrayList<>();
 
     //모든 기기 연결 상태 Table
     private static ConcurrentHashMap<String, String> mConnectionStatusTable = new ConcurrentHashMap<>();
@@ -231,6 +234,7 @@ public class BluetoothConnectionMonitor implements Runnable {
             }
             if (!isReConnected) {
                 mTotalDeviceList.add(MACAddress);
+                mTotalDeviceNameList.add(mBluetoothAdapter.getRemoteDevice(MACAddress).getName());
 
             }
             registerDevice(MACAddress);
@@ -296,8 +300,11 @@ public class BluetoothConnectionMonitor implements Runnable {
     }
 
 
-    public static synchronized CopyOnWriteArrayList<String> getTotalDeviceList() {
+    public static CopyOnWriteArrayList<String> getTotalDeviceList() {
         return mTotalDeviceList;
+    }
+    public static CopyOnWriteArrayList<String> getTotalDeviceNameList(){
+        return mTotalDeviceNameList;
     }
 
     public static synchronized ConcurrentHashMap<String, String> getConnectionStatusTable() {
@@ -344,7 +351,7 @@ public class BluetoothConnectionMonitor implements Runnable {
 
         for(int i=0; i<mTotalDeviceList.size(); i++)
         {
-            nameList.add(mBluetoothAdapter.getRemoteDevice(mTotalDeviceList.get(i)).getAddress());
+            nameList.add(mBluetoothAdapter.getRemoteDevice(mTotalDeviceList.get(i)).getName());
         }
 
         if (mTotalDeviceList.size() != 0) {
