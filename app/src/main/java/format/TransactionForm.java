@@ -43,8 +43,7 @@ public class TransactionForm {
     }
 
 
-    public void reset()
-    {
+    public void reset() {
         address = null;
         name = null;
         mBoardVer = -1;
@@ -54,11 +53,9 @@ public class TransactionForm {
     }
 
 
-
     public void setAddress(String address) {
         this.address = address;
     }
-
 
 
     public void setName(String name) {
@@ -66,11 +63,9 @@ public class TransactionForm {
     }
 
 
-
     public void setSID(String[] mSID) {
         this.mSID = mSID;
     }
-
 
 
     public void setIntData(int[] mIntData) {
@@ -78,11 +73,9 @@ public class TransactionForm {
     }
 
 
-
     public void setFloatData(float[] mFloatData) {
         this.mFloatData = mFloatData;
     }
-
 
 
 }

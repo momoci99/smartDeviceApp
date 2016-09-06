@@ -42,6 +42,12 @@
             android:label="DBtest"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <activity
+            android:name=".DetailDeviceInfo"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+        </activity>
     </application>
 
 </manifest>
