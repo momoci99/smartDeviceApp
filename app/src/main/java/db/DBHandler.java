@@ -12,6 +12,7 @@ import com.example.notemel.deviceappalphav02.R;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import format.DBResultForm;
 import format.TransactionForm;
 
 /**
@@ -53,6 +54,9 @@ public class DBHandler {
     private static String mCreateDataTableQuery = null;
     private static String mCreateTableDeviceList_Query = null;
     private static String mDeviceListTableName = null;
+
+
+    private String[] mDEVICE_LISTcolumnsList = {"DEVICENAME", "TIME"};
 
     public void InitDB(Context context) {
         mContext = context;
@@ -126,7 +130,89 @@ public class DBHandler {
 
     }
 
-    public void showDeviceList() {
+    public CopyOnWriteArrayList<DBResultForm> getSensorDataList(String deviceName)
+    {
+        CopyOnWriteArrayList<DBResultForm> DBResultFormList = new CopyOnWriteArrayList<>();
+        String[] columns = {"LOGNUMBER",
+                "DEVICENAME",
+                "BOARD_VER",
+                "SNAME_1", "DATA_1",
+                "SNAME_2", "DATA_2",
+                "SNAME_3", "DATA_3",
+                "SNAME_4", "DATA_4",
+                "TIME"};
+
+        Cursor dataQueryResult = mDB.query(deviceName, columns, null, null, null, null, null);
+
+
+
+        while (dataQueryResult.moveToNext()) {
+            int logNumber = dataQueryResult.getInt(0);
+
+            String devicename = dataQueryResult.getString(1);
+            int BoardVer = dataQueryResult.getInt(2);
+            String SNAME_1 = dataQueryResult.getString(3);
+            double DATA_1 = dataQueryResult.getDouble(4);
+
+            String SNAME_2 = dataQueryResult.getString(5);
+            double DATA_2 = dataQueryResult.getDouble(6);
+
+            String SNAME_3 = dataQueryResult.getString(7);
+            double DATA_3 = dataQueryResult.getDouble(8);
+
+            String SNAME_4 = dataQueryResult.getString(9);
+            double DATA_4 = dataQueryResult.getDouble(10);
+
+            String time = dataQueryResult.getString(11);
+
+
+            DBResultFormList.add(new DBResultForm(logNumber,devicename,BoardVer,
+                    SNAME_1,DATA_1,
+                    SNAME_2,DATA_2,
+                    SNAME_3,DATA_3,
+                    SNAME_4,DATA_4,
+                    time));
+            /*
+            String stringResult = String.valueOf(logNumber)
+                    + devicename
+                    + String.valueOf(BoardVer)
+                    + SNAME_1
+                    + String.valueOf(DATA_1)
+                    + SNAME_2
+                    + String.valueOf(DATA_2)
+                    + SNAME_3
+                    + String.valueOf(DATA_3)
+                    + SNAME_4
+                    + String.valueOf(DATA_4)
+                    + time;
+                    Log.e(TAG,stringResult);
+            */
+
+        }
+        dataQueryResult.close();
+        return DBResultFormList;
+
+
+    }
+
+    public CopyOnWriteArrayList<String> getFullDeviceList()
+    {
+        CopyOnWriteArrayList<String> fullDeviceList = new CopyOnWriteArrayList<>();
+        Cursor result = mDB.query("DEVICE_LIST", mDEVICE_LISTcolumnsList, null, null, null, null, null);
+        while (result.moveToNext()) {
+            String name = result.getString(0);
+            fullDeviceList.add(name);
+
+        }
+        result.close();
+        return fullDeviceList;
+
+    }
+    public void showFullDeviceList() {
+
+
+
+
         String[] columns = {"DEVICENAME", "TIME"};
         Cursor result = mDB.query("DEVICE_LIST", columns, null, null, null, null, null);
         while (result.moveToNext()) {

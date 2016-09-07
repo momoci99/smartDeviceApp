@@ -27,7 +27,6 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 
 
     private LayoutInflater mInflater;
-    //LayoutInflater - xml 문서에 명시된 레이아웃을 구현하여 메모리에 적재.
 
 
     public ConnectedDeviceListAdapter(Context context) {
@@ -44,8 +43,8 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
     //모든 기기 목록 - Name
     private static CopyOnWriteArrayList<String> mTotalDeviceNameList = new CopyOnWriteArrayList<>();
 
-    public void setData(CopyOnWriteArrayList<String> totalDeviceList, CopyOnWriteArrayList<String> totalDeviceNameList,ConcurrentHashMap<String, String> connectionStatusTable) {
-        Log.e(TAG,"setData mTotalDeviceList : "+ mTotalDeviceList.size());
+    public void setData(CopyOnWriteArrayList<String> totalDeviceList, CopyOnWriteArrayList<String> totalDeviceNameList, ConcurrentHashMap<String, String> connectionStatusTable) {
+        Log.e(TAG, "setData mTotalDeviceList : " + mTotalDeviceList.size());
         mTotalDeviceList = totalDeviceList;
         mConnectionStatusTable = connectionStatusTable;
         mTotalDeviceNameList = totalDeviceNameList;
@@ -76,8 +75,8 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            //convertView = mInflater.inflate(R.layout.list_item_connected_device, null);
-            convertView = mInflater.inflate(R.layout.list_item_connected_device,parent,false);
+
+            convertView = mInflater.inflate(R.layout.list_item_connected_device, parent, false);
 
             holder = new ViewHolder();
 
@@ -103,15 +102,13 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
         } else if (mConnectionStatusTable.get(deviceAddress).equals(LOSTCONNECT)) {
             holder.connection_status_Img.setBackgroundResource(R.drawable.lostconnect);
         }
-        //holder.connection_status_Img.setBackgroundResource();
-
 
         return convertView;
 
 
     }
 
-    //ViewHolder Pattern - 빠르게 불러올수있다.
+    //ViewHolder Pattern
     static class ViewHolder {
         TextView nameTv;
         ImageView connection_status_Img;
