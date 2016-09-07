@@ -15,7 +15,9 @@
     <string name="ConnectionStatus">ConnectionStatus</string>
     <string name="SensorCount">SensorCount</string>
     <string name="Disconnect">Disconnect</string>
+    <string name="BoardVer">BoardVer</string>
 
     <!-- for IntentKey !-->
-    <string name="MainToDetailDeviceInfo.String">MainToDetailDeviceInfo.String</string>
+    <string name="ToDetailDeviceInfo">ToDetailDeviceInfo</string>
+
 </resources>

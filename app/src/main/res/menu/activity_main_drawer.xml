@@ -3,7 +3,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/ConnectSensor"
             android:icon="@drawable/ic_menu_camera"
             android:title="ConnectSensor" />
         <item
@@ -13,7 +13,7 @@
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="FullDeviceList" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"

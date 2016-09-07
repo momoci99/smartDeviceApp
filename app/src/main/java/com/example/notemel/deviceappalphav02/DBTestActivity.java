@@ -28,7 +28,7 @@ public class DBTestActivity extends AppCompatActivity {
         mBtn_ShowDeviceList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDbHandler.showDeviceList();
+                //mDbHandler.showDeviceList();
             }
         });
 

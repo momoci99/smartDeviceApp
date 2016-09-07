@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
 
     private static String TAG = "MainActivity";
     static final int STATUS_UPDATE = 55;
-    String mIntentKey;
+    private String mIntentKey;
 
     /*UI Components*/
     static ListView connectedDeiceListView;
@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity
     private DBHandler mDBHandler = DBHandler.getInstance();
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,16 +78,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
-        mIntentKey= this.getResources().getString(R.string.MainToDetailDeviceInfo_String);
+        mIntentKey = this.getResources().getString(R.string.ToDetailDeviceInfo);
 
 
         connectedDeiceListView = (ListView) findViewById(R.id.lv_connectionstatus);
         listAdapter = new ConnectedDeviceListAdapter(this);
         connectedDeiceListView.setAdapter(listAdapter);
         connectedDeiceListView.setOnItemClickListener(mItemClickListener);
-
-
 
 
         //모니터 쓰레드에 메인 액티비티 핸들러등록
@@ -145,16 +140,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.ConnectSensor) {
             Intent intent = new Intent(MainActivity.this, DeviceSearchActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
-
             Intent intent = new Intent(MainActivity.this, DBTestActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-
+            Intent intent = new Intent(MainActivity.this, FullDeviceListActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -167,20 +161,19 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         mStatusReceiverHandler.updateConnectedDeviceList();
 
     }
-    private static class StatusReceiverHandler extends Handler
-    {
+
+    private static class StatusReceiverHandler extends Handler {
 
         @Override
-        public void handleMessage(Message msg)
-        {
-            switch(msg.what){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
                 case 0:
                     break;
                 case STATUS_UPDATE:
@@ -192,6 +185,7 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
+
         private void copyData() {
             //Log.e(TAG,"기기목록갯수 beforeCopy : "+ mTotalDeviceList.size());
 
@@ -212,9 +206,8 @@ public class MainActivity extends AppCompatActivity
 
         public void updateConnectedDeviceList() {
             //Log.e(TAG,"기기목록갯수 beforeUpdate : "+ mTotalDeviceList.size());
-            if(mTotalDeviceList.size()>0)
-            {
-                listAdapter.setData(mTotalDeviceList, mTotalDeviceNameList,mConnectionStatusTable);
+            if (mTotalDeviceList.size() > 0) {
+                listAdapter.setData(mTotalDeviceList, mTotalDeviceNameList, mConnectionStatusTable);
                 listAdapter.notifyDataSetChanged();
 
                 //Log.e(TAG,"기기목록갯수 : "+ mTotalDeviceList.size());
@@ -223,14 +216,15 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
     private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long l_position) {
 
             Intent intent = new Intent(MainActivity.this, DetailDeviceInfo.class);
-            intent.putExtra(mIntentKey,mTotalDeviceNameList.get(position));
-            Log.e(TAG,mTotalDeviceNameList.get(position));
+            intent.putExtra(mIntentKey, mTotalDeviceNameList.get(position));
+            Log.e(TAG, mTotalDeviceNameList.get(position));
 
             startActivity(intent);
 
