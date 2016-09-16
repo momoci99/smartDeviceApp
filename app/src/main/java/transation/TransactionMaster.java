@@ -32,9 +32,9 @@ public class TransactionMaster implements Runnable {
 
     public void offerQueue(TransactionForm transactionFormData)
     {
-        if(transactionFormData!=null)
-        mTransactionQueue.offer(transactionFormData);
-        Log.d(TAG,"큐의 크기 : " +mTransactionQueue.size());
+        //if(transactionFormData!=null)
+        //mTransactionQueue.offer(transactionFormData);
+        //Log.d(TAG,"큐의 크기 : " +mTransactionQueue.size());
         //Log.d(TAG,mTransactionQueue.poll().getName());
 
     }

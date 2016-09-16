@@ -1,7 +1,8 @@
 package com.example.notemel.deviceappalphav02;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,14 +20,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import adapter.ConnectedDeviceListAdapter;
-import bluetoothconnection.BluetoothConnectionMonitor;
+import system.BluetoothConnectionMonitor;
 import bluetoothconnection.BluetoothReconnector;
 import db.DBHandler;
+import serverconnection.ServerDataHandler;
 import system.ThreadManager;
 
 public class MainActivity extends AppCompatActivity
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     private ThreadManager mThreadManager = ThreadManager.getInstance();
     private BluetoothConnectionMonitor mBlueToothConnectionMonitor = BluetoothConnectionMonitor.getInstance();
     private BluetoothReconnector mBluetoothReconnector = new BluetoothReconnector();
-
+    private ServerDataHandler mServerDataHandler = ServerDataHandler.getInstance();
 
     private static StatusReceiverHandler mStatusReceiverHandler = new StatusReceiverHandler();
 
@@ -80,6 +81,10 @@ public class MainActivity extends AppCompatActivity
 
         mIntentKey = this.getResources().getString(R.string.ToDetailDeviceInfo);
 
+        WifiManager mng = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiInfo info = mng.getConnectionInfo();
+        final String mac = info.getMacAddress();
+
 
         connectedDeiceListView = (ListView) findViewById(R.id.lv_connectionstatus);
         listAdapter = new ConnectedDeviceListAdapter(this);
@@ -94,6 +99,11 @@ public class MainActivity extends AppCompatActivity
 
         //커넥션 모니터 시작
         mThreadManager.ActiveThread(mBlueToothConnectionMonitor);
+
+
+        //ServerConnectionManager 시작
+        mServerDataHandler.setAndroidDeviceMACAddress(mac);
+        mThreadManager.ActiveThread(mServerDataHandler);
 
 
         mDBHandler.InitDB(this);

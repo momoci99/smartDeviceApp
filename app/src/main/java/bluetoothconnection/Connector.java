@@ -3,7 +3,6 @@ package bluetoothconnection;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import db.DBHandler;
 import format.TransactionForm;
 import parser.ParserV3;
+import system.BluetoothConnectionMonitor;
 import transation.TransactionMaster;
 
 /**

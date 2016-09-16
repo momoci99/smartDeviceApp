@@ -16,6 +16,8 @@ import android.util.Log;
 import java.util.List;
 import java.util.UUID;
 
+import system.BluetoothConnectionMonitor;
+
 /**
  * Created by noteMel on 2016-07-06.
  */

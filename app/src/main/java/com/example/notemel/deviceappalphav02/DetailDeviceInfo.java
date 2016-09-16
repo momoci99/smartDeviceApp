@@ -10,6 +10,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import db.DBHandler;
@@ -83,24 +84,33 @@ public class DetailDeviceInfo extends AppCompatActivity {
             TextView logNum = new TextView(this);
             logNum.setText(String.valueOf(sensorDataList.get(i).getLogNum()));
 
+            //
             TextView sensor_1 = new TextView(this);
             sensor_1.setText(sensorDataList.get(i).getSensorName_1());
 
             TextView data_1 = new TextView(this);
-            data_1.setText(String.valueOf(sensorDataList.get(i).getSensorData_1()));
+            String d1_format = String.format(Locale.US,"%.2f",sensorDataList.get(i).getSensorData_1());
+            data_1.setText(String.valueOf(d1_format));
+
+            //
 
 
             TextView sensor_2 = new TextView(this);
             sensor_2.setText(sensorDataList.get(i).getSensorName_2());
 
             TextView data_2 = new TextView(this);
-            data_2.setText(String.valueOf(sensorDataList.get(i).getSensorData_2()));
+            String d2_format = String.format(Locale.US,"%.2f",sensorDataList.get(i).getSensorData_2());
+            data_2.setText(String.valueOf(d2_format));
+
+
 
             TextView sensor_3 = new TextView(this);
             sensor_3.setText(sensorDataList.get(i).getSensorName_3());
 
             TextView data_3 = new TextView(this);
-            data_3.setText(String.valueOf(sensorDataList.get(i).getSensorData_3()));
+            String d3_format = String.format(Locale.US,"%.2f",sensorDataList.get(i).getSensorData_3());
+            data_3.setText(String.valueOf(d3_format));
+
 
             TextView sensor_4 = new TextView(this);
             sensor_4.setText(sensorDataList.get(i).getSensorName_4());
