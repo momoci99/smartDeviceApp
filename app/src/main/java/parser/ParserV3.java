@@ -385,19 +385,19 @@ public class ParserV3 {
             String result;
             switch (index) {
                 case 0:
-                    result = "일산화탄소";
+                    result = "co";
                     break;
                 case 1:
-                    result = "온도";
+                    result = "tempt";
                     break;
                 case 2:
-                    result = "습도";
+                    result = "hum";
                     break;
                 case 3:
-                    result = "산소";
+                    result = "oxy";
                     break;
                 default:
-                    result = "NoMatched";
+                    result = null;
                     break;
             }
             return result;

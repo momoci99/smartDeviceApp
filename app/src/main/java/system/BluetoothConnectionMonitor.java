@@ -1,4 +1,4 @@
-package bluetoothconnection;
+package system;
 
 import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;
@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import bluetoothconnection.BluetoothReconnector;
 import db.DBHandler;
 
 /**
@@ -58,8 +59,11 @@ public class BluetoothConnectionMonitor implements Runnable {
     //마지막으로 신호를 받은 시간
     private static ConcurrentHashMap<String, Long> mLatestReceivedTimeTable = new ConcurrentHashMap<>();
 
-    //현재 살아있는 장치 목록
+    //현재 살아있는 장치 목록 - MACAddress
     private static CopyOnWriteArrayList<String> mAliveDeviceList = new CopyOnWriteArrayList<String>(); //현재 살아있는 장치 목록
+
+    //현재 살아있는 장치 목록 - Name
+    private static CopyOnWriteArrayList<String> mAliveDeviceNameList = new CopyOnWriteArrayList<String>(); //현재 살아있는 장치 목록
 
 
     //재연결 시도중인 기기 리스트
@@ -234,6 +238,7 @@ public class BluetoothConnectionMonitor implements Runnable {
             }
             if (!isReConnected) {
                 mTotalDeviceList.add(MACAddress);
+                mAliveDeviceNameList.add(mBluetoothAdapter.getRemoteDevice(MACAddress).getName());
                 mTotalDeviceNameList.add(mBluetoothAdapter.getRemoteDevice(MACAddress).getName());
 
             }
@@ -257,6 +262,7 @@ public class BluetoothConnectionMonitor implements Runnable {
 
     private synchronized void registerDevice(String MACAddress) {
         mAliveDeviceList.add(MACAddress);
+
         mLatestReceivedTimeTable.put(MACAddress, System.currentTimeMillis());
         updateStatusTable(MACAddress, ALIVE);
         mExecuteUpdateFlag = true;
@@ -295,8 +301,11 @@ public class BluetoothConnectionMonitor implements Runnable {
     }
 
 
-    public CopyOnWriteArrayList getAliveDeviceList() {
+    public CopyOnWriteArrayList<String> getAliveDeviceList() {
         return mAliveDeviceList;
+    }
+    public CopyOnWriteArrayList<String> getAliveDeviceNameList(){
+        return mAliveDeviceNameList;
     }
 
 
