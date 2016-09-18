@@ -5,6 +5,19 @@ package format;
  */
 public class TransactionForm {
 
+
+    public void setError(boolean mError) {
+        this.mIsError = mError;
+    }
+
+    public boolean isError() {
+        return mIsError;
+    }
+
+    private boolean mIsError = false;
+
+
+
     private String address;
     private String name;
     private String[] mSID;
@@ -51,6 +64,7 @@ public class TransactionForm {
         mIntData = null;
         mFloatData = null;
     }
+
 
 
     public void setAddress(String address) {

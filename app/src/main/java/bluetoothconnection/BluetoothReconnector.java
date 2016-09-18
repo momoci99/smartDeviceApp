@@ -18,7 +18,7 @@ public class BluetoothReconnector implements Runnable {
 
     private ThreadManager mThreadManager;
 
-    private BlueToothSocketConnector mSocketConnector;
+    private BlueToothClassic mSocketConnector;
     private BluetoothAdapter mBluetoothAdapter;
 
     static Queue<String> mReconnectStandingQueue = new ConcurrentLinkedQueue<>();
@@ -38,7 +38,7 @@ public class BluetoothReconnector implements Runnable {
             return false;
         }
 
-        mSocketConnector = new BlueToothSocketConnector();
+        mSocketConnector = new BlueToothClassic();
         mSocketConnector.configConnection(mTargetDevice);
 
         mThreadManager = ThreadManager.getInstance();

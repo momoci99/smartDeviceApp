@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import bluetoothconnection.BlueToothSocketConnector;
-import bluetoothconnection.BluetoothLeConnector;
+import bluetoothconnection.BlueToothClassic;
+import bluetoothconnection.BluetoothLe;
 import bluetoothconnection.PresetUUIDList;
 import system.ThreadManager;
 
@@ -53,8 +53,8 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
     private Button testButton;
 
     //통신을 위한 객체
-    private BlueToothSocketConnector mSocketConnector;
-    private BluetoothLeConnector mBluetoothLeConnector;
+    private BlueToothClassic mSocketConnector;
+    private BluetoothLe mBluetoothLeConnector;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
 
     private ThreadManager mThreadManager;
@@ -86,16 +86,16 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (BluetoothLeConnector.ACTION_GATT_CONNECTED.equals(action)) {
+            if (BluetoothLe.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
                 //updateConnectionState(R.string.connected);
                 invalidateOptionsMenu();
-            } else if (BluetoothLeConnector.ACTION_GATT_DISCONNECTED.equals(action)) {
+            } else if (BluetoothLe.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
                 //updateConnectionState(R.string.disconnected);
                 //invalidateOptionsMenu();
                 //clearUI();
-            } else if (BluetoothLeConnector.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+            } else if (BluetoothLe.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
 
                 //현재 현결가능한 GATT서비스 가져오기 ㅇㅎ
@@ -104,7 +104,7 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
                 setNotification();
                 Log.d("받은 서비스","GATT서비스 가져옴");
 
-            } else if (BluetoothLeConnector.ACTION_DATA_AVAILABLE.equals(action)) {
+            } else if (BluetoothLe.ACTION_DATA_AVAILABLE.equals(action)) {
                 //displayData(intent.getStringExtra(BluetoothLeConnector.EXTRA_DATA));
                 //Log.d("받은 데이터",intent.getStringExtra(BluetoothLeConnector.EXTRA_DATA));
             }
@@ -136,7 +136,7 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
 
         mSignalReceiverHandler = new SignalReceiverHandler();
         mContext = getApplicationContext();
-        mBluetoothLeConnector = new BluetoothLeConnector(mContext);
+        mBluetoothLeConnector = new BluetoothLe(mContext);
 
 
 
@@ -177,7 +177,7 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
                         //이미 연결된 기기인지 확인. 이미 연결된 기기가 아니면 연결된 장치목록에 추가
                         // if(!mConnectionInfo.isDuplicatedDevice(mTargetDevice)) {
                         boolean isNormalConnection = true;
-                        mSocketConnector = new BlueToothSocketConnector();
+                        mSocketConnector = new BlueToothClassic();
                         mSocketConnector.configConnection(mTargetDevice,mSignalReceiverHandler,isNormalConnection);
 
                         mThreadManager = ThreadManager.getInstance();
@@ -330,10 +330,10 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
     }
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothLeConnector.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(BluetoothLeConnector.ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(BluetoothLeConnector.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(BluetoothLeConnector.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(BluetoothLe.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLe.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(BluetoothLe.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothLe.ACTION_DATA_AVAILABLE);
         return intentFilter;
     }
 

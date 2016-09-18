@@ -41,9 +41,9 @@ import system.BluetoothConnectionMonitor;
  * Service for managing connection and data communication with a GATT server hosted on a
  * given Bluetooth LE device.
  */
-public class BluetoothLeConnector extends Connector
+public class BluetoothLe extends BluetoothConnector
         implements Runnable {
-    private final static String TAG = BluetoothLeConnector.class.getSimpleName();
+    private final static String TAG = BluetoothLe.class.getSimpleName();
 
     private BluetoothConnectionMonitor mBluetoothConnectionMonitor = new BluetoothConnectionMonitor();
 
@@ -72,7 +72,7 @@ public class BluetoothLeConnector extends Connector
 
     private Context mContext;
 
-    public BluetoothLeConnector(Context context) {
+    public BluetoothLe(Context context) {
         mContext = context;
     }
 

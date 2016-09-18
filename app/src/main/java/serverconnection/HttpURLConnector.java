@@ -11,12 +11,12 @@ import java.net.URL;
 /**
  * Created by Melchior_S on 2016-09-16.
  */
-public class HttpURLConnecter {
+public class HttpURLConnector {
     private final String Token = "c94da62a7d8c4b4b0148b9738ede292b";
     private final String USER_AGENT = "Mozilla/5.0";
     public void sendPost(JSONObject parameters)  {
 
-        String url = "http://hive.codefict.com/hive/TestPath";
+        String url = "http://hive.codefict.com/hive/data";
         URL obj = null;
         try {
             obj = new URL(url);
@@ -27,7 +27,6 @@ public class HttpURLConnecter {
             con.setRequestProperty("User-Agent", USER_AGENT);
             con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
             con.setRequestProperty("Token",Token);
-            //String urlParameters = " {\"device\":\"C8:14:79:E3:65:33\",\"data\":[{\"nid\":\"mOmOcus\",\"oxy\":25.5,\"tempt\":29.7,\"hum\":40.66,\"time\":\"2016-09-16 10:24:00\"}]}";
             String urlParameters = parameters.toString();
             // Send post request
             con.setDoOutput(true);

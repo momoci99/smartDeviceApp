@@ -116,7 +116,8 @@ public class DetailDeviceInfo extends AppCompatActivity {
             sensor_4.setText(sensorDataList.get(i).getSensorName_4());
 
             TextView data_4 = new TextView(this);
-            data_4.setText(String.valueOf(sensorDataList.get(i).getSensorData_4()));
+            String d4_format = String.format(Locale.US,"%.2f",sensorDataList.get(i).getSensorData_4());
+            data_4.setText(String.valueOf(d4_format));
 
             TextView time = new TextView(this);
             time.setText(String.valueOf(sensorDataList.get(i).getTime()));
