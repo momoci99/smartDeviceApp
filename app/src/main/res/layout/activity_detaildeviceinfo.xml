@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Disconnect"
         android:id="@+id/button"
-        android:layout_below="@+id/textView2" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/BoardVer"
+        android:layout_below="@+id/textView2"
+        android:text="@string/Disconnect" />
+
+    <TextView
         android:id="@+id/textView2"
-        android:textSize="25sp"
-        android:layout_marginTop="119dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/button" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:layout_alignEnd="@+id/button"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="119dp"
+        android:text="@string/BoardVer"
+        android:textSize="25sp" />
+
+    <TextView
         android:id="@+id/tv_board_ver"
-        android:textSize="25sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/button"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="89dp" />
+        android:layout_marginEnd="89dp"
+        android:text="New Text"
+        android:textSize="25sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/button">
+        android:layout_below="@+id/button"
+        android:layout_gravity="center_horizontal">
 
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/scrollView"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true" >
+            android:layout_alignParentStart="true">
 
             <TableLayout
                 android:id="@+id/tbl_sensordata"
@@ -54,10 +56,6 @@
                 android:layout_height="match_parent"></TableLayout>
 
         </ScrollView>
-
-
-
-
 
 
     </RelativeLayout>

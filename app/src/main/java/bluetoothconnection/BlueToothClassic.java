@@ -15,13 +15,12 @@ import java.util.UUID;
 
 import format.TransactionForm;
 import parser.ParserV3;
-import system.BluetoothConnectionMonitor;
-import transation.TransactionMaster;
+
 
 /**
  * Created by noteMel on 2016-07-04.
  */
-public class BlueToothSocketConnector extends Connector implements Runnable {
+public class BlueToothClassic extends BluetoothConnector implements Runnable {
 
     //통신을 위한 객체
 
@@ -51,11 +50,6 @@ public class BlueToothSocketConnector extends Connector implements Runnable {
 
     private ParserV3 mParser = new ParserV3();
     private TransactionForm mTransactionForm = new TransactionForm();
-    private TransactionMaster mTransactionMaster = new TransactionMaster();
-
-
-    private BluetoothConnectionMonitor mBluetoothConnectionMonitor = new BluetoothConnectionMonitor();
-
 
     private Handler mTargetActivityHandler = null;
 

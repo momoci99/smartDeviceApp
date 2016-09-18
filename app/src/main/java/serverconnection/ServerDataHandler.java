@@ -18,10 +18,10 @@ import system.BluetoothConnectionMonitor;
 public class ServerDataHandler implements Runnable {
 
     private final long mSendInterval = 5000;
-    private long pastTime =0;
+    private long pastTime = 0;
     private String pastTimeString;
 
-    private HttpURLConnecter mHttpURLConnection = new HttpURLConnecter();
+    private HttpURLConnector mHttpURLConnection = new HttpURLConnector();
     private BluetoothConnectionMonitor mBluetoothConnectionMonitor = BluetoothConnectionMonitor.getInstance();
     private DBHandler mDBHandler = DBHandler.getInstance();
     private JsonHandler jsonHandler = new JsonHandler();
@@ -44,28 +44,23 @@ public class ServerDataHandler implements Runnable {
         }
         return objectInstance;
     }
-    public void setAndroidDeviceMACAddress(String mac)
-    {
+
+    public void setAndroidDeviceMACAddress(String mac) {
         mAndroidDeviceMACAddress = mac;
     }
 
 
-    public JSONObject transactionCreater(long currentTime)
-    {
-
-
+    public JSONObject transactionCreator(String currentTime, String pastTime) {
         CopyOnWriteArrayList<JSONObject> JSONObjectList = new CopyOnWriteArrayList<>();
         CopyOnWriteArrayList<CopyOnWriteArrayList<DBResultForm>> dbResultList = new CopyOnWriteArrayList<CopyOnWriteArrayList<DBResultForm>>();
 
         mAliveDeviceList = mBluetoothConnectionMonitor.getAliveDeviceNameList();
 
-        if(mAliveDeviceList.size()>0) {
-
-            System.out.println("현재 시간 " + currentTime);
+        if (mAliveDeviceList.size() > 0) {
 
             for (int i = 0; i < mAliveDeviceList.size(); i++) {
 
-                dbResultList.add(mDBHandler.getSensorDataListTimeCondition(mAliveDeviceList.get(i), currentTime));
+                dbResultList.add(mDBHandler.getSensorDataListTimeCondition(mAliveDeviceList.get(i), currentTime, pastTime));
             }
 
             System.out.println("가져온장치갯수 : " + dbResultList.size());
@@ -76,73 +71,32 @@ public class ServerDataHandler implements Runnable {
                     JSONObjectList.add(jsonHandler.createJSONObjectSensorData(dbResultList.get(j).get(k)));
                 }
             }
-            return jsonHandler.createJSONObjectForServer(mAndroidDeviceMACAddress,JSONObjectList);
-        }
-        else
-        {
+            return jsonHandler.createJSONObjectForServer(mAndroidDeviceMACAddress, JSONObjectList);
+        } else {
             return null;
         }
 
     }
-    public JSONObject transactionCreater(String currentTime,String pastTime)
-    {
 
-
-        CopyOnWriteArrayList<JSONObject> JSONObjectList = new CopyOnWriteArrayList<>();
-        CopyOnWriteArrayList<CopyOnWriteArrayList<DBResultForm>> dbResultList = new CopyOnWriteArrayList<CopyOnWriteArrayList<DBResultForm>>();
-
-        mAliveDeviceList = mBluetoothConnectionMonitor.getAliveDeviceNameList();
-
-        if(mAliveDeviceList.size()>0) {
-
-            System.out.println("현재 시간 " + currentTime);
-
-            for (int i = 0; i < mAliveDeviceList.size(); i++) {
-
-                dbResultList.add(mDBHandler.getSensorDataListTimeCondition(mAliveDeviceList.get(i), currentTime,pastTime));
-            }
-
-            System.out.println("가져온장치갯수 : " + dbResultList.size());
-            for (int j = 0; j < dbResultList.size(); j++) {
-
-                System.out.println("가져온장치의 리스트 크기 : " + dbResultList.get(j).size());
-                for (int k = 0; k < dbResultList.get(j).size(); k++) {
-                    JSONObjectList.add(jsonHandler.createJSONObjectSensorData(dbResultList.get(j).get(k)));
-                }
-            }
-            return jsonHandler.createJSONObjectForServer(mAndroidDeviceMACAddress,JSONObjectList);
-        }
-        else
-        {
-            return null;
-        }
-
-    }
     @Override
     public void run() {
 
-        while(true)
-        {
+        while (true) {
             long currentTime = System.currentTimeMillis();
 
-            if(currentTime - pastTime> mSendInterval)
-            {
+            if (currentTime - pastTime > mSendInterval) {
                 Calendar calendar = Calendar.getInstance();
                 java.util.Date date = calendar.getTime();
-                String today = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA).format(date));
-                //JSONObject transactionJSONObject = transactionCreater(currentTime);
+                String todayTimeString = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA).format(date));
 
 
-                JSONObject transactionJSONObject = transactionCreater(today,pastTimeString);
-                if(transactionJSONObject!=null)
-                {
-                    //System.out.println(transactionJSONObject.toString());
+                JSONObject transactionJSONObject = transactionCreator(todayTimeString, pastTimeString);
+                if (transactionJSONObject != null) {
                     mHttpURLConnection.sendPost(transactionJSONObject);
                 }
 
-
                 pastTime = currentTime;
-                pastTimeString = today;
+                pastTimeString = todayTimeString;
             }
 
         }

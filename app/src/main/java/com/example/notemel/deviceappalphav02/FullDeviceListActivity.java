@@ -32,10 +32,12 @@ public class FullDeviceListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_full_device_list);
         mIntentKey = this.getResources().getString(R.string.ToDetailDeviceInfo);
 
+        /*Init UI*/
         mFullDeviceListView = (ListView) findViewById(R.id.lv_full_device_list);
         mFullDeviceListAdapter = new FullDeviceListAdapter(this);
         mFullDeviceListView.setAdapter(mFullDeviceListAdapter);
         mFullDeviceListView.setOnItemClickListener(mItemClickListener);
+
 
         copyFullDeviceList();
         mFullDeviceListAdapter.setData(mFullDeviceList);
@@ -43,6 +45,7 @@ public class FullDeviceListActivity extends AppCompatActivity {
 
     }
 
+    //Copy FullDeviceList From Monitor
     public void copyFullDeviceList() {
         CopyOnWriteArrayList<String> fullDeviceList = mDBHandler.getFullDeviceList();
         for (int i = 0; i < fullDeviceList.size(); i++) {

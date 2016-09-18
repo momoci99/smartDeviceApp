@@ -12,5 +12,5 @@
         android:id="@+id/lv_full_device_list"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="70sp" />
+        android:layout_marginTop="100sp" />
 </RelativeLayout>

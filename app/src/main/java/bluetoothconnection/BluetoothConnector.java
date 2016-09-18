@@ -12,12 +12,11 @@ import db.DBHandler;
 import format.TransactionForm;
 import parser.ParserV3;
 import system.BluetoothConnectionMonitor;
-import transation.TransactionMaster;
 
 /**
  * Created by Melchior_S on 2016-09-02.
  */
-public class Connector {
+public class BluetoothConnector {
 
     //0xFF,0xFF 감지용 변수
     private final byte EOF = (byte) 0xFF;
@@ -29,7 +28,7 @@ public class Connector {
     private ByteBuffer accByteBuffer = ByteBuffer.allocate(1024);
 
     private TransactionForm mTransactionForm = new TransactionForm();
-    private TransactionMaster mTransactionMaster = new TransactionMaster();
+
 
     private Context mContext;
 
@@ -85,8 +84,12 @@ public class Connector {
             mTransactionForm.setIntData(mParser.getIntData());
             mTransactionForm.setSID(mParser.getSID());
             mTransactionForm.setBoardVer(mParser.getBoardVer());
-            mTransactionMaster.offerQueue(mTransactionForm);
 
+
+        }
+        else
+        {
+            mTransactionForm.setError(true);
         }
         slicedBytes.clear();
     }
@@ -132,8 +135,19 @@ public class Connector {
     }
     private void updateTransactionToDB()
     {
-        mDBHandler.insertRow_SensorTable(mTransactionForm);
-        mTransactionForm.reset();
+        if(mTransactionForm!=null && !mTransactionForm.isError())
+        {
+            try{
+                mDBHandler.insertRow_SensorTable(mTransactionForm);
+                mTransactionForm.reset();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
 }
