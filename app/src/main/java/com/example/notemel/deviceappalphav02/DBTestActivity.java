@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import db.DBHandler;
+import db.DBCommander;
 import format.DBResultForm;
 import json.JsonHandler;
 
@@ -25,7 +25,7 @@ public class DBTestActivity extends AppCompatActivity {
     private Button mBtn_ShowData;
     private Button mBtn_TestJson;
 
-    private DBHandler mDbHandler = DBHandler.getInstance();
+    private DBCommander mDbHandler = DBCommander.getInstance();
     private JsonHandler mJsonHandler = new JsonHandler();
 
     private CopyOnWriteArrayList<String> mFullDeviceList = new CopyOnWriteArrayList<>();

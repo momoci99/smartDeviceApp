@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import adapter.ConnectedDeviceListAdapter;
 import system.BluetoothConnectionMonitor;
 import bluetoothconnection.BluetoothReconnector;
-import db.DBHandler;
+import db.DBCommander;
 import serverconnection.ServerDataHandler;
 import system.ThreadManager;
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
 
     /*DB*/
-    private DBHandler mDBHandler = DBHandler.getInstance();
+    private DBCommander mDBHandler = DBCommander.getInstance();
 
 
     @Override

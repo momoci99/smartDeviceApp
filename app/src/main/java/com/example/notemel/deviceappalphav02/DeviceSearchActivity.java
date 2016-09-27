@@ -1,5 +1,6 @@
 package com.example.notemel.deviceappalphav02;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -55,7 +56,6 @@ public class DeviceSearchActivity extends AppCompatActivity {
         searchBtn            = (Button) findViewById(R.id.bt_scan);
         listAdapter          = new SearchedDeviceListAdapter(this);
 
-
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         //이미 켜진상태라면 스위치가 on쪽으로 향함
         if (mBluetoothAdapter.isEnabled()) {
@@ -65,6 +65,15 @@ public class DeviceSearchActivity extends AppCompatActivity {
             bluetoothOnOffSwitch.setChecked(false);
             searchBtn.setEnabled(false);
         }
+
+        // Quick permission check
+        int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
+        permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
+        if (permissionCheck != 0) {
+
+            this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001); //Any number
+        }
+
 
         bluetoothOnOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
