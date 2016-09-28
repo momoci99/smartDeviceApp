@@ -15,7 +15,7 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="FullDeviceList" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_stats"
             android:icon="@drawable/ic_menu_manage"
             android:title="Stats" />
     </group>

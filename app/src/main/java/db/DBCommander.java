@@ -41,6 +41,8 @@ public class DBCommander {
             "SNAME_4", "DATA_4",
             "TIME"};
 
+    private static final String[] mSensorElementData = {"Temperature","Humidity","Oxygen","CO"};
+
     private Context mContext;
 
     private volatile static DBCommander objectInstance;
@@ -56,7 +58,10 @@ public class DBCommander {
         }
         return objectInstance;
     }
-
+    public static String[] getSensorElementData()
+    {
+        return mSensorElementData;
+    }
 
     /*
         Table 생성에 필요한 각종 텍스트

@@ -59,6 +59,13 @@
             android:theme="@style/AppTheme.NoActionBar"
             >
         </activity>
+
+        <activity
+            android:name=".StatsActivity"
+            android:label="StatsActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+        </activity>
     </application>
 
 </manifest>
