@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import adapter.ConnectedDeviceListAdapter;
 import system.BluetoothConnectionMonitor;
 import bluetoothconnection.BluetoothReconnector;
-import db.DBHandler;
+import db.DBCommander;
 import serverconnection.ServerDataHandler;
 import system.ThreadManager;
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
 
     /*DB*/
-    private DBHandler mDBHandler = DBHandler.getInstance();
+    private DBCommander mDBHandler = DBCommander.getInstance();
 
 
     @Override
@@ -159,8 +159,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
             Intent intent = new Intent(MainActivity.this, FullDeviceListActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_stats) {
+            Intent intent = new Intent(MainActivity.this, StatsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

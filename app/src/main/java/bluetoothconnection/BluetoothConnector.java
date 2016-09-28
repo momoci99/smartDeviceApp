@@ -8,7 +8,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import db.DBHandler;
+import db.DBCommander;
 import format.TransactionForm;
 import parser.ParserV3;
 import system.BluetoothConnectionMonitor;
@@ -34,7 +34,7 @@ public class BluetoothConnector {
 
     private BluetoothDevice mBluetoothDevice;
 
-    private DBHandler mDBHandler = DBHandler.getInstance();
+    private DBCommander mDBHandler = DBCommander.getInstance();
 
     /**
      * @param bluetoothDevice for Bluetooth Classic
