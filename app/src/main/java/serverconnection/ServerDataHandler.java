@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import db.DBHandler;
+import db.DBCommander;
 import format.DBResultForm;
 import json.JsonHandler;
 import system.BluetoothConnectionMonitor;
@@ -23,7 +23,7 @@ public class ServerDataHandler implements Runnable {
 
     private HttpURLConnector mHttpURLConnection = new HttpURLConnector();
     private BluetoothConnectionMonitor mBluetoothConnectionMonitor = BluetoothConnectionMonitor.getInstance();
-    private DBHandler mDBHandler = DBHandler.getInstance();
+    private DBCommander mDBHandler = DBCommander.getInstance();
     private JsonHandler jsonHandler = new JsonHandler();
 
     private String mAndroidDeviceMACAddress;

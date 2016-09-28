@@ -10,14 +10,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import bluetoothconnection.BluetoothReconnector;
-import db.DBHandler;
+import db.DBCommander;
 
 /**
  * Created by noteMel on 2016-07-12.
  */
 public class BluetoothConnectionMonitor implements Runnable {
 
-    private DBHandler mDBDbHandler = DBHandler.getInstance();
+    private DBCommander mDBDbHandler = DBCommander.getInstance();
     private BluetoothAdapter mBluetoothAdapter;
 
 

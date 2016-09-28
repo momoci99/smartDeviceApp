@@ -1,24 +1,14 @@
 package com.example.notemel.deviceappalphav02;
 
-import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.util.Locale;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import db.DBHandler;
-import format.DBResultForm;
 import fragment.SensorDataTableFragment;
 
 /**
@@ -28,11 +18,14 @@ public class DetailDeviceInfo extends AppCompatActivity {
 
 
     private static SensorDataTableFragment mSensorDataTableFragment;
+    private FragmentManager mFragmentManager ;
 
     TextView boardVerTV;
     String mSelectedDevice;
     String mIntentKey;
     Button loadDataBtn;
+
+    private boolean mDoReload = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,19 +40,35 @@ public class DetailDeviceInfo extends AppCompatActivity {
         toolbar.setTitle(mSelectedDevice + " Info");
         setSupportActionBar(toolbar);
 
-        boardVerTV = (TextView)findViewById(R.id.tv_board_ver);
 
-        loadDataBtn = (Button) findViewById(R.id.btn_loaddata) ;
+
+        mFragmentManager = getFragmentManager();
+
+        loadDataBtn = (Button) findViewById(R.id.btn_loaddata);
+
+        mSensorDataTableFragment = new SensorDataTableFragment();
+        mSensorDataTableFragment.setDeviceName(mSelectedDevice);
+
+
+
         loadDataBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSensorDataTableFragment = new SensorDataTableFragment();
-                mSensorDataTableFragment.setDeviceName(mSelectedDevice);
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                if(!mDoReload)
+                {
+                    fragmentTransaction.add(R.id.sensordata_container,mSensorDataTableFragment);
+                    fragmentTransaction.commit();
+                    mDoReload =true;
+                }
+                else
+                {
+                    fragmentTransaction.detach(mSensorDataTableFragment);
+                    fragmentTransaction.attach(mSensorDataTableFragment);
+                    fragmentTransaction.commit();
+                }
 
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.add(R.id.sensordata_container,mSensorDataTableFragment);
-                fragmentTransaction.commit();
+
 
             }
         });

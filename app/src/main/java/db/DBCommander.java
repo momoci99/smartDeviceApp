@@ -3,9 +3,9 @@ package db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.transition.Transition;
 import android.util.Log;
 
 import com.example.notemel.deviceappalphav02.R;
@@ -20,9 +20,9 @@ import format.TransactionForm;
  */
 
 
-public class DBHandler {
+public class DBCommander {
 
-    private static final String TAG = "DBHandler";
+    private static final String TAG = "DBCommander";
 
     private SQLiteDatabase mDB = null;
     private DBOpenHelper mDBHelper;
@@ -43,13 +43,13 @@ public class DBHandler {
 
     private Context mContext;
 
-    private volatile static DBHandler objectInstance;
+    private volatile static DBCommander objectInstance;
 
-    public static DBHandler getInstance() {
+    public static DBCommander getInstance() {
         if (objectInstance == null) {
-            synchronized (DBHandler.class) {
+            synchronized (DBCommander.class) {
                 if (objectInstance == null) {
-                    objectInstance = new DBHandler();
+                    objectInstance = new DBCommander();
 
                 }
             }
@@ -193,7 +193,63 @@ public class DBHandler {
         return DBResultFormList;
     }
 
+    public long getSensorDataRowCount(String tableName)
+    {
+        return DatabaseUtils.queryNumEntries(mDB,"'" + tableName + "'");
 
+    }
+
+    /**
+     *
+     * @param deviceName - table name
+     * @param count - number of row
+     * @param offsetNumber - offset
+     * @return offset을 기준으로 count만큼의 row를 반환한다.
+     */
+    public CopyOnWriteArrayList<DBResultForm> getSensorDataList(String deviceName, String count, String offsetNumber)
+    {
+        CopyOnWriteArrayList<DBResultForm> DBResultFormList = new CopyOnWriteArrayList<>();
+        Cursor dataQueryResult =
+                mDB.query("'" + deviceName + "'", mColumnsSensorData, null, null, null, null, null,offsetNumber+","+count);
+
+
+        while (dataQueryResult.moveToNext()) {
+            int logNumber = dataQueryResult.getInt(0);
+
+            String devicename = dataQueryResult.getString(1);
+            int BoardVer = dataQueryResult.getInt(2);
+            String SNAME_1 = dataQueryResult.getString(3);
+            double DATA_1 = dataQueryResult.getDouble(4);
+
+            String SNAME_2 = dataQueryResult.getString(5);
+            double DATA_2 = dataQueryResult.getDouble(6);
+
+            String SNAME_3 = dataQueryResult.getString(7);
+            double DATA_3 = dataQueryResult.getDouble(8);
+
+            String SNAME_4 = dataQueryResult.getString(9);
+            double DATA_4 = dataQueryResult.getDouble(10);
+
+            String time = dataQueryResult.getString(11);
+
+
+            DBResultFormList.add(new DBResultForm(logNumber, devicename, BoardVer,
+                    SNAME_1, DATA_1,
+                    SNAME_2, DATA_2,
+                    SNAME_3, DATA_3,
+                    SNAME_4, DATA_4,
+                    time));
+        }
+        dataQueryResult.close();
+        return DBResultFormList;
+
+    }
+
+    /**
+     *
+     * @param deviceName
+     * @return SensorDataList
+     */
     public CopyOnWriteArrayList<DBResultForm> getSensorDataList(String deviceName) {
         CopyOnWriteArrayList<DBResultForm> DBResultFormList = new CopyOnWriteArrayList<>();
         Cursor dataQueryResult = mDB.query("'" + deviceName + "'", mColumnsSensorData, null, null, null, null, null);

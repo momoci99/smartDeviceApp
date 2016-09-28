@@ -11,7 +11,7 @@ import android.widget.ListView;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import adapter.FullDeviceListAdapter;
-import db.DBHandler;
+import db.DBCommander;
 
 /**
  * Created by Melchior_S on 2016-09-07.
@@ -19,7 +19,7 @@ import db.DBHandler;
 public class FullDeviceListActivity extends AppCompatActivity {
 
     private static String TAG = "FullDeviceListActivity";
-    private DBHandler mDBHandler = DBHandler.getInstance();
+    private DBCommander mDBHandler = DBCommander.getInstance();
     private CopyOnWriteArrayList<String> mFullDeviceList = new CopyOnWriteArrayList<>();
 
     static ListView mFullDeviceListView;
