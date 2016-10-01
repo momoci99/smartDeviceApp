@@ -160,12 +160,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, FullDeviceListActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_stats) {
-            Intent intent = new Intent(MainActivity.this, StatsActivity.class);
+            Intent intent = new Intent(MainActivity.this, ChartOptionSelectActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

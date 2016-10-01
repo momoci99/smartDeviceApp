@@ -79,7 +79,8 @@
         android:text="◀"
         android:id="@+id/btn_prev_sdata"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/btn_next_sdata" />
 
     <TextView
         android:layout_width="wrap_content"

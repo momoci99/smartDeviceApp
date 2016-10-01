@@ -20,7 +20,8 @@ public class ElementSelectListReAdapter extends RecyclerView.Adapter<ElementSele
 
     private final String TAG = "ES.ListReAdapter";
     private ArrayList<String> mDataSet;
-    public static int mSelectedItem = -1;
+    private int mSelectedItemNumber = -1;
+    public static String mSelectedElement = "";
 
 
     public ElementSelectListReAdapter (ArrayList<String> dataSet)
@@ -42,7 +43,7 @@ public class ElementSelectListReAdapter extends RecyclerView.Adapter<ElementSele
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mTV_elementName.setText(mDataSet.get(position));
-        holder.mRBTN_elementSelection.setChecked(position == mSelectedItem);
+        holder.mRBTN_elementSelection.setChecked(position == mSelectedItemNumber);
         //RadioButton?
     }
 
@@ -51,11 +52,11 @@ public class ElementSelectListReAdapter extends RecyclerView.Adapter<ElementSele
         return mDataSet.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTV_elementName;
-        public RadioButton mRBTN_elementSelection;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView mTV_elementName;
+        RadioButton mRBTN_elementSelection;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             mTV_elementName = (TextView) itemView.findViewById(R.id.tv_element_select);
@@ -63,9 +64,12 @@ public class ElementSelectListReAdapter extends RecyclerView.Adapter<ElementSele
             View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mSelectedItem = getAdapterPosition();
+                    mSelectedItemNumber = getAdapterPosition();
+                    mSelectedElement = mDataSet.get(getAdapterPosition());
+
                     notifyItemRangeChanged(0, mDataSet.size());
-                    Log.e(TAG,"Position"+mSelectedItem);
+                    Log.e(TAG,"selected item : "+mDataSet.get(getAdapterPosition()));
+
                 }
             };
             itemView.setOnClickListener(clickListener);

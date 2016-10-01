@@ -33,8 +33,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ry_element_list"
-                android:layout_below="@+id/textView6"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/btn_show_chart"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/btn_show_chart"
+                android:layout_alignEnd="@+id/btn_show_chart" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show Chart"
+                android:id="@+id/btn_show_chart"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
 
 
         </RelativeLayout>
@@ -58,7 +69,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/ry_chart_device_name_list"
                 android:layout_below="@+id/textView2"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" />
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
