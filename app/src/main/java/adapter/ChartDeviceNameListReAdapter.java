@@ -6,22 +6,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.notemel.deviceappalphav02.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by noteMel on 2016-09-28.
  */
 public class ChartDeviceNameListReAdapter extends RecyclerView.Adapter<ChartDeviceNameListReAdapter.ViewHolder>{
 
-    private final String TAG = "CDN.ListReAdapter";
+    private static final String TAG = "CDN.ListReAdapter";
     private ArrayList<String> mDataSet;
-    private ArrayList<String> mCheckList = new ArrayList<>();
-    private int mSlectPosition = -1;
+
+    public static ArrayList<String> mSelectedDeviceList = new ArrayList<>();
 
 
     public ChartDeviceNameListReAdapter (ArrayList dataSet){
@@ -31,7 +34,7 @@ public class ChartDeviceNameListReAdapter extends RecyclerView.Adapter<ChartDevi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_chart_element_select, parent, false);
+                .inflate(R.layout.list_item_chart_devicelist, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
 
@@ -39,12 +42,28 @@ public class ChartDeviceNameListReAdapter extends RecyclerView.Adapter<ChartDevi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        mSlectPosition = position;
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+
         holder.mTV_elementName.setText(mDataSet.get(position));
+        holder.mCKB_deviceSelection.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.e(TAG, holder.getAdapterPosition() + "번 체크박스");
+                Log.e(TAG, isChecked + "입니다.");
+
+                if(isChecked)
+                {
+                    mSelectedDeviceList.add(mDataSet.get(holder.getAdapterPosition()));
+                }
+                else
+                {
+                    mSelectedDeviceList.remove(mDataSet.get(holder.getAdapterPosition()));
+                }
 
 
-        //RadioButton?
+            }
+        });
+
     }
 
     @Override
@@ -52,7 +71,7 @@ public class ChartDeviceNameListReAdapter extends RecyclerView.Adapter<ChartDevi
         return mDataSet.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTV_elementName;
         public CheckBox mCKB_deviceSelection;
 
@@ -66,13 +85,6 @@ public class ChartDeviceNameListReAdapter extends RecyclerView.Adapter<ChartDevi
 
         }
 
-        @Override
-        public void onClick(View view) {
-            if(mCKB_deviceSelection.isChecked());
-            {
-                Log.e(TAG,"got!" + mSlectPosition);
-            }
-            //mCheckList.add(mDataSet.get(mSlectPosition));
-    }
+
     }
 }

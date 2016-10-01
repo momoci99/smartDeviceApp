@@ -4,33 +4,22 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/ConnectSensor"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/nav_connect_sensor"
             android:title="ConnectSensor" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/nav_check_server"
             android:title="CheckServer(working)" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="FullDeviceList" />
+            android:icon="@drawable/nav_device_info"
+            android:title="DeviceInfo" />
         <item
             android:id="@+id/nav_stats"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/nav_stats"
             android:title="Stats" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+
 
 </menu>

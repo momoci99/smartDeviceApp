@@ -61,8 +61,15 @@
         </activity>
 
         <activity
-            android:name=".StatsActivity"
-            android:label="StatsActivity"
+            android:name=".ChartOptionSelectActivity"
+            android:label="ChartOptionSelectActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+        </activity>
+
+        <activity
+            android:name=".ChartActivity"
+            android:label="ChartActivity"
             android:theme="@style/AppTheme.NoActionBar"
             >
         </activity>
