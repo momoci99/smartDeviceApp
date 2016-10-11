@@ -17,7 +17,7 @@ import db.DBCommander;
  */
 public class BluetoothConnectionMonitor implements Runnable {
 
-    private DBCommander mDBDbHandler = DBCommander.getInstance();
+
     private BluetoothAdapter mBluetoothAdapter;
 
 
@@ -197,9 +197,6 @@ public class BluetoothConnectionMonitor implements Runnable {
                 updateStatusTable(MACAddress, RETRYING);
                 mExecuteUpdateFlag = true;
                 break;
-            } else {
-                //정상적인 - 살아있는경우
-
             }
         }
 
@@ -365,7 +362,7 @@ public class BluetoothConnectionMonitor implements Runnable {
 
         if (mTotalDeviceList.size() != 0) {
 
-            mDBDbHandler.insertRow_DeviceList(nameList);
+            DBCommander.insertRow_DeviceList(nameList);
         }
 
     }

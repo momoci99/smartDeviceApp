@@ -74,19 +74,19 @@ public class BlueToothClassic extends BluetoothConnector implements Runnable {
         setIsNormalConnection(false);
     }
 
-    public void setBluetoothDevice(BluetoothDevice mBluetoothDevice) {
+    private void setBluetoothDevice(BluetoothDevice mBluetoothDevice) {
         this.mBluetoothDevice = mBluetoothDevice;
     }
 
-    public void setTargetActivityHandler(Handler mTargetActivityHandler) {
+    private void setTargetActivityHandler(Handler mTargetActivityHandler) {
         this.mTargetActivityHandler = mTargetActivityHandler;
     }
 
-    public void setIsNormalConnection(boolean isNormalConnection) {
+    private void setIsNormalConnection(boolean isNormalConnection) {
         this.isNormalConnection = isNormalConnection;
     }
 
-    public boolean createConnection() {
+    private boolean createConnection() {
         boolean isSuccess = false;
 
         isSuccess = setupSocket();
@@ -102,7 +102,7 @@ public class BlueToothClassic extends BluetoothConnector implements Runnable {
     }
 
 
-    public boolean setupSocket() {
+    private boolean setupSocket() {
         boolean isSuccess = false;
         try {
             mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(mUUID);
@@ -115,7 +115,7 @@ public class BlueToothClassic extends BluetoothConnector implements Runnable {
         return isSuccess;
     }
 
-    public boolean getStream() {
+    private boolean getStream() {
         boolean isSuccess = false;
         try {
             mOutputStream = mBluetoothSocket.getOutputStream();
@@ -129,7 +129,7 @@ public class BlueToothClassic extends BluetoothConnector implements Runnable {
     }
 
     /*기기와 연결이 끊어지면 소켓 및 스트림이 끊어진다. 자동으로 복구는 안됨     */
-    public void processData() {
+    private void processData() {
 
         while (mBluetoothSocket != null) {
 
@@ -182,7 +182,7 @@ public class BlueToothClassic extends BluetoothConnector implements Runnable {
         }
 
     }
-    public void SendSignalToActivity(int Signal) {
+    private void SendSignalToActivity(int Signal) {
         Message SignalMessage = Message.obtain();
         SignalMessage.what = Signal;
         mTargetActivityHandler.sendMessage(SignalMessage);

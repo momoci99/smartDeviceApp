@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.notemel.deviceappalphav02.R;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -20,9 +21,9 @@ import format.DBResultForm;
 public class SensorDataListReAdapter extends RecyclerView.Adapter<SensorDataListReAdapter.ViewHolder> {
 
     private final String TAG = "S.DListReAdapter";
-    private CopyOnWriteArrayList<DBResultForm> mDataSet;
+    private ArrayList<DBResultForm> mDataSet;
 
-    public SensorDataListReAdapter(CopyOnWriteArrayList<DBResultForm> dataSet)
+    public SensorDataListReAdapter(ArrayList<DBResultForm> dataSet)
     {
         mDataSet = dataSet;
     }

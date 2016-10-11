@@ -22,7 +22,7 @@ import java.util.HashMap;
  * This class includes a small subset of standard GATT attributes for demonstration purposes.
  */
 public class PresetUUIDList {
-    private static HashMap<String, String> attributes = new HashMap();
+    private static HashMap<String, String> attributes = new HashMap<String,String>();
     public static String BLE_DEVICE_CHARACTERISTIC_UUID = "bcc9bc68-dea4-4199-9dbc-4f7f243454fc";//커스텀 코드
 
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";

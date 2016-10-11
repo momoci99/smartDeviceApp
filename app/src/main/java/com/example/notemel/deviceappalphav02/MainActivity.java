@@ -58,8 +58,7 @@ public class MainActivity extends AppCompatActivity
     private static ConcurrentHashMap<String, String> mConnectionStatusTable = new ConcurrentHashMap<>();
 
 
-    /*DB*/
-    private DBCommander mDBHandler = DBCommander.getInstance();
+
 
 
     @Override
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity
         mThreadManager.ActiveThread(mServerDataHandler);
 
 
-        mDBHandler.InitDB(this);
+        DBCommander.InitDB(this);
 
         //리커넥터 시작
         //mThreadManager.ActiveThread(mBluetoothReconnector);
@@ -211,7 +210,7 @@ public class MainActivity extends AppCompatActivity
             //Log.e(TAG,"기기목록갯수 endCopy : "+ mTotalDeviceList.size());
         }
 
-        public void updateConnectedDeviceList() {
+        private void updateConnectedDeviceList() {
             //Log.e(TAG,"기기목록갯수 beforeUpdate : "+ mTotalDeviceList.size());
             if (mTotalDeviceList.size() > 0) {
                 listAdapter.setData(mTotalDeviceList, mTotalDeviceNameList, mConnectionStatusTable);

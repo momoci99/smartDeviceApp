@@ -34,26 +34,26 @@ public class BluetoothConnector {
 
     private BluetoothDevice mBluetoothDevice;
 
-    private DBCommander mDBHandler = DBCommander.getInstance();
+
 
     /**
      * @param bluetoothDevice for Bluetooth Classic
      */
     public void initConnector(BluetoothDevice bluetoothDevice) {
         mBluetoothDevice = bluetoothDevice;
-        mDBHandler.createDataTable(bluetoothDevice.getName());
+        DBCommander.createDataTable(bluetoothDevice.getName());
 
     }
 
     /**
      * for Bluetooth LE
      *
-     * @param bluetoothAdapter
-     * @param bluetoothDeviceAddress
+     * @param bluetoothAdapter for Bluetooth Low Energy
+     * @param bluetoothDeviceAddress for Bluetooth Low Energy
      */
     public void initConnector(BluetoothAdapter bluetoothAdapter, String bluetoothDeviceAddress) {
         mBluetoothDevice = bluetoothAdapter.getRemoteDevice(bluetoothDeviceAddress);
-        mDBHandler.createDataTable(mBluetoothDevice.getName());
+        DBCommander.createDataTable(mBluetoothDevice.getName());
 
     }
 
@@ -138,7 +138,7 @@ public class BluetoothConnector {
         if(mTransactionForm!=null && !mTransactionForm.isError())
         {
             try{
-                mDBHandler.insertRow_SensorTable(mTransactionForm);
+                DBCommander.insertRow_SensorTable(mTransactionForm);
                 mTransactionForm.reset();
             }
             catch (Exception e)
