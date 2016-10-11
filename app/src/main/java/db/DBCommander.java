@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+
 
 import com.example.notemel.deviceappalphav02.R;
 
@@ -25,10 +25,10 @@ import format.TransactionForm;
 
 public class DBCommander {
 
-    private static final String TAG = "DBCommander";
+    private static String TAG = "DBCommander";
 
     private static SQLiteDatabase mDB = null;
-    private DBOpenHelper mDBHelper;
+    private static DBOpenHelper mDBHelper;
 
     //DB 초기화에 필요한 변수들
     private static final String mDBName = "SmartDevice.db";
@@ -48,21 +48,8 @@ public class DBCommander {
 
     private static final String[] mSensorElementData = {"co","tempt","hum","oxy"};
 
-    private Context mContext;
 
-    private volatile static DBCommander objectInstance;
 
-    public static DBCommander getInstance() {
-        if (objectInstance == null) {
-            synchronized (DBCommander.class) {
-                if (objectInstance == null) {
-                    objectInstance = new DBCommander();
-
-                }
-            }
-        }
-        return objectInstance;
-    }
     public static String[] getSensorElementData()
     {
         return mSensorElementData;
@@ -73,20 +60,19 @@ public class DBCommander {
     */
     private static String mCreateDataTableQuery = null;
     private static String mCreateTableDeviceList_Query = null;
-    private static String mDeviceListTableName = null;
+
+    private static final String[] mDEVICE_LISTcolumnList = {"DEVICENAME", "TIME"};
+
+    public static void InitDB(Context context) {
 
 
-    private String[] mDEVICE_LISTcolumnsList = {"DEVICENAME", "TIME"};
+        mDBHelper = new DBOpenHelper(context, mDBName, null, mDBVersion);
 
-    public void InitDB(Context context) {
-        mContext = context;
-
-        mDBHelper = new DBOpenHelper(mContext, mDBName, null, mDBVersion);
         try {
             //읽고 쓸수 있는 DB 객체 불러옴
             mDB = mDBHelper.getWritableDatabase();
-            mCreateTableDeviceList_Query = mContext.getResources().getString(R.string.query_create_device_list);
-            mCreateDataTableQuery = mContext.getResources().getString(R.string.query_create_data_table);
+            mCreateTableDeviceList_Query = context.getResources().getString(R.string.query_create_device_list);
+            mCreateDataTableQuery = context.getResources().getString(R.string.query_create_data_table);
 
             createDeviceListTable();
 
@@ -97,13 +83,13 @@ public class DBCommander {
         }
     }
 
-    public void createDeviceListTable() throws SQLiteException {
+    private static void createDeviceListTable() throws SQLiteException {
 
         Log.d(TAG, mCreateTableDeviceList_Query);
         mDB.execSQL(mCreateTableDeviceList_Query);
     }
 
-    public void createDataTable(String deviceName) {
+    public static void createDataTable(String deviceName) {
         String createDataTableQuery = "";
         createDataTableQuery += "CREATE TABLE IF NOT EXISTS ";
         createDataTableQuery += "'";
@@ -115,7 +101,7 @@ public class DBCommander {
 
     }
 
-    public void insertRow_DeviceList(CopyOnWriteArrayList<String> deviceList) {
+    public static void insertRow_DeviceList(CopyOnWriteArrayList<String> deviceList) {
         String insertDeviceList_Query = "";
         for (int i = 0; i < deviceList.size(); i++) {
             insertDeviceList_Query = "INSERT OR REPLACE INTO DEVICE_LIST (DEVICENAME) VALUES ";
@@ -128,7 +114,7 @@ public class DBCommander {
 
     }
 
-    public void insertRow_SensorTable(TransactionForm transactionForm) {
+    public static void insertRow_SensorTable(TransactionForm transactionForm) {
         ContentValues newValues = new ContentValues();
         newValues.put("DEVICENAME", transactionForm.getName());
         newValues.put("BOARD_VER", transactionForm.getBoardVer());
@@ -152,8 +138,8 @@ public class DBCommander {
 
     }
 
-    public CopyOnWriteArrayList<DBResultForm> getSensorDataListTimeCondition(String deviceName, String currentTime, String pastTime) {
-        CopyOnWriteArrayList<DBResultForm> DBResultFormList = new CopyOnWriteArrayList<>();
+    public static ArrayList<DBResultForm> getSensorDataListTimeCondition(String deviceName, String currentTime, String pastTime) {
+        ArrayList<DBResultForm> DBResultFormList = new ArrayList<>();
         Cursor dataQueryResult = mDB.query("'" + deviceName + "'", mColumnsSensorData, "TIME < " + "'" + currentTime + "'" + "AND " + "TIME > " + "'" + pastTime + "'", null, null, null, null);
 
         while (dataQueryResult.moveToNext()) {
@@ -203,14 +189,14 @@ public class DBCommander {
         return DBResultFormList;
     }
 
-    public long getSensorDataRowCount(String tableName)
+    public static long getSensorDataRowCount(String tableName)
     {
         return DatabaseUtils.queryNumEntries(mDB,"'" + tableName + "'");
 
     }
 
 
-    public String getFirstSensorRecordTime(String deviceName)
+    public static String getFirstSensorRecordTime(String deviceName)
     {
 
         Cursor dataQueryResult =
@@ -221,7 +207,7 @@ public class DBCommander {
         dataQueryResult.close();
         return time;
     }
-    public String getLastSensorRecordTime(String deviceName)
+    public static String getLastSensorRecordTime(String deviceName)
     {
         Cursor dataQueryResult =
                 mDB.query("'" + deviceName + "'", mColumnsSensorTime, null, null, null, null, mColumnsSensorTime[0] + " desc","0 , 1");
@@ -240,9 +226,9 @@ public class DBCommander {
      * @param offsetNumber - offset
      * @return offset을 기준으로 count만큼의 row를 반환한다.
      */
-    public CopyOnWriteArrayList<DBResultForm> getSensorDataList(String deviceName, String count, String offsetNumber)
+    public static ArrayList<DBResultForm> getSensorDataList(String deviceName, String count, String offsetNumber)
     {
-        CopyOnWriteArrayList<DBResultForm> DBResultFormList = new CopyOnWriteArrayList<>();
+        ArrayList<DBResultForm> DBResultFormList = new ArrayList<>();
         Cursor dataQueryResult =
                 mDB.query("'" + deviceName + "'", mColumnsSensorData, null, null, null, null, null,offsetNumber+","+count);
 
@@ -284,8 +270,8 @@ public class DBCommander {
      * @param deviceName
      * @return SensorDataList
      */
-    public CopyOnWriteArrayList<DBResultForm> getSensorDataList(String deviceName) {
-        CopyOnWriteArrayList<DBResultForm> DBResultFormList = new CopyOnWriteArrayList<>();
+    public static ArrayList<DBResultForm> getSensorDataList(String deviceName) {
+        ArrayList<DBResultForm> DBResultFormList = new ArrayList<>();
         Cursor dataQueryResult = mDB.query("'" + deviceName + "'", mColumnsSensorData, null, null, null, null, null);
 
 
@@ -322,9 +308,9 @@ public class DBCommander {
 
     }
 
-    public CopyOnWriteArrayList<String> getFullDeviceList() {
+    public static CopyOnWriteArrayList<String> getFullDeviceList() {
         CopyOnWriteArrayList<String> fullDeviceList = new CopyOnWriteArrayList<>();
-        Cursor result = mDB.query("DEVICE_LIST", mDEVICE_LISTcolumnsList, null, null, null, null, null);
+        Cursor result = mDB.query("DEVICE_LIST", mDEVICE_LISTcolumnList, null, null, null, null, null);
         while (result.moveToNext()) {
             String name = result.getString(0);
             fullDeviceList.add(name);

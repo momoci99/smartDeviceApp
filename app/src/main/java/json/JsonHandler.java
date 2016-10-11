@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,7 +17,7 @@ public class JsonHandler {
 
 
 
-    public JSONObject createJSONObjectForServer(String WifiMAC , CopyOnWriteArrayList<JSONObject> dbResultList)
+    public JSONObject createJSONObjectForServer(String WifiMAC , ArrayList<JSONObject> dbResultList)
     {
         JSONObject jsonTransaction = new JSONObject();
         JSONArray sensorDataJSONArray = new JSONArray();
@@ -94,7 +95,7 @@ public class JsonHandler {
         }
         return sensorData;
     }
-    public double changeFormatTo2f(double value)
+    private double changeFormatTo2f(double value)
     {
         String d3_format = String.format(Locale.US,"%.2f",value);
         return Double.valueOf(d3_format);

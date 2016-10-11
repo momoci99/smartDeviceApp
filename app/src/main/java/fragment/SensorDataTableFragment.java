@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.notemel.deviceappalphav02.R;
 
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import adapter.SensorDataListReAdapter;
@@ -23,12 +24,12 @@ import format.DBResultForm;
 /**
  * Created by Melchior_S on 2016-09-18.
  */
-public class SensorDataTableFragment extends Fragment{
+public class SensorDataTableFragment extends Fragment {
 
     private final String TAG = "SDTableFragment";
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter ;
+    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
 
@@ -44,41 +45,38 @@ public class SensorDataTableFragment extends Fragment{
     String mSelectedDevice;
 
 
-
     static Context mContext;
 
-    private DBCommander mDBHandler = DBCommander.getInstance();
-    private CopyOnWriteArrayList<DBResultForm> sensorDataList;
+
+    private ArrayList<DBResultForm> sensorDataList;
 
     private int mOffset = 0;
     private int mRowCountValue = 20;
-    private long mSensorDataRowCount=0;
-
-    private final String mString_Total= " Total ";
+    private long mSensorDataRowCount = 0;
 
 
-    public SensorDataTableFragment(){}
+    public SensorDataTableFragment() {
+    }
 
-    public void setDeviceName(String deviceName)
-    {
+    public void setDeviceName(String deviceName) {
         mSelectedDevice = deviceName;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sensordata_table, container, false);
 
 
-        mContext =  view.getContext();
-        sensorDataList = mDBHandler.getSensorDataList(mSelectedDevice,String.valueOf(mRowCountValue),String.valueOf(mOffset));
+        mContext = view.getContext();
+        sensorDataList = DBCommander.getSensorDataList(mSelectedDevice, String.valueOf(mRowCountValue), String.valueOf(mOffset));
 
 
-
-        mTV_sname1 = (TextView)view.findViewById(R.id.tv_sname1);
-        mTV_sname2 = (TextView)view.findViewById(R.id.tv_sname2);
-        mTV_sname3 = (TextView)view.findViewById(R.id.tv_sname3);
-        mTV_sname4 = (TextView)view.findViewById(R.id.tv_sname4);
-        mTV_currentPosition = (TextView)view.findViewById(R.id.tv_total_row_count);
+        mTV_sname1 = (TextView) view.findViewById(R.id.tv_sname1);
+        mTV_sname2 = (TextView) view.findViewById(R.id.tv_sname2);
+        mTV_sname3 = (TextView) view.findViewById(R.id.tv_sname3);
+        mTV_sname4 = (TextView) view.findViewById(R.id.tv_sname4);
+        mTV_currentPosition = (TextView) view.findViewById(R.id.tv_total_row_count);
 
 
         mTV_sname1.setText(sensorDataList.get(0).getSensorName_1());
@@ -86,19 +84,18 @@ public class SensorDataTableFragment extends Fragment{
         mTV_sname3.setText(sensorDataList.get(0).getSensorName_3());
         mTV_sname4.setText(sensorDataList.get(0).getSensorName_4());
 
-        mSensorDataRowCount = mDBHandler.getSensorDataRowCount(mSelectedDevice);
+        mSensorDataRowCount = DBCommander.getSensorDataRowCount(mSelectedDevice);
 
 
         mTV_currentPosition.setText(String.valueOf(mSensorDataRowCount));
 
-        mBTN_showNextSensorData = (Button)view.findViewById(R.id.btn_next_sdata);
-        mBTN_showPrevSensorData = (Button)view.findViewById(R.id.btn_prev_sdata);
+        mBTN_showNextSensorData = (Button) view.findViewById(R.id.btn_next_sdata);
+        mBTN_showPrevSensorData = (Button) view.findViewById(R.id.btn_prev_sdata);
 
         mBTN_showPrevSensorData.setEnabled(false);
 
 
-
-        mRecyclerView = (RecyclerView)view.findViewById(R.id.ry_sdata_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.ry_sdata_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -120,14 +117,13 @@ public class SensorDataTableFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 mBTN_showPrevSensorData.setEnabled(true);
-                mOffset +=mRowCountValue;
+                mOffset += mRowCountValue;
 
                 sensorDataList.clear();
-                sensorDataList.addAll(mDBHandler.getSensorDataList(mSelectedDevice,String.valueOf(mRowCountValue),String.valueOf(mOffset)));
+                sensorDataList.addAll(DBCommander.getSensorDataList(mSelectedDevice, String.valueOf(mRowCountValue), String.valueOf(mOffset)));
                 mAdapter.notifyDataSetChanged();
 
-                if(mOffset>=mSensorDataRowCount)
-                {
+                if (mOffset >= mSensorDataRowCount) {
                     mBTN_showNextSensorData.setEnabled(false);
                 }
             }
@@ -141,11 +137,10 @@ public class SensorDataTableFragment extends Fragment{
                 mBTN_showNextSensorData.setEnabled(true);
                 mOffset -= mRowCountValue;
                 sensorDataList.clear();
-                sensorDataList.addAll(mDBHandler.getSensorDataList(mSelectedDevice,String.valueOf(mRowCountValue),String.valueOf(mOffset)));
+                sensorDataList.addAll(DBCommander.getSensorDataList(mSelectedDevice, String.valueOf(mRowCountValue), String.valueOf(mOffset)));
                 mAdapter.notifyDataSetChanged();
 
-                if(mOffset==0)
-                {
+                if (mOffset == 0) {
                     mBTN_showPrevSensorData.setEnabled(false);
                 }
             }
@@ -153,10 +148,4 @@ public class SensorDataTableFragment extends Fragment{
 
         return view;
     }
-    //TODO: 정해진 갯수만큼 레코드 로드하는 쿼리 및 처리 코드 그리고 변경된 리스트 업데이트하는코드
-
-
-
-
-
 }

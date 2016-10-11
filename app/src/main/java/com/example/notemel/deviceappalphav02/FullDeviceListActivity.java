@@ -19,7 +19,7 @@ import db.DBCommander;
 public class FullDeviceListActivity extends AppCompatActivity {
 
     private static String TAG = "FullDeviceListActivity";
-    private DBCommander mDBHandler = DBCommander.getInstance();
+ 
     private CopyOnWriteArrayList<String> mFullDeviceList = new CopyOnWriteArrayList<>();
 
     static ListView mFullDeviceListView;
@@ -47,7 +47,7 @@ public class FullDeviceListActivity extends AppCompatActivity {
 
     //Copy FullDeviceList From Monitor
     public void copyFullDeviceList() {
-        CopyOnWriteArrayList<String> fullDeviceList = mDBHandler.getFullDeviceList();
+        CopyOnWriteArrayList<String> fullDeviceList = DBCommander.getFullDeviceList();
         for (int i = 0; i < fullDeviceList.size(); i++) {
             mFullDeviceList.add(fullDeviceList.get(i));
         }

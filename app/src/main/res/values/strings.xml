@@ -19,5 +19,6 @@
 
     <!-- for IntentKey !-->
     <string name="ToDetailDeviceInfo">ToDetailDeviceInfo</string>
+    <string name="ToChartActivity">ChartOption.list</string>
 
 </resources>

@@ -3,6 +3,7 @@ package serverconnection;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,12 +24,11 @@ public class ServerDataHandler implements Runnable {
 
     private HttpURLConnector mHttpURLConnection = new HttpURLConnector();
     private BluetoothConnectionMonitor mBluetoothConnectionMonitor = BluetoothConnectionMonitor.getInstance();
-    private DBCommander mDBHandler = DBCommander.getInstance();
     private JsonHandler jsonHandler = new JsonHandler();
 
     private String mAndroidDeviceMACAddress;
     //현재 살아있는 장치 목록
-    private static CopyOnWriteArrayList<String> mAliveDeviceList = new CopyOnWriteArrayList<String>(); //현재 살아있는 장치 목록
+    private static CopyOnWriteArrayList<String> mAliveDeviceList = new CopyOnWriteArrayList<>(); //현재 살아있는 장치 목록
 
     private volatile static ServerDataHandler objectInstance;
 
@@ -50,9 +50,9 @@ public class ServerDataHandler implements Runnable {
     }
 
 
-    public JSONObject transactionCreator(String currentTime, String pastTime) {
-        CopyOnWriteArrayList<JSONObject> JSONObjectList = new CopyOnWriteArrayList<>();
-        CopyOnWriteArrayList<CopyOnWriteArrayList<DBResultForm>> dbResultList = new CopyOnWriteArrayList<CopyOnWriteArrayList<DBResultForm>>();
+    private JSONObject transactionCreator(String currentTime, String pastTime) {
+        ArrayList<JSONObject> JSONObjectList = new ArrayList<>();
+        ArrayList<ArrayList<DBResultForm>> dbResultList = new ArrayList<>();
 
         mAliveDeviceList = mBluetoothConnectionMonitor.getAliveDeviceNameList();
 
@@ -60,7 +60,7 @@ public class ServerDataHandler implements Runnable {
 
             for (int i = 0; i < mAliveDeviceList.size(); i++) {
 
-                dbResultList.add(mDBHandler.getSensorDataListTimeCondition(mAliveDeviceList.get(i), currentTime, pastTime));
+                dbResultList.add(DBCommander.getSensorDataListTimeCondition(mAliveDeviceList.get(i), currentTime, pastTime));
             }
 
             System.out.println("가져온장치갯수 : " + dbResultList.size());

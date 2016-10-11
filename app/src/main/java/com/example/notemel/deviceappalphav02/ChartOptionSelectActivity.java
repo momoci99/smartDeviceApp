@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import adapter.ChartDeviceNameListReAdapter;
 import adapter.ElementSelectListReAdapter;
@@ -38,7 +38,7 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter_ElementList;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private RecyclerView mRV_devcieList;
+    private RecyclerView mRV_deviceList;
     private RecyclerView.Adapter mAdapter_DeviceList;
     private RecyclerView.LayoutManager mLayoutManager_DeviceList;
 
@@ -60,22 +60,20 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
     private int endDate;
 
 
-    private DBCommander mDBHandler = DBCommander.getInstance();
-
     private ArrayList<String> mColumnsList = new ArrayList<>();
     private String[] mColumnsArray;
 
     private ArrayList<String> mDeviceList = new ArrayList<>();
-
-    private DBCommander mDBCommander = DBCommander.getInstance();
-
     private ArrayList<String> mChartOptionList = new ArrayList<>();
+
+    private String mIntentKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart_option);
 
+        mIntentKey = getResources().getString(R.string.ToChartActivity);
 
         mEdt_startDate = (EditText) findViewById(R.id.edt_start_date_input);
         mEdt_endDate = (EditText) findViewById(R.id.edt_end_date_input);
@@ -96,11 +94,11 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
         }
 
 
-        mRV_devcieList = (RecyclerView) findViewById(R.id.ry_chart_device_name_list);
+        mRV_deviceList = (RecyclerView) findViewById(R.id.ry_chart_device_name_list);
         mLayoutManager_DeviceList = new LinearLayoutManager(this);
-        mRV_devcieList.setLayoutManager(mLayoutManager_DeviceList);
+        mRV_deviceList.setLayoutManager(mLayoutManager_DeviceList);
 
-        mDeviceList.addAll(mDBCommander.getFullDeviceList());
+        mDeviceList.addAll(DBCommander.getFullDeviceList());
         Log.e(TAG, "mDeviceList 사이즈 : " + mDeviceList.size());
 
 
@@ -108,7 +106,7 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter_ElementList);
 
         mAdapter_DeviceList = new ChartDeviceNameListReAdapter(mDeviceList);
-        mRV_devcieList.setAdapter(mAdapter_DeviceList);
+        mRV_deviceList.setAdapter(mAdapter_DeviceList);
 
 
         mBTN_ShowChart = (Button) findViewById(R.id.btn_show_chart);
@@ -134,17 +132,13 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
 
 
                     Intent intent = new Intent(ChartOptionSelectActivity.this, ChartActivity.class);
-                    intent.putStringArrayListExtra("ChartOption.list", mChartOptionList);
+                    intent.putStringArrayListExtra(mIntentKey, mChartOptionList);
                     startActivity(intent);
-
 
 
                     mChartOptionList.clear();
 
                 }
-
-
-
 
 
             }
@@ -154,8 +148,8 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
         mEdt_startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String sensorDataFirstTime = mDBHandler.getFirstSensorRecordTime(mDeviceList.get(0));
-                String sensorDataLastTime = mDBHandler.getLastSensorRecordTime(mDeviceList.get(0));
+                String sensorDataFirstTime = DBCommander.getFirstSensorRecordTime(mDeviceList.get(0));
+                String sensorDataLastTime = DBCommander.getLastSensorRecordTime(mDeviceList.get(0));
 
                 long minMilliseconds = 0;
                 long maxMilliseconds = 0;
@@ -185,7 +179,9 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
                 int startMonth = (calendar.get(calendar.MONTH) + 1);
                 int startDate = calendar.get(calendar.DATE);
 
-                DatePickerDialog dialog = new DatePickerDialog(ChartOptionSelectActivity.this, startDatePickerListener, startYear, startMonth, startDate);
+                DatePickerDialog dialog =
+                        new DatePickerDialog(ChartOptionSelectActivity.this,
+                                startDatePickerListener, startYear, startMonth, startDate);
 
                 //TODO : 장치별 기한설정할것.
                 dialog.getDatePicker().setMinDate(minMilliseconds);
@@ -201,7 +197,7 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (startMils != 0) {
 
-                    String sensorDataLastTime = mDBHandler.getLastSensorRecordTime(mDeviceList.get(0));
+                    String sensorDataLastTime = DBCommander.getLastSensorRecordTime(mDeviceList.get(0));
                     long maxMilliseconds = 0;
                     SimpleDateFormat lastTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
 

@@ -36,7 +36,6 @@ public class ChartActivity extends AppCompatActivity {
     private final String TAG = ChartActivity.this.getClass().getSimpleName();
 
 
-    private DBCommander mDBHander = DBCommander.getInstance();
     private ArrayList<String> mChartOptionList;
 
     private String mElement;
@@ -44,7 +43,6 @@ public class ChartActivity extends AppCompatActivity {
 
     private ArrayList<String> mDeviceList = new ArrayList<>();
 
-    private DBCommander mDBHandler = DBCommander.getInstance();
 
     private String mStartDateString;
     private String mEndDateString;
@@ -63,14 +61,15 @@ public class ChartActivity extends AppCompatActivity {
     private HashMap<String, String> mMaxDataMap = new HashMap<>();
     private HashMap<String, String> mAverageDataMap = new HashMap<>();
 
+    private String mIntentKey;
 
     //TODO:어댑터 등록하고 데이터 삽입, 갱신, 확인
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
-        mChartOptionList = getIntent().getStringArrayListExtra("ChartOption.list");
-
+        mIntentKey = getResources().getString(R.string.ToChartActivity);
+        mChartOptionList = getIntent().getStringArrayListExtra(mIntentKey);
 
 
         mElement = mChartOptionList.get(0);
@@ -91,15 +90,15 @@ public class ChartActivity extends AppCompatActivity {
             drawMultiBarGraph();
         }
 
-
+        //setLegend
         Legend l = mChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(true);
+        l.setDrawInside(false);
         l.setYOffset(0f);
         l.setYEntrySpace(0f);
-        l.setTextSize(8f);
+        l.setTextSize(10f);
 
         //ExpandableListView implements
         mExpList = (ExpandableListView) findViewById(R.id.explist_data_stats);
@@ -112,27 +111,26 @@ public class ChartActivity extends AppCompatActivity {
         getAttributeData();
         setListData();
 
-        mExpList = (ExpandableListView)findViewById(R.id.explist_data_stats);
-        mChartStatsExpListAdapter = new ChartStatsExpListAdapter(this, mGroupList,mChildList);
+        mExpList = (ExpandableListView) findViewById(R.id.explist_data_stats);
+        mChartStatsExpListAdapter = new ChartStatsExpListAdapter(this, mGroupList, mChildList);
         mExpList.setAdapter(mChartStatsExpListAdapter);
         mChartStatsExpListAdapter.notifyDataSetChanged();
     }
-    public void setListData()
-    {
+
+    public void setListData() {
         ArrayList<String> elementList = new ArrayList<>();
         elementList.add(mElement);
         mChildList.add(elementList);
 
         ArrayList<String> periodList = new ArrayList<>();
-        periodList.add("START : "+mStartDateString);
+        periodList.add("START : " + mStartDateString);
         periodList.add("END : " + mEndDateString);
         mChildList.add(periodList);
 
         ArrayList<String> maxList = new ArrayList<>();
         ArrayList<String> minList = new ArrayList<>();
         ArrayList<String> avgList = new ArrayList<>();
-        for(int i = 0; i<mDeviceList.size(); i++)
-        {
+        for (int i = 0; i < mDeviceList.size(); i++) {
             maxList.add(mDeviceList.get(i) + " : " + mMaxDataMap.get(mDeviceList.get(i)));
             minList.add(mDeviceList.get(i) + " : " + mMinDataMap.get(mDeviceList.get(i)));
             avgList.add(mDeviceList.get(i) + " : " + mAverageDataMap.get(mDeviceList.get(i)));
@@ -142,43 +140,40 @@ public class ChartActivity extends AppCompatActivity {
         mChildList.add(avgList);
 
 
+    }
+
+    private void setDataMap(String deviceName, String targetColumn) {
+        mMaxDataMap.put(deviceName, DBCommander.getMaxData(deviceName, targetColumn));
+        mMinDataMap.put(deviceName, DBCommander.getMinData(deviceName, targetColumn));
+        mAverageDataMap.put(deviceName, DBCommander.getAvgData(deviceName, targetColumn));
 
     }
-    public void getAttributeData() {
-        //MAX
+
+    private void getAttributeData() {
+
         String targetColumn;
-        CopyOnWriteArrayList<CopyOnWriteArrayList<DBResultForm>> sensorDataList = new CopyOnWriteArrayList<>();
+        ArrayList<ArrayList<DBResultForm>> sensorDataList = new ArrayList<>();
 
         for (int i = 0; i < mDeviceList.size(); i++) {
-            sensorDataList.add(mDBHandler.getSensorDataListTimeCondition(mDeviceList.get(i), mEndDateString, mStartDateString));
+            sensorDataList.add(DBCommander.getSensorDataListTimeCondition(mDeviceList.get(i), mEndDateString, mStartDateString));
             if (mElement.equals(sensorDataList.get(i).get(i).getSensorName_1())) {
                 targetColumn = "DATA_1";
-                mMaxDataMap.put(mDeviceList.get(i), DBCommander.getMaxData(mDeviceList.get(i), targetColumn));
-                mMinDataMap.put(mDeviceList.get(i), DBCommander.getMinData(mDeviceList.get(i), targetColumn));
-                mAverageDataMap.put(mDeviceList.get(i), DBCommander.getAvgData(mDeviceList.get(i), targetColumn));
+                setDataMap(mDeviceList.get(i), targetColumn);
 
             } else if (mElement.equals(sensorDataList.get(i).get(i).getSensorName_2())) {
                 targetColumn = "DATA_2";
-                mMaxDataMap.put(mDeviceList.get(i), DBCommander.getMaxData(mDeviceList.get(i), targetColumn));
-                mMinDataMap.put(mDeviceList.get(i), DBCommander.getMinData(mDeviceList.get(i), targetColumn));
-                mAverageDataMap.put(mDeviceList.get(i), DBCommander.getAvgData(mDeviceList.get(i), targetColumn));
+                setDataMap(mDeviceList.get(i), targetColumn);
 
             } else if (mElement.equals(sensorDataList.get(i).get(i).getSensorName_3())) {
                 targetColumn = "DATA_3";
-                mMaxDataMap.put(mDeviceList.get(i), DBCommander.getMaxData(mDeviceList.get(i), targetColumn));
-                mMinDataMap.put(mDeviceList.get(i), DBCommander.getMinData(mDeviceList.get(i), targetColumn));
-                mAverageDataMap.put(mDeviceList.get(i), DBCommander.getAvgData(mDeviceList.get(i), targetColumn));
+                setDataMap(mDeviceList.get(i), targetColumn);
 
             } else if (mElement.equals(sensorDataList.get(i).get(i).getSensorName_4())) {
                 targetColumn = "DATA_4";
-                mMaxDataMap.put(mDeviceList.get(i), DBCommander.getMaxData(mDeviceList.get(i), targetColumn));
-                mMinDataMap.put(mDeviceList.get(i), DBCommander.getMinData(mDeviceList.get(i), targetColumn));
-                mAverageDataMap.put(mDeviceList.get(i), DBCommander.getAvgData(mDeviceList.get(i), targetColumn));
+                setDataMap(mDeviceList.get(i), targetColumn);
 
             }
         }
-
-
 
 
     }
@@ -186,9 +181,9 @@ public class ChartActivity extends AppCompatActivity {
     public void drawSingleBarGraph() {
         Random mColorRandom = new Random();
         List<BarEntry> entries = new ArrayList<BarEntry>();
-        CopyOnWriteArrayList<DBResultForm> sensorDataList;
+        ArrayList<DBResultForm> sensorDataList;
 
-        sensorDataList = mDBHandler.getSensorDataListTimeCondition(mDeviceList.get(0), mEndDateString, mStartDateString);
+        sensorDataList = DBCommander.getSensorDataListTimeCondition(mDeviceList.get(0), mEndDateString, mStartDateString);
 
         for (int i = 0; i < sensorDataList.size(); i++) {
             if (mElement.equals(sensorDataList.get(i).getSensorName_1())) {
@@ -214,13 +209,13 @@ public class ChartActivity extends AppCompatActivity {
     public void drawMultiBarGraph() {
         Random mColorRandom = new Random();
         ArrayList<ArrayList<BarEntry>> mBarEntryList = new ArrayList<>();
-        CopyOnWriteArrayList<CopyOnWriteArrayList<DBResultForm>> sensorDataList = new CopyOnWriteArrayList<>();
+        ArrayList<ArrayList<DBResultForm>> sensorDataList = new ArrayList<>();
         ArrayList<BarDataSet> mBarDataSetList = new ArrayList<>();
 
 
         for (int i = 0; i < mDeviceList.size(); i++) {
             mBarEntryList.add(new ArrayList<BarEntry>());
-            sensorDataList.add(mDBHandler.getSensorDataListTimeCondition(mDeviceList.get(i), mEndDateString, mStartDateString));
+            sensorDataList.add(DBCommander.getSensorDataListTimeCondition(mDeviceList.get(i), mEndDateString, mStartDateString));
 
             for (int j = 0; j < sensorDataList.get(i).size(); j++) {
 
