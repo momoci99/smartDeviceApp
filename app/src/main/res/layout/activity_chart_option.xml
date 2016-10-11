@@ -1,77 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/app_bar_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
     <LinearLayout
-        android:layout_marginTop="80sp"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
 
+        android:layout_alignParentTop="true"
+
+        android:orientation="vertical"
         android:weightSum="100">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="50" >
-
+            android:layout_weight="30">
 
             <TextView
+                android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:text="Select Element"
-                android:id="@+id/textView6" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <android.support.v7.widget.RecyclerView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/ry_element_list"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/btn_show_chart"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@+id/btn_show_chart"
-                android:layout_alignEnd="@+id/btn_show_chart" />
-
-            <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Show Chart"
-                android:id="@+id/btn_show_chart"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_height="match_parent"
+
+
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView6" />
 
 
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="50" >
+            android:layout_weight="30">
 
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Select Device"
-                android:id="@+id/textView2"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true" />
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/ry_chart_device_name_list"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView2"/>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30">
+
+            <TextView
+                android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/ry_chart_device_name_list"
-                android:layout_below="@+id/textView2"
+                android:text="Select Period"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+            <EditText
+                android:id="@+id/edt_start_date_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textView11"
+                android:layout_alignBottom="@+id/textView11"
+                android:layout_alignStart="@+id/edt_end_date_input"
+                android:ems="10"
+                android:inputType="date"
+                android:text="startDateInput" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView12"
+                android:layout_marginTop="10dp"
+                android:text="StartDate"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn_show_chart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:text="Show Chart" />
+
+            <EditText
+                android:id="@+id/edt_end_date_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/edt_start_date_input"
+                android:ems="10"
+                android:inputType="date"
+                android:text="endDateinput" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/edt_end_date_input"
+                android:layout_alignBottom="@+id/edt_end_date_input"
+                android:layout_alignParentStart="true"
+                android:text="EndDate"
+                android:textSize="20sp" />
         </RelativeLayout>
+
     </LinearLayout>
+
+
 </RelativeLayout>

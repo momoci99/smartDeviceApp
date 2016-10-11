@@ -6,10 +6,13 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.example.notemel.deviceappalphav02.R;
 
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import format.DBResultForm;
@@ -24,7 +27,7 @@ public class DBCommander {
 
     private static final String TAG = "DBCommander";
 
-    private SQLiteDatabase mDB = null;
+    private static SQLiteDatabase mDB = null;
     private DBOpenHelper mDBHelper;
 
     //DB 초기화에 필요한 변수들
@@ -41,7 +44,9 @@ public class DBCommander {
             "SNAME_4", "DATA_4",
             "TIME"};
 
-    private static final String[] mSensorElementData = {"Temperature","Humidity","Oxygen","CO"};
+    private static final String[] mColumnsSensorTime = {"TIME"};
+
+    private static final String[] mSensorElementData = {"co","tempt","hum","oxy"};
 
     private Context mContext;
 
@@ -204,6 +209,30 @@ public class DBCommander {
 
     }
 
+
+    public String getFirstSensorRecordTime(String deviceName)
+    {
+
+        Cursor dataQueryResult =
+                mDB.query("'" + deviceName + "'", mColumnsSensorTime, null, null, null, null, null,"0 , 1");
+
+        dataQueryResult.moveToNext();
+        String time = dataQueryResult.getString(0);
+        dataQueryResult.close();
+        return time;
+    }
+    public String getLastSensorRecordTime(String deviceName)
+    {
+        Cursor dataQueryResult =
+                mDB.query("'" + deviceName + "'", mColumnsSensorTime, null, null, null, null, mColumnsSensorTime[0] + " desc","0 , 1");
+
+        dataQueryResult.moveToNext();
+        String time = dataQueryResult.getString(0);
+        dataQueryResult.close();
+        return time;
+    }
+
+
     /**
      *
      * @param deviceName - table name
@@ -286,22 +315,6 @@ public class DBCommander {
                     SNAME_3, DATA_3,
                     SNAME_4, DATA_4,
                     time));
-            /*
-            String stringResult = String.valueOf(logNumber)
-                    + devicename
-                    + String.valueOf(BoardVer)
-                    + SNAME_1
-                    + String.valueOf(DATA_1)
-                    + SNAME_2
-                    + String.valueOf(DATA_2)
-                    + SNAME_3
-                    + String.valueOf(DATA_3)
-                    + SNAME_4
-                    + String.valueOf(DATA_4)
-                    + time;
-                    Log.e(TAG,stringResult);
-            */
-
         }
         dataQueryResult.close();
         return DBResultFormList;
@@ -379,6 +392,36 @@ public class DBCommander {
         }
         result.close();
 
+    }
+    public static String getMaxData(String deviceName, String columnName)
+    {
+        double maxData = 0;
+        Cursor dataQueryResult = mDB.query("'" + deviceName + "'",new String[]{"MAX("+columnName+")"} , null, null, null, null, null);
+        while (dataQueryResult.moveToNext()) {
+            maxData = dataQueryResult.getDouble(0);
+        }
+        dataQueryResult.close();
+        return String.format(Locale.US,"%.2f",maxData);
+    }
+    public static String getMinData(String deviceName, String columnName)
+    {
+        double minData = 0;
+        Cursor dataQueryResult = mDB.query("'" + deviceName + "'",new String[]{"MIN("+columnName+")"} , null, null, null, null, null);
+        while (dataQueryResult.moveToNext()) {
+            minData = dataQueryResult.getDouble(0);
+        }
+        dataQueryResult.close();
+        return String.format(Locale.US,"%.2f",minData);
+    }
+    public static String getAvgData(String deviceName, String columnName)
+    {
+        double minData = 0;
+        Cursor dataQueryResult = mDB.query("'" + deviceName + "'",new String[]{"AVG("+columnName+")"} , null, null, null, null, null);
+        while (dataQueryResult.moveToNext()) {
+            minData = dataQueryResult.getDouble(0);
+        }
+        dataQueryResult.close();
+        return String.format(Locale.US,"%.2f",minData);
     }
 
 

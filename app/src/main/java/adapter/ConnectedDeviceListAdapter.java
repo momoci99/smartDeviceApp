@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class ConnectedDeviceListAdapter extends BaseAdapter {
 
-    private static String TAG = "ConnectedDeviceListAdapter";
+    private static String TAG = "ConnectedD.ListAdapter";
     private String WATCHING = "WATCHING";
     private String RETRYING = "RETRYING";
     private String LOSTCONNECT = "LOSTCONNECT";
