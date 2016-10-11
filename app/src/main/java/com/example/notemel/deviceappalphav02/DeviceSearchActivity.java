@@ -67,6 +67,7 @@ public class DeviceSearchActivity extends AppCompatActivity {
         }
 
         // Quick permission check
+
         int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
         permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
         if (permissionCheck != 0) {

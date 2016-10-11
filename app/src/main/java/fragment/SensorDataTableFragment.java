@@ -155,10 +155,6 @@ public class SensorDataTableFragment extends Fragment{
     }
     //TODO: 정해진 갯수만큼 레코드 로드하는 쿼리 및 처리 코드 그리고 변경된 리스트 업데이트하는코드
 
-    public void initButtonUI()
-    {
-        mBTN_showPrevSensorData.setEnabled(false);
-    }
 
 
 
