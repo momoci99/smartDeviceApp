@@ -54,11 +54,9 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
     private int startDate;
 
     private String mEndDateString;
-    private long endMils;
-    private int endYear;
-    private int endMonth;
-    private int endDate;
 
+    private long minimumMilliseconds = Long.MAX_VALUE;
+    private long maximumMilliseconds = Long.MIN_VALUE;
 
     private ArrayList<String> mColumnsList = new ArrayList<>();
     private String[] mColumnsArray;
@@ -130,12 +128,30 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
                     mChartOptionList.add(mEndDateString);
                     mChartOptionList.addAll(ChartDeviceNameListReAdapter.mSelectedDeviceList);
 
+                    //check empty list
+                    //prevent draw empty chart
+                    if (mDeviceList.size() == 1) {
 
-                    Intent intent = new Intent(ChartOptionSelectActivity.this, ChartActivity.class);
-                    intent.putStringArrayListExtra(mIntentKey, mChartOptionList);
-                    startActivity(intent);
+                        if (DBCommander.getSensorDataListTimeCondition(mDeviceList.get(0), mEndDateString, mStartDateString).size() == 0) {
+                            showAlertEmptyList();
+                            //mChartOptionList.clear();
+                        } else {
+                            startChartActivity();
+                        }
+                    } else {
+                        boolean isEmpty = false;
+                        for (int i = 0; i < mDeviceList.size(); i++) {
+                            if (DBCommander.getSensorDataListTimeCondition(mDeviceList.get(i), mEndDateString, mStartDateString).size() == 0) {
+                                showAlertEmptyList();
+                                isEmpty = true;
+                            }
+                        }
+                        if (!isEmpty) {
+                            startChartActivity();
+                            //mChartOptionList.clear();
+                        }
 
-
+                    }
                     mChartOptionList.clear();
 
                 }
@@ -148,32 +164,40 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
         mEdt_startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String sensorDataFirstTime = DBCommander.getFirstSensorRecordTime(mDeviceList.get(0));
-                String sensorDataLastTime = DBCommander.getLastSensorRecordTime(mDeviceList.get(0));
 
-                long minMilliseconds = 0;
-                long maxMilliseconds = 0;
+                ArrayList<String> timeList = new ArrayList<>();
 
-                SimpleDateFormat firstTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
-                SimpleDateFormat lastTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
 
-                Date minDate = null;
-                Date maxDate = null;
-                try {
-
-                    minDate = firstTimeFormat.parse(sensorDataFirstTime);
-                    maxDate = lastTimeFormat.parse(sensorDataLastTime);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                if (minDate != null && maxDate != null) {
-                    minMilliseconds = minDate.getTime();
-                    maxMilliseconds = maxDate.getTime();
+                for (int i = 0; i < mDeviceList.size(); i++) {
+                    timeList.add(DBCommander.getFirstSensorRecordTime(mDeviceList.get(i)));
+                    timeList.add(DBCommander.getLastSensorRecordTime(mDeviceList.get(i)));
 
                 }
+
+                SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
+                Date timeDate = null;
+                Date minimumDate = null;
+
+                for (int j = 0; j < timeList.size(); j++) {
+                    try {
+
+                        timeDate = timeFormat.parse(timeList.get(j));
+                        long convertTime = timeDate.getTime();
+                        if (maximumMilliseconds <= convertTime) {
+                            maximumMilliseconds = convertTime;
+                        }
+                        if (minimumMilliseconds >= convertTime) {
+                            minimumMilliseconds = convertTime;
+                            minimumDate = timeDate;
+                        }
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(minDate);
+                calendar.setTime(minimumDate);
 
                 int startYear = calendar.get(calendar.YEAR);
                 int startMonth = (calendar.get(calendar.MONTH) + 1);
@@ -184,8 +208,8 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
                                 startDatePickerListener, startYear, startMonth, startDate);
 
                 //TODO : 장치별 기한설정할것.
-                dialog.getDatePicker().setMinDate(minMilliseconds);
-                dialog.getDatePicker().setMaxDate(maxMilliseconds);
+                dialog.getDatePicker().setMinDate(minimumMilliseconds);
+                dialog.getDatePicker().setMaxDate(maximumMilliseconds);
 
                 dialog.show();
             }
@@ -196,25 +220,9 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (startMils != 0) {
-
-                    String sensorDataLastTime = DBCommander.getLastSensorRecordTime(mDeviceList.get(0));
-                    long maxMilliseconds = 0;
-                    SimpleDateFormat lastTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
-
-                    Date maxDate = null;
-                    try {
-                        maxDate = lastTimeFormat.parse(sensorDataLastTime);
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    if (maxDate != null) {
-                        maxMilliseconds = maxDate.getTime();
-
-                    }
                     DatePickerDialog dialog = new DatePickerDialog(ChartOptionSelectActivity.this, endDatePickerListener, startYear, startMonth, startDate);
                     dialog.getDatePicker().setMinDate(startMils);
-                    dialog.getDatePicker().setMaxDate(maxMilliseconds);
+                    dialog.getDatePicker().setMaxDate(maximumMilliseconds);
 
                     dialog.show();
                 } else {
@@ -268,10 +276,7 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
             try {
                 Date endDateObj;
                 endDateObj = startDateFormat.parse(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-                endMils = endDateObj.getTime();
-                endYear = year;
-                endMonth = monthOfYear + 1;
-                endDate = dayOfMonth;
+
                 mEndDateString = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(endDateObj);
                 mEndDateString += " 23:59:59";
 
@@ -281,4 +286,27 @@ public class ChartOptionSelectActivity extends AppCompatActivity {
 
         }
     };
+
+    public void showAlertEmptyList() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(ChartOptionSelectActivity.this);
+        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //finish();
+            }
+        });
+        alert.setMessage("Please Check Period (Empty List)");
+        alert.show();
+
+    }
+
+    private void startChartActivity() {
+        Intent intent = new Intent(ChartOptionSelectActivity.this, ChartActivity.class);
+        intent.putStringArrayListExtra(mIntentKey, mChartOptionList);
+        startActivity(intent);
+
+
+        mChartOptionList.clear();
+    }
 }
