@@ -21,4 +21,10 @@
     <string name="ToDetailDeviceInfo">ToDetailDeviceInfo</string>
     <string name="ToChartActivity">ChartOption.list</string>
 
+    <!-- for ServerConfigActivity !-->
+    <string name="CheckServerStatus">CheckServerStatus</string>
+    <string name="ServerStatus">ServerStatus</string>
+    <string name="ServerConnection">ServerConnection</string>
+    <string name="Check">Check</string>
+
 </resources>

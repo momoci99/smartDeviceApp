@@ -1,8 +1,6 @@
 package com.example.notemel.deviceappalphav02;
 
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,15 +17,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import adapter.ConnectedDeviceListAdapter;
 import system.BluetoothConnectionMonitor;
-import bluetoothconnection.BluetoothReconnector;
 import db.DBCommander;
-import serverconnection.ServerDataHandler;
+import serverconnection.ServerConnectionHandler;
 import system.ThreadManager;
 
 public class MainActivity extends AppCompatActivity
@@ -38,15 +39,18 @@ public class MainActivity extends AppCompatActivity
     private String mIntentKey;
 
     /*UI Components*/
-    static ListView connectedDeiceListView;
+    private ListView connectedDeiceListView;
     static ConnectedDeviceListAdapter listAdapter;
+    private TextView tv_ConnectedDeviceList;
+    private TextView tv_ServerStatus;
 
     private ThreadManager mThreadManager = ThreadManager.getInstance();
     private BluetoothConnectionMonitor mBlueToothConnectionMonitor = BluetoothConnectionMonitor.getInstance();
-    private BluetoothReconnector mBluetoothReconnector = new BluetoothReconnector();
-    private ServerDataHandler mServerDataHandler = ServerDataHandler.getInstance();
-
+    //private BluetoothReconnector mBluetoothReconnector = new BluetoothReconnector();
+    private ServerConnectionHandler mServerConnectionHandler = ServerConnectionHandler.getInstance();
     private static StatusReceiverHandler mStatusReceiverHandler = new StatusReceiverHandler();
+
+
 
     //모든 기기 목록 - MACAddress
     private static CopyOnWriteArrayList<String> mTotalDeviceList = new CopyOnWriteArrayList<>();
@@ -79,10 +83,11 @@ public class MainActivity extends AppCompatActivity
 
 
         mIntentKey = this.getResources().getString(R.string.ToDetailDeviceInfo);
+        tv_ConnectedDeviceList = (TextView)findViewById(R.id.tv_main_deviceList);
+        tv_ServerStatus = (TextView)findViewById(R.id.tv_main_server_status);
+        setTextUI(mTotalDeviceList.size());
 
-        WifiManager mng = (WifiManager) getSystemService(WIFI_SERVICE);
-        WifiInfo info = mng.getConnectionInfo();
-        final String mac = info.getMacAddress();
+        final String mac = getMacAddr();
 
 
         connectedDeiceListView = (ListView) findViewById(R.id.lv_connectionstatus);
@@ -101,8 +106,8 @@ public class MainActivity extends AppCompatActivity
 
 
         //ServerConnectionManager 시작
-        mServerDataHandler.setAndroidDeviceMACAddress(mac);
-        mThreadManager.ActiveThread(mServerDataHandler);
+        mServerConnectionHandler.setAndroidDeviceMACAddress(mac);
+        mThreadManager.ActiveThread(mServerConnectionHandler);
 
 
         DBCommander.InitDB(this);
@@ -153,7 +158,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, DeviceSearchActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(MainActivity.this, DBTestActivity.class);
+            Intent intent = new Intent(MainActivity.this, ServerConfigActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
             Intent intent = new Intent(MainActivity.this, FullDeviceListActivity.class);
@@ -172,6 +177,7 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         mStatusReceiverHandler.updateConnectedDeviceList();
+        setTextUI(mTotalDeviceList.size());
 
     }
 
@@ -185,6 +191,7 @@ public class MainActivity extends AppCompatActivity
                 case STATUS_UPDATE:
                     copyData();
                     updateConnectedDeviceList();
+
                     break;
                 default:
                     break;
@@ -221,6 +228,7 @@ public class MainActivity extends AppCompatActivity
             //Log.e(TAG,"기기목록갯수 endUpdate : "+ mTotalDeviceList.size());
 
         }
+
     }
 
     private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
@@ -237,4 +245,51 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    private static String getMacAddr() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(Integer.toHexString(b & 0xFF) + ":");
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "02:00:00:00:00:00";
+    }
+    private void setTextUI(int count)
+    {
+        if(count == 0)
+        {
+            tv_ConnectedDeviceList.setText("Please Connect Sensor Device");
+        }
+        else
+        {
+            tv_ConnectedDeviceList.setText("Connected Device List");
+        }
+
+        if(mServerConnectionHandler.getSendingStatus())
+        {
+            tv_ServerStatus.setText("Sending");
+        }
+        else
+        {
+            tv_ServerStatus.setText("Suspend");
+        }
+
+    }
 }

@@ -16,60 +16,33 @@ import format.DBResultForm;
 public class JsonHandler {
 
 
-
-    public JSONObject createJSONObjectForServer(String WifiMAC , ArrayList<JSONObject> dbResultList)
-    {
+    public static JSONObject createJSONObjectForServer(String WifiMAC, ArrayList<JSONObject> dbResultList) {
         JSONObject jsonTransaction = new JSONObject();
         JSONArray sensorDataJSONArray = new JSONArray();
-        try{
+        try {
 
-            jsonTransaction.put("device",WifiMAC);
+            jsonTransaction.put("device", WifiMAC);
 
-            for(int i =0; i<dbResultList.size(); i++)
-            {
+            for (int i = 0; i < dbResultList.size(); i++) {
                 sensorDataJSONArray.put(dbResultList.get(i));
             }
 
+            jsonTransaction.put("data", sensorDataJSONArray);
 
-            jsonTransaction.put("data",sensorDataJSONArray);
-
-        }
-        catch (JSONException e)
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return jsonTransaction;
     }
 
-    public JSONObject createJSONObjectForServer(String WifiMAC , DBResultForm dbResult)
-    {
-        JSONObject jsonTransaction = new JSONObject();
-        JSONArray sensorDataJSONArray = new JSONArray();
-        try{
 
-            jsonTransaction.put("device",WifiMAC);
-
-
-            sensorDataJSONArray.put(createJSONObjectSensorData(dbResult));
-
-            jsonTransaction.put("data",sensorDataJSONArray);
-
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-        return jsonTransaction;
-    }
-
-    public JSONObject createJSONObjectSensorData(DBResultForm dbResult)
-    {
+    public static JSONObject createJSONObjectSensorData(DBResultForm dbResult) {
         JSONObject sensorData = new JSONObject();
         try {
-            sensorData.put("nid",dbResult.getDeviceName());
+            sensorData.put("nid", dbResult.getDeviceName());
 
             String sensorName_1 = dbResult.getSensorName_1();
-            if(sensorName_1!=null && !sensorName_1.isEmpty()) {
+            if (sensorName_1 != null && !sensorName_1.isEmpty()) {
                 sensorData.put(sensorName_1, changeFormatTo2f(dbResult.getSensorData_1()));
 
                 String sensorName_2 = dbResult.getSensorName_2();
@@ -90,14 +63,14 @@ public class JsonHandler {
                 sensorData.put("time", dbResult.getTime());
 
             }
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return sensorData;
     }
-    private double changeFormatTo2f(double value)
-    {
-        String d3_format = String.format(Locale.US,"%.2f",value);
+
+    private static double changeFormatTo2f(double value) {
+        String d3_format = String.format(Locale.US, "%.2f", value);
         return Double.valueOf(d3_format);
     }
 

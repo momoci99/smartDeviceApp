@@ -1,5 +1,8 @@
 package serverconnection;
 
+import android.os.Handler;
+import android.os.Message;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -11,12 +14,39 @@ import java.net.URL;
 /**
  * Created by Melchior_S on 2016-09-16.
  */
-public class HttpURLConnector {
+public class ServerChecker implements Runnable{
+
+
+    private Handler mTargetHandler;
+
     private final String Token = "c94da62a7d8c4b4b0148b9738ede292b";
     private final String USER_AGENT = "Mozilla/5.0";
-    public void sendPost(JSONObject parameters)  {
 
-        String url = "http://hive.codefict.com/hive/data";
+    private final String url = "http://hive.codefict.com/hive/data";
+
+    public ServerChecker (Handler targetHandler)
+    {
+        this.mTargetHandler = targetHandler;
+    }
+
+    @Override
+    public void run() {
+        if(sendPing());
+        {
+            sendMessageToConfigActivity();
+        }
+    }
+    private void sendMessageToConfigActivity()
+    {
+        Message SignalMessage = Message.obtain();
+        SignalMessage.what = 99;
+        mTargetHandler.sendMessage(SignalMessage);
+
+    }
+    private boolean sendPing()
+    {
+        boolean serverStatus = false;
+        int responseCode = -1;
         URL obj = null;
         try {
             obj = new URL(url);
@@ -27,18 +57,20 @@ public class HttpURLConnector {
             con.setRequestProperty("User-Agent", USER_AGENT);
             con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
             con.setRequestProperty("Token",Token);
-            String urlParameters = parameters.toString();
+
             // Send post request
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(urlParameters);
+            wr.writeBytes("ping");
             wr.flush();
             wr.close();
 
-            int responseCode = con.getResponseCode();
+            responseCode = con.getResponseCode();
+            String responseCodeSting = String.valueOf(responseCode);
+
+
             System.out.println("\n con :"+con);
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Post parameters : " + urlParameters);
+            System.out.println("\nSending Ping : " + url);
             System.out.println("Response Code : " + responseCode);
 
             BufferedReader in = new BufferedReader(
@@ -53,9 +85,16 @@ public class HttpURLConnector {
 
             //print result
             System.out.println(response.toString());
+
+
+            if(responseCodeSting.charAt(0)==4)
+            {
+                serverStatus= true;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return serverStatus;
     }
 }

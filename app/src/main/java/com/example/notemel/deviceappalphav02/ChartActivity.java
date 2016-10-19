@@ -1,7 +1,9 @@
 package com.example.notemel.deviceappalphav02;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ExpandableListView;
 
@@ -84,9 +86,13 @@ public class ChartActivity extends AppCompatActivity {
         mColumnsArray = DBCommander.getSensorElementData();
         mChart = (BarChart) findViewById(R.id.chart);
 
+
+
         if (mDeviceList.size() == 1) {
             drawSingleBarGraph();
+
         } else {
+
             drawMultiBarGraph();
         }
 
@@ -264,4 +270,6 @@ public class ChartActivity extends AppCompatActivity {
         mChart.invalidate();
         mChart.notifyDataSetChanged();
     }
+
+
 }

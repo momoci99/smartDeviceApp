@@ -301,7 +301,7 @@ public class BluetoothConnectionMonitor implements Runnable {
     public CopyOnWriteArrayList<String> getAliveDeviceList() {
         return mAliveDeviceList;
     }
-    public CopyOnWriteArrayList<String> getAliveDeviceNameList(){
+    public static CopyOnWriteArrayList<String> getAliveDeviceNameList(){
         return mAliveDeviceNameList;
     }
 

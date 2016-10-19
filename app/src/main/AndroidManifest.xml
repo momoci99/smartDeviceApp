@@ -32,47 +32,37 @@
         <activity
             android:name=".DeviceSearchActivity"
             android:label="센서디바이스 찾기"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity
             android:name=".SelectedDeviceInfoActivity"
             android:label="센서디바이스연결"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity
-            android:name=".DBTestActivity"
-            android:label="DBtest"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:name=".ServerConfigActivity"
+            android:label="ServerConfigActivity"></activity>
 
         <activity
             android:name=".DetailDeviceInfo"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity
             android:name=".FullDeviceListActivity"
             android:label="FullDeviceListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity
             android:name=".ChartOptionSelectActivity"
             android:label="ChartOptionSelectActivity"
 
-            >
-        </activity>
+            ></activity>
 
         <activity
             android:name=".ChartActivity"
             android:label="ChartActivity"
 
-            >
-        </activity>
+            ></activity>
     </application>
 
 </manifest>
