@@ -5,10 +5,14 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- for DBQuery !-->
     <string name="query_create_device_list">CREATE TABLE IF NOT EXISTS DEVICE_LIST (DEVICENAME TEXT PRIMARY KEY,  TIME TIMESTAMP DEFAULT CURRENT_TIMESTAMP);</string>
     <string name="table_name_device_list">DEVICE_LIST</string>
     <string name="query_create_data_table">(LOGNUMBER INTEGER PRIMARY KEY AUTOINCREMENT, DEVICENAME TEXT, BOARD_VER INTEGER, SNAME_1 TEXT, DATA_1 REAL, SNAME_2 TEXT, DATA_2 REAL, SNAME_3 TEXT, DATA_3 REAL, SNAME_4 TEXT, DATA_4 REAL, TIME TIMESTAMP DEFAULT (datetime("'now','localtime'")) );</string>
     <string name="query_create_data_table_bak">(LOGNUMBER INTEGER PRIMARY KEY AUTOINCREMENT, DEVICENAME TEXT, BOARD_VER INTEGER, SNAME_1 TEXT, DATA_1 REAL, SNAME_2 TEXT, DATA_2 REAL, SNAME_3 TEXT, DATA_3 REAL, SNAME_4 TEXT, DATA_4 REAL, TIME TIMESTAMP DEFAULT CURRENT_TIMESTAMP );</string>
+    <string name="query_create_alert_config_table">CREATE TABLE IF NOT EXISTS ALERT_CONFIG (CONFIG TEXT)</string>
+    <string name="table_name_ALERT_CONFIG">ALERT_CONFIG</string>
 
     <!-- for activity_detaildeviceinfo.xml !-->
     <string name="LastReceivedTime">LastReceivedTime</string>
@@ -26,5 +30,40 @@
     <string name="ServerStatus">ServerStatus</string>
     <string name="ServerConnection">ServerConnection</string>
     <string name="Check">Check</string>
+
+    <!--for Service IntentKey!-->
+    <string name="AlarmService.Key">com.android.service.AlarmService</string>
+    <string name="title_activity_config">ConfigActivity</string>
+
+    <!--for DrawItem !-->
+    <string name="ConnectSensor">ConnectSensor</string>
+    <string name="CheckServer">CheckServer</string>
+    <string name="DeviceInfo">DeviceInfo</string>
+    <string name="Stats">Stats</string>
+    <string name="AlertConfig">AlertConfig</string>
+
+    <!--for AlertConfigActivity !-->
+    <string name="SoundAlert">SoundAlert</string>
+    <string name="NotificationAlert">NotificationAlert</string>
+
+    <string name="SetAlertBorder">SetAlertBorder(defaultValue)</string>
+    <string name="Temperature">Temperature</string>
+    <string name="Humidity">Humidity</string>
+    <string name="Oxygen">Oxygen</string>
+    <string name="CO">CO</string>
+
+    <!--for AlertConfigData !-->
+    <string name="SoundAlertEnable">SoundAlertEnable</string>
+    <string name="NotificationAlertEnable">NotificationAlertEnable</string>
+    <string name="TemperatureEnable">TemperatureEnable</string>
+    <string name="HumidityEnable">HumidityEnable</string>
+    <string name="OxygenEnable">OxygenEnable</string>
+    <string name="COEnable">COEnable</string>
+
+    <string name="CO_Level">CO_Level</string>
+    <string name="Temperature_Level">Temperature_Level</string>
+    <string name="Oxygen_Level">Oxygen_Level</string>
+    <string name="Humidity_Level">Humidity_Level</string>
+
 
 </resources>

@@ -2,6 +2,7 @@ package bluetoothconnection;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -40,8 +41,8 @@ public class BlueToothClassic extends BluetoothConnector implements Runnable {
     private int mReceivedFrameLength = 0;
 
 
-    private ArrayList<Byte> slicedBytes = new ArrayList<>();
-    private ByteBuffer accByteBuffer = ByteBuffer.allocate(1024);
+    //private ArrayList<Byte> slicedBytes = new ArrayList<>();
+    //private ByteBuffer accByteBuffer = ByteBuffer.allocate(1024);
 
 
     //0xFF,0xFF 감지용 변수
@@ -54,12 +55,15 @@ public class BlueToothClassic extends BluetoothConnector implements Runnable {
     private Handler mTargetActivityHandler = null;
 
 
-
     private boolean isNormalConnection = false;
 
     private final int CONNECT_SUCCESS = 1;
     private final int CONNECT_FAIL = -1;
 
+    public BlueToothClassic (Context context)
+    {
+        super(context);
+    }
 
     public void configConnection(BluetoothDevice targetDevice, Handler signalReceiverHandler, boolean isNormalConnection) {
         setBluetoothDevice(targetDevice);
@@ -182,6 +186,7 @@ public class BlueToothClassic extends BluetoothConnector implements Runnable {
         }
 
     }
+
     private void SendSignalToActivity(int Signal) {
         Message SignalMessage = Message.obtain();
         SignalMessage.what = Signal;
