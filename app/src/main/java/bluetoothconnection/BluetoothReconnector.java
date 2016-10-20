@@ -12,7 +12,9 @@ import system.ThreadManager;
 /**
  * Created by noteMel on 2016-07-13.
  */
+
 public class BluetoothReconnector implements Runnable {
+    /*
     private String TAG = "커넥션리커넥터";
 
 
@@ -84,11 +86,11 @@ public class BluetoothReconnector implements Runnable {
     public void sendReconnectRequest(String requestDeviceAddress) {
         mReconnectStandingQueue.offer(requestDeviceAddress);
     }
-
+*/
     @Override
     public void run() {
         while (true) {
-            processReconnection();
+        //     processReconnection();
         }
     }
 }

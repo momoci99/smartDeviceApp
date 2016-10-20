@@ -73,6 +73,7 @@ public class BluetoothLe extends BluetoothConnector
     private Context mContext;
 
     public BluetoothLe(Context context) {
+        super(context);
         mContext = context;
     }
 

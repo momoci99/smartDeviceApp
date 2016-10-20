@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.notemel.deviceappalphav02">
 
-
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -28,41 +27,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".DeviceSearchActivity"
             android:label="센서디바이스 찾기"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SelectedDeviceInfoActivity"
             android:label="센서디바이스연결"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ServerConfigActivity"
-            android:label="ServerConfigActivity"></activity>
-
+            android:label="ServerConfigActivity" />
         <activity
             android:name=".DetailDeviceInfo"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FullDeviceListActivity"
             android:label="FullDeviceListActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ChartOptionSelectActivity"
-            android:label="ChartOptionSelectActivity"
-
-            ></activity>
-
+            android:label="ChartOptionSelectActivity" />
         <activity
             android:name=".ChartActivity"
-            android:label="ChartActivity"
+            android:label="ChartActivity" />
+        <activity
+            android:name=".AlertConfigActivity"
+            android:label="AlertConfigActivity" />
+        <service
+            android:name="service.AlarmService"
+            android:enabled="true"></service>
 
-            ></activity>
     </application>
 
 </manifest>

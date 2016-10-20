@@ -5,19 +5,23 @@
         <item
             android:id="@+id/ConnectSensor"
             android:icon="@drawable/nav_connect_sensor"
-            android:title="ConnectSensor" />
+            android:title="@string/ConnectSensor" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/nav_check_server"
-            android:title="CheckServer(working)" />
+            android:title="@string/CheckServer" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/nav_device_info"
-            android:title="DeviceInfo" />
+            android:title="@string/DeviceInfo" />
         <item
             android:id="@+id/nav_stats"
             android:icon="@drawable/nav_stats"
-            android:title="Stats" />
+            android:title="@string/Stats" />
+        <item
+            android:id="@+id/nav_alert_config"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/AlertConfig" />
     </group>
 
 

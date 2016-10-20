@@ -46,12 +46,10 @@ public class DBCommander {
 
     private static final String[] mColumnsSensorTime = {"TIME"};
 
-    private static final String[] mSensorElementData = {"co","tempt","hum","oxy"};
+    private static final String[] mSensorElementData = {"co", "tempt", "hum", "oxy"};
 
 
-
-    public static String[] getSensorElementData()
-    {
+    public static String[] getSensorElementData() {
         return mSensorElementData;
     }
 
@@ -60,8 +58,11 @@ public class DBCommander {
     */
     private static String mCreateDataTableQuery = null;
     private static String mCreateTableDeviceList_Query = null;
+    private static String mCreateTableAlertConfig_Query = null;
 
-    private static final String[] mDEVICE_LISTcolumnList = {"DEVICENAME", "TIME"};
+    private static final String[] mDEVICE_LISTcolumnList = {"DEVICENAME", "TIME"};//TEXT,TIMESTAMP
+    private static final String[] mALERT_CONFIG_columnList = {"CONFIG"};//TEXT
+    private static String mALERT_CONFIG_tableName = null;
 
     public static void InitDB(Context context) {
 
@@ -73,9 +74,13 @@ public class DBCommander {
             mDB = mDBHelper.getWritableDatabase();
             mCreateTableDeviceList_Query = context.getResources().getString(R.string.query_create_device_list);
             mCreateDataTableQuery = context.getResources().getString(R.string.query_create_data_table);
-
+            mCreateTableAlertConfig_Query = context.getResources().getString(R.string.query_create_alert_config_table);
+            mALERT_CONFIG_tableName = context.getResources().getString(R.string.table_name_ALERT_CONFIG);
             createDeviceListTable();
+            createAlertConfigTable();
 
+            //
+            checkAlertConfigTableEmpty();
         } catch (SQLiteException e) {
 
             e.printStackTrace();
@@ -83,10 +88,15 @@ public class DBCommander {
         }
     }
 
+
+    /** Create Table **/
     private static void createDeviceListTable() throws SQLiteException {
 
         Log.d(TAG, mCreateTableDeviceList_Query);
         mDB.execSQL(mCreateTableDeviceList_Query);
+    }
+    private static void createAlertConfigTable() {
+        mDB.execSQL(mCreateTableAlertConfig_Query);
     }
 
     public static void createDataTable(String deviceName) {
@@ -101,6 +111,32 @@ public class DBCommander {
 
     }
 
+    public static long checkAlertConfigTableEmpty()
+    {
+        Log.e(TAG,"ConfigTableRowCount : " + DatabaseUtils.queryNumEntries(mDB, mALERT_CONFIG_tableName));
+        return DatabaseUtils.queryNumEntries(mDB, mALERT_CONFIG_tableName);
+    }
+    public static void updateAlertConfigTable(String configData)
+    {
+        String insertDeviceList_Query = "";
+
+            insertDeviceList_Query = "INSERT OR REPLACE INTO ALERT_CONFIG (CONFIG) VALUES ";
+            insertDeviceList_Query += "(";
+            insertDeviceList_Query += "\"" +configData +"\"";
+            insertDeviceList_Query += ")";
+    }
+    public static String getAlertConfigData()
+    {
+        String configData = null;
+        Cursor result = mDB.query(mALERT_CONFIG_tableName, mALERT_CONFIG_columnList, null, null, null, null, null);
+        while (result.moveToNext()) {
+            configData = result.getString(0);
+
+
+        }
+        result.close();
+        return configData;
+    }
     public static void insertRow_DeviceList(CopyOnWriteArrayList<String> deviceList) {
         String insertDeviceList_Query = "";
         for (int i = 0; i < deviceList.size(); i++) {
@@ -189,28 +225,26 @@ public class DBCommander {
         return DBResultFormList;
     }
 
-    public static long getSensorDataRowCount(String tableName)
-    {
-        return DatabaseUtils.queryNumEntries(mDB,"'" + tableName + "'");
+    public static long getSensorDataRowCount(String tableName) {
+        return DatabaseUtils.queryNumEntries(mDB, "'" + tableName + "'");
 
     }
 
 
-    public static String getFirstSensorRecordTime(String deviceName)
-    {
+    public static String getFirstSensorRecordTime(String deviceName) {
 
         Cursor dataQueryResult =
-                mDB.query("'" + deviceName + "'", mColumnsSensorTime, null, null, null, null, null,"0 , 1");
+                mDB.query("'" + deviceName + "'", mColumnsSensorTime, null, null, null, null, null, "0 , 1");
 
         dataQueryResult.moveToNext();
         String time = dataQueryResult.getString(0);
         dataQueryResult.close();
         return time;
     }
-    public static String getLastSensorRecordTime(String deviceName)
-    {
+
+    public static String getLastSensorRecordTime(String deviceName) {
         Cursor dataQueryResult =
-                mDB.query("'" + deviceName + "'", mColumnsSensorTime, null, null, null, null, mColumnsSensorTime[0] + " desc","0 , 1");
+                mDB.query("'" + deviceName + "'", mColumnsSensorTime, null, null, null, null, mColumnsSensorTime[0] + " desc", "0 , 1");
 
         dataQueryResult.moveToNext();
         String time = dataQueryResult.getString(0);
@@ -220,17 +254,15 @@ public class DBCommander {
 
 
     /**
-     *
-     * @param deviceName - table name
-     * @param count - number of row
+     * @param deviceName   - table name
+     * @param count        - number of row
      * @param offsetNumber - offset
      * @return offset을 기준으로 count만큼의 row를 반환한다.
      */
-    public static ArrayList<DBResultForm> getSensorDataList(String deviceName, String count, String offsetNumber)
-    {
+    public static ArrayList<DBResultForm> getSensorDataList(String deviceName, String count, String offsetNumber) {
         ArrayList<DBResultForm> DBResultFormList = new ArrayList<>();
         Cursor dataQueryResult =
-                mDB.query("'" + deviceName + "'", mColumnsSensorData, null, null, null, null, null,offsetNumber+","+count);
+                mDB.query("'" + deviceName + "'", mColumnsSensorData, null, null, null, null, null, offsetNumber + "," + count);
 
 
         while (dataQueryResult.moveToNext()) {
@@ -266,8 +298,7 @@ public class DBCommander {
     }
 
     /**
-     *
-     * @param deviceName
+     * @param deviceName deviceName
      * @return SensorDataList
      */
     public static ArrayList<DBResultForm> getSensorDataList(String deviceName) {
@@ -379,35 +410,35 @@ public class DBCommander {
         result.close();
 
     }
-    public static String getMaxData(String deviceName, String columnName)
-    {
+
+    public static String getMaxData(String deviceName, String columnName) {
         double maxData = 0;
-        Cursor dataQueryResult = mDB.query("'" + deviceName + "'",new String[]{"MAX("+columnName+")"} , null, null, null, null, null);
+        Cursor dataQueryResult = mDB.query("'" + deviceName + "'", new String[]{"MAX(" + columnName + ")"}, null, null, null, null, null);
         while (dataQueryResult.moveToNext()) {
             maxData = dataQueryResult.getDouble(0);
         }
         dataQueryResult.close();
-        return String.format(Locale.US,"%.2f",maxData);
+        return String.format(Locale.US, "%.2f", maxData);
     }
-    public static String getMinData(String deviceName, String columnName)
-    {
+
+    public static String getMinData(String deviceName, String columnName) {
         double minData = 0;
-        Cursor dataQueryResult = mDB.query("'" + deviceName + "'",new String[]{"MIN("+columnName+")"} , null, null, null, null, null);
+        Cursor dataQueryResult = mDB.query("'" + deviceName + "'", new String[]{"MIN(" + columnName + ")"}, null, null, null, null, null);
         while (dataQueryResult.moveToNext()) {
             minData = dataQueryResult.getDouble(0);
         }
         dataQueryResult.close();
-        return String.format(Locale.US,"%.2f",minData);
+        return String.format(Locale.US, "%.2f", minData);
     }
-    public static String getAvgData(String deviceName, String columnName)
-    {
+
+    public static String getAvgData(String deviceName, String columnName) {
         double minData = 0;
-        Cursor dataQueryResult = mDB.query("'" + deviceName + "'",new String[]{"AVG("+columnName+")"} , null, null, null, null, null);
+        Cursor dataQueryResult = mDB.query("'" + deviceName + "'", new String[]{"AVG(" + columnName + ")"}, null, null, null, null, null);
         while (dataQueryResult.moveToNext()) {
             minData = dataQueryResult.getDouble(0);
         }
         dataQueryResult.close();
-        return String.format(Locale.US,"%.2f",minData);
+        return String.format(Locale.US, "%.2f", minData);
     }
 
 

@@ -177,7 +177,7 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
                         //이미 연결된 기기인지 확인. 이미 연결된 기기가 아니면 연결된 장치목록에 추가
                         // if(!mConnectionInfo.isDuplicatedDevice(mTargetDevice)) {
                         boolean isNormalConnection = true;
-                        mSocketConnector = new BlueToothClassic();
+                        mSocketConnector = new BlueToothClassic(getApplicationContext());
                         mSocketConnector.configConnection(mTargetDevice,mSignalReceiverHandler,isNormalConnection);
 
                         mThreadManager = ThreadManager.getInstance();

@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import adapter.ConnectedDeviceListAdapter;
+import service.AlarmService;
 import system.BluetoothConnectionMonitor;
 import db.DBCommander;
 import serverconnection.ServerConnectionHandler;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG = "MainActivity";
     static final int STATUS_UPDATE = 55;
     private String mIntentKey;
-
+    private String mServiceIntentKey;
     /*UI Components*/
     private ListView connectedDeiceListView;
     static ConnectedDeviceListAdapter listAdapter;
@@ -83,6 +84,8 @@ public class MainActivity extends AppCompatActivity
 
 
         mIntentKey = this.getResources().getString(R.string.ToDetailDeviceInfo);
+        mServiceIntentKey = this.getResources().getString(R.string.AlarmService_Key);
+
         tv_ConnectedDeviceList = (TextView)findViewById(R.id.tv_main_deviceList);
         tv_ServerStatus = (TextView)findViewById(R.id.tv_main_server_status);
         setTextUI(mTotalDeviceList.size());
@@ -111,10 +114,11 @@ public class MainActivity extends AppCompatActivity
 
 
         DBCommander.InitDB(this);
-
+        initService();
         //리커넥터 시작
         //mThreadManager.ActiveThread(mBluetoothReconnector);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -166,6 +170,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_stats) {
             Intent intent = new Intent(MainActivity.this, ChartOptionSelectActivity.class);
             startActivity(intent);
+        }  else if(id==R.id.nav_alert_config){
+            Intent intent = new Intent(MainActivity.this, AlertConfigActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -179,6 +186,14 @@ public class MainActivity extends AppCompatActivity
         mStatusReceiverHandler.updateConnectedDeviceList();
         setTextUI(mTotalDeviceList.size());
 
+    }
+
+    private void initService()
+    {
+        Intent serviceIntent = new Intent(this, AlarmService.class);
+        //serviceIntent.setAction(mServiceIntentKey);
+        serviceIntent.setPackage("com.android.service");
+        startService(serviceIntent);
     }
 
     private static class StatusReceiverHandler extends Handler {

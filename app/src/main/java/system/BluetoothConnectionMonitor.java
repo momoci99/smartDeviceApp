@@ -93,7 +93,7 @@ public class BluetoothConnectionMonitor implements Runnable {
 
     private Handler mTargetActivityHandler;
 
-    private BluetoothReconnector mBluetoothReconnector = new BluetoothReconnector();
+    //private BluetoothReconnector mBluetoothReconnector = new BluetoothReconnector();
 
     private final int WARNING_TIME_BOUND = 10000;       //10sec
     private final int DISCONNECTED_TIME_BOUND = 20000;  //20sec
@@ -285,7 +285,7 @@ public class BluetoothConnectionMonitor implements Runnable {
 
 
     private synchronized void tryReconnect(String MACAddress) {
-        mBluetoothReconnector.sendReconnectRequest(MACAddress);
+        //mBluetoothReconnector.sendReconnectRequest(MACAddress);
     }
 
     private synchronized void updateStatusTable(String MACAddress, String Status) {

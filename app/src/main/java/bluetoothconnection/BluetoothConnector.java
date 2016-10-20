@@ -3,6 +3,7 @@ package bluetoothconnection;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
@@ -17,6 +18,9 @@ import system.BluetoothConnectionMonitor;
  * Created by Melchior_S on 2016-09-02.
  */
 public class BluetoothConnector {
+
+
+    private final String TAG = BluetoothConnector.this.getClass().getSimpleName();
 
     //0xFF,0xFF 감지용 변수
     private final byte EOF = (byte) 0xFF;
@@ -35,6 +39,12 @@ public class BluetoothConnector {
     private BluetoothDevice mBluetoothDevice;
 
 
+
+    public BluetoothConnector(Context context)
+    {
+        this.mContext =context;
+
+    }
 
     /**
      * @param bluetoothDevice for Bluetooth Classic
@@ -139,7 +149,10 @@ public class BluetoothConnector {
         {
             try{
                 DBCommander.insertRow_SensorTable(mTransactionForm);
+                dataLoger();
+                checkCondition();
                 mTransactionForm.reset();
+
             }
             catch (Exception e)
             {
@@ -147,6 +160,47 @@ public class BluetoothConnector {
             }
 
         }
+
+    }
+    private void checkCondition()
+    {
+        for (int i = 0; i < mTransactionForm.getSID().length; i++) {
+            if (mTransactionForm.getIntData()[i] == -1) {
+                if(mTransactionForm.getSID()[i].equals("tempt") && mTransactionForm.getFloatData()[i]>=30.0)
+                {
+                    Log.e(TAG,"gotit");
+                    sendAlertBroadcast("tempt");
+                }
+            } else if (mTransactionForm.getFloatData()[i] == -1) {
+
+            }
+        }
+    }
+    private void dataLoger()
+    {
+        Log.d(TAG,"-----------------------------");
+        Log.d(TAG,"from Loger");
+        Log.d(TAG,mTransactionForm.getAddress());
+        Log.d(TAG,mTransactionForm.getName());
+
+
+        for (int i = 0; i < mTransactionForm.getSID().length; i++) {
+            if (mTransactionForm.getIntData()[i] == -1) {
+                Log.d(TAG, mTransactionForm.getSID()[i] +" : "+mTransactionForm.getFloatData()[i]);
+            } else if (mTransactionForm.getFloatData()[i] == -1) {
+                Log.d(TAG, mTransactionForm.getSID()[i]+" : "+mTransactionForm.getIntData()[i]);
+            }
+        }
+
+
+        Log.d(TAG,"-----------------------------");
+    }
+    private void sendAlertBroadcast(String message)
+    {
+        Intent sendAlertIntent = new Intent();
+        sendAlertIntent.setAction("YOUR_INTENT_FILTER");
+        sendAlertIntent.putExtra("alert",message);
+        mContext.sendBroadcast(sendAlertIntent);
 
     }
 
