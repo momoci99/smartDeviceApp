@@ -65,5 +65,9 @@
     <string name="Oxygen_Level">Oxygen_Level</string>
     <string name="Humidity_Level">Humidity_Level</string>
 
-
+    <!--for DefaultData(AlertConfigData !-->
+    <string name="CO_Level_Default">30.0</string>
+    <string name="Temperature_Level_Default">30.0</string>
+    <string name="Oxygen_Level_Default">19.0</string>
+    <string name="Humidity_Level_Default">80.0</string>
 </resources>

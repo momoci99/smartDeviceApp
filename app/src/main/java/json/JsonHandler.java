@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -74,4 +75,25 @@ public class JsonHandler {
         return Double.valueOf(d3_format);
     }
 
+    public static String getConfigJSONtoString(HashMap<String, Boolean> alertOptionHash,
+                                               HashMap<String, Float> alertDataHash,
+                                               ArrayList<String> alertOptionIndexList,
+                                               ArrayList<String> alertConfigDataIndexList) {
+        JSONObject configData = new JSONObject();
+        for (int i = 0; i < alertOptionIndexList.size(); i++) {
+            try {
+                configData.put(alertOptionIndexList.get(i), alertOptionHash.get(alertOptionIndexList.get(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        for (int j = 0; j < alertConfigDataIndexList.size(); j++) {
+            try {
+                configData.put(alertConfigDataIndexList.get(j), alertDataHash.get(alertConfigDataIndexList.get(j)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return configData.toString();
+    }
 }

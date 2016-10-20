@@ -124,6 +124,7 @@ public class DBCommander {
             insertDeviceList_Query += "(";
             insertDeviceList_Query += "\"" +configData +"\"";
             insertDeviceList_Query += ")";
+        mDB.execSQL(insertDeviceList_Query);
     }
     public static String getAlertConfigData()
     {

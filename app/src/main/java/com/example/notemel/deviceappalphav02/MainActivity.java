@@ -27,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import adapter.ConnectedDeviceListAdapter;
 import service.AlarmService;
+import system.AlertConfigHandler;
 import system.BluetoothConnectionMonitor;
 import db.DBCommander;
 import serverconnection.ServerConnectionHandler;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     static final int STATUS_UPDATE = 55;
     private String mIntentKey;
     private String mServiceIntentKey;
+
     /*UI Components*/
     private ListView connectedDeiceListView;
     static ConnectedDeviceListAdapter listAdapter;
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     private ServerConnectionHandler mServerConnectionHandler = ServerConnectionHandler.getInstance();
     private static StatusReceiverHandler mStatusReceiverHandler = new StatusReceiverHandler();
 
-
+    private AlertConfigHandler mAlertConfigHandler = AlertConfigHandler.getInstance();
 
     //모든 기기 목록 - MACAddress
     private static CopyOnWriteArrayList<String> mTotalDeviceList = new CopyOnWriteArrayList<>();
@@ -113,7 +115,9 @@ public class MainActivity extends AppCompatActivity
         mThreadManager.ActiveThread(mServerConnectionHandler);
 
 
+
         DBCommander.InitDB(this);
+        //mAlertConfigHandler.initConfig(this);
         initService();
         //리커넥터 시작
         //mThreadManager.ActiveThread(mBluetoothReconnector);
