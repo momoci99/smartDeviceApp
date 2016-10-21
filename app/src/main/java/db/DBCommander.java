@@ -79,8 +79,6 @@ public class DBCommander {
             createDeviceListTable();
             createAlertConfigTable();
 
-            //
-            checkAlertConfigTableEmpty();
         } catch (SQLiteException e) {
 
             e.printStackTrace();
@@ -122,7 +120,7 @@ public class DBCommander {
 
             insertDeviceList_Query = "INSERT OR REPLACE INTO ALERT_CONFIG (CONFIG) VALUES ";
             insertDeviceList_Query += "(";
-            insertDeviceList_Query += "\"" +configData +"\"";
+            insertDeviceList_Query += "'" +configData +"'";
             insertDeviceList_Query += ")";
         mDB.execSQL(insertDeviceList_Query);
     }

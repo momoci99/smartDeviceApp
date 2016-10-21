@@ -13,6 +13,7 @@ import db.DBCommander;
 import format.TransactionForm;
 import parser.ParserV3;
 import system.BluetoothConnectionMonitor;
+import system.ConditionChecker;
 
 /**
  * Created by Melchior_S on 2016-09-02.
@@ -27,6 +28,7 @@ public class BluetoothConnector {
     private ParserV3 mParser = new ParserV3();
 
     private BluetoothConnectionMonitor mBluetoothConnectionMonitor = new BluetoothConnectionMonitor();
+    private ConditionChecker mConditionChecker;
 
     private ArrayList<Byte> slicedBytes = new ArrayList<>();
     private ByteBuffer accByteBuffer = ByteBuffer.allocate(1024);
@@ -43,6 +45,7 @@ public class BluetoothConnector {
     public BluetoothConnector(Context context)
     {
         this.mContext =context;
+        mConditionChecker = new ConditionChecker(mContext);
 
     }
 
@@ -150,7 +153,7 @@ public class BluetoothConnector {
             try{
                 DBCommander.insertRow_SensorTable(mTransactionForm);
                 dataLoger();
-                checkCondition();
+                mConditionChecker.checkCondition(mTransactionForm);
                 mTransactionForm.reset();
 
             }
@@ -162,20 +165,7 @@ public class BluetoothConnector {
         }
 
     }
-    private void checkCondition()
-    {
-        for (int i = 0; i < mTransactionForm.getSID().length; i++) {
-            if (mTransactionForm.getIntData()[i] == -1) {
-                if(mTransactionForm.getSID()[i].equals("tempt") && mTransactionForm.getFloatData()[i]>=30.0)
-                {
-                    Log.e(TAG,"gotit");
-                    sendAlertBroadcast("tempt");
-                }
-            } else if (mTransactionForm.getFloatData()[i] == -1) {
 
-            }
-        }
-    }
     private void dataLoger()
     {
         Log.d(TAG,"-----------------------------");
@@ -195,13 +185,6 @@ public class BluetoothConnector {
 
         Log.d(TAG,"-----------------------------");
     }
-    private void sendAlertBroadcast(String message)
-    {
-        Intent sendAlertIntent = new Intent();
-        sendAlertIntent.setAction("YOUR_INTENT_FILTER");
-        sendAlertIntent.putExtra("alert",message);
-        mContext.sendBroadcast(sendAlertIntent);
 
-    }
 
 }

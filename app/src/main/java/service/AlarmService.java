@@ -15,6 +15,8 @@ import android.util.Log;
 
 import com.example.notemel.deviceappalphav02.R;
 
+import java.util.ArrayList;
+
 /**
  * Created by Melchior_S on 2016-10-19.
  */
@@ -81,8 +83,14 @@ public class AlarmService extends Service {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("YOUR_INTENT_FILTER")) {
                 //HERE YOU WILL GET VALUES FROM BROADCAST THROUGH INTENT EDIT YOUR TEXTVIEW///////////
-                String receivedValue = intent.getStringExtra("alert");
-                Log.e(TAG, receivedValue + " burn!!!!!!");
+                ArrayList<String> mAlertInfoList = intent.getStringArrayListExtra("alert");
+                Log.e(TAG, "name: " + mAlertInfoList.get(0));
+                Log.e(TAG, "Type: " + mAlertInfoList.get(1));
+                Log.e(TAG, "Value: " + mAlertInfoList.get(2));
+
+                //옵션에 따라 노티피케이션, 경보음 알람 실시
+                //반복시간설정.
+                //가령 노티나 경보음 알람 1회실행후 5초간 무시한다던지..ㅇㅇ
             }
         }
     };

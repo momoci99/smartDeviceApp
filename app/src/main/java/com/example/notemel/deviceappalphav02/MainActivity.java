@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity
 
 
         DBCommander.InitDB(this);
-        //mAlertConfigHandler.initConfig(this);
+        mAlertConfigHandler.initConfig(this);
         initService();
         //리커넥터 시작
         //mThreadManager.ActiveThread(mBluetoothReconnector);
