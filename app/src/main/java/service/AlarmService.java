@@ -88,6 +88,7 @@ public class AlarmService extends Service {
                 Log.e(TAG, "Type: " + mAlertInfoList.get(1));
                 Log.e(TAG, "Value: " + mAlertInfoList.get(2));
 
+
                 //옵션에 따라 노티피케이션, 경보음 알람 실시
                 //반복시간설정.
                 //가령 노티나 경보음 알람 1회실행후 5초간 무시한다던지..ㅇㅇ
