@@ -65,7 +65,11 @@
     <string name="Oxygen_Level">Oxygen_Level</string>
     <string name="Humidity_Level">Humidity_Level</string>
 
-    <!--for DefaultData(AlertConfigData !-->
+    <string name="Input_Error_Too_HIGH_String">Value is too High</string>
+    <string name="Input_Error_Too_LOW_String">Value is too Low</string>
+    <string name="Input_Error_Wrong_input_String">Wrong Input</string>
+
+    <!--for DefaultData(AlertConfigData) !-->
     <string name="CO_Level_Default">30.0</string>
     <string name="Temperature_Level_Default">30.0</string>
     <string name="Oxygen_Level_Default">19.0</string>
