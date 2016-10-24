@@ -50,7 +50,6 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
     private TextView deviceAddressTv;
     private Button startConnectionBtn;
     private Button startPairBtn;
-    private Button testButton;
 
     //통신을 위한 객체
     private BlueToothClassic mSocketConnector;
@@ -63,11 +62,11 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
 
 
     //Signal
-    private final int CONNECT_SUCCESS = 1;
+    private final static int CONNECT_SUCCESS = 1;
 
-    private final int CONNECT_FAIL = -1;
+    private final static int CONNECT_FAIL = -1;
 
-    private ProgressDialog mProgressDialog;
+    private static ProgressDialog mProgressDialog;
 
     private boolean mConnected = false;
 
@@ -126,7 +125,7 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
         deviceAddressTv  = (TextView)findViewById(R.id.tv_data);
         startConnectionBtn     = (Button)findViewById(R.id.btn_connect);
         startPairBtn        = (Button)findViewById(R.id.btn_pair);
-        testButton = (Button)findViewById(R.id.btn_bletest);
+
 
 
         mTargetDevice = mSelectedDevice.get(0);
@@ -159,12 +158,7 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
         }
 
 
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
 
         startConnectionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,13 +179,13 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
 
                         mProgressDialog = new ProgressDialog(SelectedDeviceInfoActivity.this);
                         mProgressDialog.setCancelable(false);
-                        mProgressDialog.setMessage(mTargetDevice.getName() + "과(와) 연결중입니다.");
+                        mProgressDialog.setMessage(mTargetDevice.getName() + "is now Connecting");
                         mProgressDialog.show();
                     }
                 }
                 else if(mTargetDevice.getType() == BluetoothDevice.DEVICE_TYPE_LE)
                 {
-                    showToast("BLE장치 입니다.");
+                    showToast("BLE Device");
                     if(mBluetoothLeConnector !=null )
                     {
                         setBLEConnection();
@@ -300,11 +294,11 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
                     break;
                 case CONNECT_SUCCESS:
                     mProgressDialog.dismiss();
-                    showToast("연결완료");
+                    showToast("Connect Success");
                     break;
                 case CONNECT_FAIL:
                     mProgressDialog.dismiss();
-                    showToast("연결을 실패하였습니다. 장치연결을 다시확인해주세요.");
+                    showToast("Connect Failed Check Device");
                     break;
                 default:
                     break;
@@ -324,7 +318,7 @@ public class SelectedDeviceInfoActivity extends AppCompatActivity {
         super.onResume();
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeConnector != null) {
-            final boolean result = mBluetoothLeConnector.connect(mTargetDevice.getAddress().toString());
+            final boolean result = mBluetoothLeConnector.connect(mTargetDevice.getAddress());
             Log.d("커텍션 리퀘스트 결과", "Connect request result=" + result);
         }
     }

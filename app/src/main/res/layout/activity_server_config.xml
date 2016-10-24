@@ -4,6 +4,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--
     <Button
         android:text="@string/Check"
         android:layout_width="wrap_content"
@@ -14,31 +15,35 @@
         android:layout_marginTop="10dp"
         android:id="@+id/btn_server_check" />
 
-    <TextView
+<TextView
         android:text="@string/CheckServerStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView5"
-        android:layout_marginStart="47dp"
+        android:layout_marginStart="10dp"
         android:layout_alignBaseline="@+id/btn_server_check"
         android:layout_alignBottom="@+id/btn_server_check"
         android:layout_alignParentStart="true" />
+    !-->
 
     <TextView
         android:text="@string/ServerConnection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="16dp"
         android:id="@+id/textView13"
-        android:layout_below="@+id/btn_server_check"
-        android:layout_alignStart="@+id/textView5" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp" />
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sw_server_connect"
-        android:layout_marginStart="23dp"
-        android:layout_alignTop="@+id/textView13"
-        android:layout_alignStart="@+id/btn_server_check" />
+        android:layout_marginEnd="29dp"
+        android:layout_alignBaseline="@+id/textView13"
+        android:layout_alignBottom="@+id/textView13"
+        android:layout_alignParentEnd="true" />
+
 
 </RelativeLayout>

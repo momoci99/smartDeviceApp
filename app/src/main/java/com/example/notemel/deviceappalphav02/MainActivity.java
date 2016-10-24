@@ -303,11 +303,11 @@ public class MainActivity extends AppCompatActivity
 
         if(mServerConnectionHandler.getSendingStatus())
         {
-            tv_ServerStatus.setText("Sending");
+            tv_ServerStatus.setText("Activated");
         }
         else
         {
-            tv_ServerStatus.setText("Suspend");
+            tv_ServerStatus.setText("Deactivated");
         }
 
     }

@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -29,31 +30,32 @@
         </activity>
         <activity
             android:name=".DeviceSearchActivity"
-            android:label="센서디바이스 찾기"
+            android:label="DeviceSearch"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SelectedDeviceInfoActivity"
-            android:label="센서디바이스연결"
+            android:label="@string/DeviceInfo"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ServerConfigActivity"
-            android:label="ServerConfigActivity" />
+            android:label="ServerConfig" />
         <activity
             android:name=".DetailDeviceInfo"
+            android:label="DetailDeviceInfo"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FullDeviceListActivity"
-            android:label="FullDeviceListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="DeviceLog"
+        />
         <activity
             android:name=".ChartOptionSelectActivity"
-            android:label="ChartOptionSelectActivity" />
+            android:label="ChartOption" />
         <activity
             android:name=".ChartActivity"
-            android:label="ChartActivity" />
+            android:label="Chart" />
         <activity
             android:name=".AlertConfigActivity"
-            android:label="AlertConfigActivity" />
+            android:label="AlertConfig" />
         <service
             android:name="service.AlarmService"
             android:enabled="true"></service>

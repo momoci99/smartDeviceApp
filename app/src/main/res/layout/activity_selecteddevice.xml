@@ -31,7 +31,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="연결"
+        android:text="Connect"
         android:id="@+id/btn_connect"
         android:layout_alignTop="@+id/btn_pair"
         android:layout_alignParentStart="true"
@@ -46,13 +46,5 @@
         android:layout_below="@+id/tv_data"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="73dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="bletest"
-        android:id="@+id/btn_bletest"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/btn_connect" />
 
 </RelativeLayout>

@@ -17,7 +17,7 @@ import fragment.SensorDataTableFragment;
 public class DetailDeviceInfo extends AppCompatActivity {
 
 
-    private static SensorDataTableFragment mSensorDataTableFragment;
+    private SensorDataTableFragment mSensorDataTableFragment;
     private FragmentManager mFragmentManager ;
 
     TextView boardVerTV;
@@ -37,7 +37,7 @@ public class DetailDeviceInfo extends AppCompatActivity {
         setContentView(R.layout.activity_detaildeviceinfo);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(mSelectedDevice + " Info");
+        toolbar.setTitle(mSelectedDevice + " Log");
         setSupportActionBar(toolbar);
 
 
