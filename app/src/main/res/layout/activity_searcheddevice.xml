@@ -9,54 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sw_bluetooth"
-        android:layout_marginTop="86dp"
-        android:checked="false"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/tv_btStats"
-        android:layout_marginStart="62dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="블루투스 ON/OFF"
-        android:id="@+id/tv_btStats"
-        android:layout_marginStart="51dp"
-        android:layout_alignTop="@+id/sw_bluetooth"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="장치스캔"
-        android:id="@+id/textView3"
-        android:layout_marginTop="41dp"
-        android:layout_below="@+id/sw_bluetooth"
-        android:layout_alignStart="@+id/tv_btStats" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="스캔"
-        android:id="@+id/bt_scan"
-        android:layout_above="@+id/textView4"
-        android:layout_alignEnd="@+id/sw_bluetooth" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="스캔된 장치"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/textView3"
-        android:layout_alignStart="@+id/textView3"
-        android:layout_marginTop="64dp" />
-
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,6 +16,57 @@
         android:layout_below="@+id/textView4"
         android:layout_alignStart="@+id/textView4"
         android:layout_alignEnd="@+id/bt_scan" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DeviceScan"
+        android:id="@+id/textView3"
+        android:layout_marginTop="41dp"
+        android:layout_below="@+id/sw_bluetooth"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="18sp"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bluetooth ON/OFF"
+        android:id="@+id/tv_btStats"
+        android:layout_alignTop="@+id/sw_bluetooth"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="18sp"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ScanResult"
+        android:id="@+id/textView4"
+        android:layout_marginTop="63dp"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="18sp"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SCAN"
+        android:id="@+id/bt_scan"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="22dp" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sw_bluetooth"
+        android:layout_marginTop="85dp"
+        android:checked="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/bt_scan"
+         />
 
 
 </RelativeLayout>

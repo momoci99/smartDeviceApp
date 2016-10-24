@@ -37,12 +37,18 @@ public class ServerConnectionHandler implements Runnable {
 
     private volatile static ServerConnectionHandler objectInstance;
 
-    private boolean sendFlag = false;
+    //true is default;
+    private boolean sendFlag = true;
 
     public void setSendFlag(boolean flag)
     {
         this.sendFlag = flag;
     }
+    public boolean getSendFlagStatus()
+    {
+        return sendFlag;
+    }
+
 
     public boolean getSendingStatus()
     {

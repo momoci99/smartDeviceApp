@@ -24,10 +24,7 @@ public class ServerChecker implements Runnable{
 
     private final String url = "http://hive.codefict.com/hive/data";
 
-    public ServerChecker (Handler targetHandler)
-    {
-        this.mTargetHandler = targetHandler;
-    }
+
 
     @Override
     public void run() {

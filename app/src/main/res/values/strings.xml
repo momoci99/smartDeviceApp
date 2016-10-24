@@ -6,6 +6,25 @@
 
     <string name="action_settings">Settings</string>
 
+    <!-- for common !-->
+    <string name="Temperature">Temperature</string>
+    <string name="Humidity">Humidity</string>
+    <string name="Oxygen">Oxygen</string>
+    <string name="CO">CO</string>
+
+    <string name="Temperature_KOR">온도</string>
+    <string name="Humidity_KOR">습도</string>
+    <string name="Oxygen_KOR">산소</string>
+    <string name="CO_KOR">일산화탄소</string>
+
+
+    <string name="Concentration_KOR">농도</string>
+
+
+    <string name="Celsius_KOR">도</string>
+    <string name="PPM_KOR">피피엠</string>
+    <string name="Percent_KOR">퍼센트</string>
+
     <!-- for DBQuery !-->
     <string name="query_create_device_list">CREATE TABLE IF NOT EXISTS DEVICE_LIST (DEVICENAME TEXT PRIMARY KEY,  TIME TIMESTAMP DEFAULT CURRENT_TIMESTAMP);</string>
     <string name="table_name_device_list">DEVICE_LIST</string>
@@ -47,10 +66,7 @@
     <string name="NotificationAlert">NotificationAlert</string>
 
     <string name="SetAlertBorder">SetAlertBorder(defaultValue)</string>
-    <string name="Temperature">Temperature</string>
-    <string name="Humidity">Humidity</string>
-    <string name="Oxygen">Oxygen</string>
-    <string name="CO">CO</string>
+
 
     <!--for AlertConfigData !-->
     <string name="SoundAlertEnable">SoundAlertEnable</string>

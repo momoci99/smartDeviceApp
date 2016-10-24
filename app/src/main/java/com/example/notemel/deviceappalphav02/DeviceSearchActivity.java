@@ -116,9 +116,9 @@ public class DeviceSearchActivity extends AppCompatActivity {
 
         //다이얼로그 정의
         progressDlg = new ProgressDialog(this);
-        progressDlg.setMessage("탐색중...");
+        progressDlg.setMessage("Scanning...");
         progressDlg.setCancelable(false);
-        progressDlg.setButton(DialogInterface.BUTTON_NEGATIVE, "취소", new DialogInterface.OnClickListener() {
+        progressDlg.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel Scan", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -178,7 +178,7 @@ public class DeviceSearchActivity extends AppCompatActivity {
     }
 
     private void showUnsupported() {
-        showToast("블루투스 미지원기기입니다.");
+        showToast("No Bluetooth Interface.");
         bluetoothOnOffSwitch.setEnabled(false);
         searchBtn.setEnabled(false);
     }

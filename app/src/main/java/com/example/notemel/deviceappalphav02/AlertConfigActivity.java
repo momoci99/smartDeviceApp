@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -134,6 +135,7 @@ public class AlertConfigActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mAlertConfigHandler.updateAlertOptionHash(mSoundAlertEnable, isChecked);
+                showToastMessage(cbx_SoundAlert.getText().toString(), isChecked);
             }
         });
 
@@ -141,30 +143,35 @@ public class AlertConfigActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mAlertConfigHandler.updateAlertOptionHash(mNotificationAlertEnable, isChecked);
+                showToastMessage(cbx_NotificationAlert.getText().toString(), isChecked);
             }
         });
         cbx_Temperature.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mAlertConfigHandler.updateAlertOptionHash(mTemperatureEnable, isChecked);
+                showToastMessage(cbx_Temperature.getText().toString(), isChecked);
             }
         });
         cbx_Humidity.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mAlertConfigHandler.updateAlertOptionHash(mHumidityEnable, isChecked);
+                showToastMessage(cbx_Humidity.getText().toString(), isChecked);
             }
         });
         cbx_Oxygen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mAlertConfigHandler.updateAlertOptionHash(mOxygenEnable, isChecked);
+                showToastMessage(cbx_Oxygen.getText().toString(), isChecked);
             }
         });
         cbx_CO.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mAlertConfigHandler.updateAlertOptionHash(mCOEnable, isChecked);
+                showToastMessage(cbx_CO.getText().toString(), isChecked);
             }
         });
 
@@ -186,9 +193,8 @@ public class AlertConfigActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(inputFilter(s.toString(), edt_TemperatureValue, mTemperatureMax, mTemperatureMin))
-                {
-                    mAlertConfigHandler.updateAlertDataHash(mTemperature_Level,Float.parseFloat(s.toString()));
+                if (inputFilter(s.toString(), edt_TemperatureValue, mTemperatureMax, mTemperatureMin)) {
+                    mAlertConfigHandler.updateAlertDataHash(mTemperature_Level, Float.parseFloat(s.toString()));
                 }
             }
         });
@@ -205,9 +211,8 @@ public class AlertConfigActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(inputFilter(s.toString(), edt_HumidityValue, mHumidityMax, mHumidityMin))
-                {
-                    mAlertConfigHandler.updateAlertDataHash(mHumidity_Level,Float.parseFloat(s.toString()));
+                if (inputFilter(s.toString(), edt_HumidityValue, mHumidityMax, mHumidityMin)) {
+                    mAlertConfigHandler.updateAlertDataHash(mHumidity_Level, Float.parseFloat(s.toString()));
                 }
             }
         });
@@ -226,9 +231,8 @@ public class AlertConfigActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(inputFilter(s.toString(), edt_OxygenValue, mOxygenMax, mOxygenMin))
-                {
-                    mAlertConfigHandler.updateAlertDataHash(mOxygen_Level,Float.parseFloat(s.toString()));
+                if (inputFilter(s.toString(), edt_OxygenValue, mOxygenMax, mOxygenMin)) {
+                    mAlertConfigHandler.updateAlertDataHash(mOxygen_Level, Float.parseFloat(s.toString()));
                 }
             }
         });
@@ -247,9 +251,8 @@ public class AlertConfigActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(inputFilter(s.toString(), edt_COValue, mCOMax, mCOMin))
-                {
-                    mAlertConfigHandler.updateAlertDataHash(mCO_Level,Float.parseFloat(s.toString()));
+                if (inputFilter(s.toString(), edt_COValue, mCOMax, mCOMin)) {
+                    mAlertConfigHandler.updateAlertDataHash(mCO_Level, Float.parseFloat(s.toString()));
                 }
 
             }
@@ -269,9 +272,7 @@ public class AlertConfigActivity extends AppCompatActivity {
                 } else if (inputValue < min) {
                     editTextObj.setText(String.valueOf(min));
                     showAlertTextInputError(mTooLowString);
-                }
-                else
-                {
+                } else {
                     isCorrectValue = true;
                 }
             }
@@ -294,5 +295,18 @@ public class AlertConfigActivity extends AppCompatActivity {
         alert.setMessage(text);
         alert.show();
 
+    }
+
+    private void showToastMessage(String type, boolean isAct) {
+        String actMessage = " is now activated";
+        String deActMessage = " is now deactivated";
+        String message = type;
+        if (isAct) {
+            message += actMessage;
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        } else {
+            message += deActMessage;
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
     }
 }

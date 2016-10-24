@@ -30,34 +30,25 @@ public class ServerConfigActivity extends AppCompatActivity {
 
     private ThreadManager mThreadManager = ThreadManager.getInstance();
     private ServerConnectionHandler mServerConnectionHandler = ServerConnectionHandler.getInstance();
-    private ServerChecker mServerChecker;
 
-    private StatusReceiverHandler mStatusReceiverHandler = new StatusReceiverHandler();
 
-    private Button btn_ServerCheck  ;
-    private Switch sw_ServerConnect ;
+    private Button btn_ServerCheck;
+    private Switch sw_ServerConnect;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_server_config);
-        mServerChecker = new ServerChecker(mStatusReceiverHandler);
 
-        btn_ServerCheck  = (Button) findViewById(R.id.btn_server_check);
+
+
         sw_ServerConnect = (Switch) findViewById(R.id.sw_server_connect);
 
 
-        btn_ServerCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mThreadManager.ActiveThread(mServerChecker);
+        initConnectSwitch();
 
 
-            }
-        });
 
         sw_ServerConnect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -74,25 +65,14 @@ public class ServerConfigActivity extends AppCompatActivity {
 
     }
 
-    private void connectSwitchInit(boolean flag)
-    {
-        sw_ServerConnect.setChecked(flag);
+    @Override
+    protected void onResume() {
+        initConnectSwitch();
+        super.onResume();
     }
 
-    private static class StatusReceiverHandler extends Handler {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 99:
-                    //TODO:LISTVIEW 로 갱신시켜야지뭐...ㅅㅂ
-                    break;
-                default:
-                    break;
-
-            }
-        }
-
-
+    private void initConnectSwitch() {
+        sw_ServerConnect.setChecked(mServerConnectionHandler.getSendFlagStatus());
     }
+
 }
