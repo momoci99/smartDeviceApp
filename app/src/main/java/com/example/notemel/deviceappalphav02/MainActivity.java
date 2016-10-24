@@ -1,6 +1,9 @@
 package com.example.notemel.deviceappalphav02;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,11 +45,14 @@ public class MainActivity extends AppCompatActivity
     private String mIntentKey;
     private String mServiceIntentKey;
 
+
     /*UI Components*/
     private ListView connectedDeiceListView;
     static ConnectedDeviceListAdapter listAdapter;
     private TextView tv_ConnectedDeviceList;
     private TextView tv_ServerStatus;
+    private TextView tv_SensorData;
+
 
     private ThreadManager mThreadManager = ThreadManager.getInstance();
     private BluetoothConnectionMonitor mBlueToothConnectionMonitor = BluetoothConnectionMonitor.getInstance();
@@ -65,9 +72,6 @@ public class MainActivity extends AppCompatActivity
     private static ConcurrentHashMap<String, String> mConnectionStatusTable = new ConcurrentHashMap<>();
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,12 +88,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        tv_SensorData = (TextView)findViewById(R.id.tv_sensor_data_list_main);
+
 
         mIntentKey = this.getResources().getString(R.string.ToDetailDeviceInfo);
         mServiceIntentKey = this.getResources().getString(R.string.AlarmService_Key);
 
-        tv_ConnectedDeviceList = (TextView)findViewById(R.id.tv_main_deviceList);
-        tv_ServerStatus = (TextView)findViewById(R.id.tv_main_server_status);
+        tv_ConnectedDeviceList = (TextView) findViewById(R.id.tv_main_deviceList);
+        tv_ServerStatus = (TextView) findViewById(R.id.tv_main_server_status);
+        tv_SensorData.setText("");
         setTextUI(mTotalDeviceList.size());
 
         final String mac = getMacAddr();
@@ -115,14 +122,19 @@ public class MainActivity extends AppCompatActivity
         mThreadManager.ActiveThread(mServerConnectionHandler);
 
 
-
         DBCommander.InitDB(this);
         mAlertConfigHandler.initConfig(this);
         initService();
+        setIntentFilter();
         //리커넥터 시작
         //mThreadManager.ActiveThread(mBluetoothReconnector);
     }
 
+    private void setIntentFilter() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("MAIN_MONITOR");
+        registerReceiver(broadcastReceiver, filter);
+    }
 
     @Override
     public void onBackPressed() {
@@ -174,7 +186,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_stats) {
             Intent intent = new Intent(MainActivity.this, ChartOptionSelectActivity.class);
             startActivity(intent);
-        }  else if(id==R.id.nav_alert_config){
+        } else if (id == R.id.nav_alert_config) {
             Intent intent = new Intent(MainActivity.this, AlertConfigActivity.class);
             startActivity(intent);
         }
@@ -185,20 +197,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         mStatusReceiverHandler.updateConnectedDeviceList();
         setTextUI(mTotalDeviceList.size());
 
     }
 
-    private void initService()
+    @Override
+    protected void onDestroy()
     {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
+
+    private void initService() {
         Intent serviceIntent = new Intent(this, AlarmService.class);
         //serviceIntent.setAction(mServiceIntentKey);
         serviceIntent.setPackage("com.android.service");
         startService(serviceIntent);
     }
+
 
     private static class StatusReceiverHandler extends Handler {
 
@@ -290,25 +309,36 @@ public class MainActivity extends AppCompatActivity
         }
         return "02:00:00:00:00:00";
     }
-    private void setTextUI(int count)
-    {
-        if(count == 0)
-        {
+
+    private void setTextUI(int count) {
+        if (count == 0) {
             tv_ConnectedDeviceList.setText("Please Connect Sensor Device");
-        }
-        else
-        {
+        } else {
             tv_ConnectedDeviceList.setText("Connected Device List");
         }
 
-        if(mServerConnectionHandler.getSendingStatus())
-        {
+        if (mServerConnectionHandler.getSendingStatus()) {
             tv_ServerStatus.setText("Activated");
-        }
-        else
-        {
+        } else {
             tv_ServerStatus.setText("Deactivated");
         }
 
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("MAIN_MONITOR")) {
+                ArrayList<String> mAlertInfoList = intent.getStringArrayListExtra("DATA_Info_List");
+                tv_SensorData.setText("");
+                for(int i=0; i<mAlertInfoList.size(); i++)
+                {
+                    tv_SensorData.append(mAlertInfoList.get(i));
+                    tv_SensorData.append("\n");
+
+                }
+            }
+        }
+
+    };
 }

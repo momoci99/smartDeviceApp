@@ -37,16 +37,16 @@
 
             <ListView
                 android:id="@+id/lv_connectionstatus"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/tv_main_deviceList" />
+                android:layout_below="@+id/tv_main_deviceList"
+               />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="40">
+            android:layout_weight="10">
 
             <TextView
                 android:id="@+id/TextView14"
@@ -66,6 +66,31 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20">
+
+
+            <TextView
+                android:text="Data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textSize="20sp"
+                android:id="@+id/textView5"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:text="......"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_sensor_data_list_main"
+                android:textSize="20sp"
+                android:layout_below="@+id/textView5"
+                android:layout_alignParentStart="true" />
+        </RelativeLayout>
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
