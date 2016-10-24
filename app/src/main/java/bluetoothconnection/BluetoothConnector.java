@@ -14,6 +14,7 @@ import format.TransactionForm;
 import parser.ParserV3;
 import system.BluetoothConnectionMonitor;
 import system.ConditionChecker;
+import system.MainMonitor;
 
 /**
  * Created by Melchior_S on 2016-09-02.
@@ -29,6 +30,7 @@ public class BluetoothConnector {
 
     private BluetoothConnectionMonitor mBluetoothConnectionMonitor = new BluetoothConnectionMonitor();
     private ConditionChecker mConditionChecker;
+    private MainMonitor mMainMonitor;
 
     private ArrayList<Byte> slicedBytes = new ArrayList<>();
     private ByteBuffer accByteBuffer = ByteBuffer.allocate(1024);
@@ -46,7 +48,7 @@ public class BluetoothConnector {
     {
         this.mContext =context;
         mConditionChecker = new ConditionChecker(mContext);
-
+        mMainMonitor = new MainMonitor(mContext);
     }
 
     /**
@@ -154,6 +156,8 @@ public class BluetoothConnector {
                 DBCommander.insertRow_SensorTable(mTransactionForm);
                 dataLoger();
                 mConditionChecker.checkCondition(mTransactionForm);
+                mMainMonitor.sendDataToMainActivate(mTransactionForm);
+
                 mTransactionForm.reset();
 
             }

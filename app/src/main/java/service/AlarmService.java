@@ -215,7 +215,7 @@ public class AlarmService extends Service implements TextToSpeech.OnInitListener
         String dialogue = createDialogue(type,value);
         String evacuationText = "주의하시기 바랍니다.";
 
-        myTTS.speak(warningText, TextToSpeech.QUEUE_FLUSH, null, "asdf");
+        myTTS.speak(warningText, TextToSpeech.QUEUE_ADD, null, "asdf");
         myTTS.speak(dialogue, TextToSpeech.QUEUE_ADD, null, "asdf2");
         myTTS.speak(evacuationText, TextToSpeech.QUEUE_ADD, null, "asdf3");
     }
