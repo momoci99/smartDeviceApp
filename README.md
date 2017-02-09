@@ -212,6 +212,7 @@ Smart Device : 센서 기기에서 보내오는 환경 데이터를 전달받아
 ### 2.3 하드웨어 구성
 
 하드웨어는 센서 기기와 Android Application을 구동하는 스마트 기기로 나누어진다.
+
 <img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/sensor_pic.JPG?token=ASX2dVXh9O5MrmAw-ql7zXKUzNv7YGPrks5YpUOUwA%3D%3D">
 
 명칭 : Sensor Device
@@ -282,17 +283,15 @@ Smart Device : 센서 기기에서 보내오는 환경 데이터를 전달받아
 
 ## 3. 결과
 ### 3.1 동작결과
-### 3.2 결과분석
 
-3.1 동작 결과
+
+
 
 <img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/init_pic.JPG?token=ASX2dVHV-xBP04bqpwxYFhBAw0EQlF0Hks5YpUmMwA%3D%3D">
-그림  (좌) Application 초기 화면 (우) Navi Menu
+
+(좌) Application 초기 화면 (우) Navi Menu
 
 Application을 초기 구동하면 좌측의 화면이 가장 먼저 표시된다. 각 기능을 이용하기 위해서는 좌측 상단의 매뉴 버튼을 눌러 Navi 메뉴를 호출한다. 우측의 메뉴를 통해 각 기능을 사용할 수 있다.
-
-
-
 
 
 ○ Connect Sensor
@@ -344,7 +343,7 @@ DB에 저장된 데이터를 바탕으로 시각화를 할 수 있다. 그래프
 TTS(Text to Speech) 경고 및 Notification 경고 둘 다 선택하거나 별도로 선택가능하다. (좌)각 항목별로 임계치를 설정해 줄 수 있으며 필요에 따라 요소에 대한 모니터링을 활성화 / 비활성화가 가능하다. 임계치를 넘게 되면 (우)경고가 동작된다.
 
 
-
+### 3.2 결과분석
 
 ○ 목표한 기능은 대부분 제대로 작동하는 것을 확인하였다. 다만 개선해야할 사항이 많이 발견됨. 추후에 상용화를 한다면 반드시 개선되어야할 부분이다.
 
