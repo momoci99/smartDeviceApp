@@ -199,22 +199,22 @@ Bluetooth Classic의 경우 연결을 위해 Socket 연결이 필요하며 BLE(B
 
 
 ### 2.2 시스템 구성
-pic
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/solution_pic.JPG?token=ASX2deRLjV8g0H5zrZN79yKUqDSXNEN6ks5YpUJ6wA%3D%3D">
+
 솔루션은 크게 센서 디바이스, 스마트디바이스로 구성된다. 센서 디바이스는 작업환경을 센서를 통해 측정하며 측정된 데이터는 Bluetooth를 통해 스마트 디바이스로 전송된다. 스마트 디바이스에는 Android Application이 구동되어 수신받은 데이터를 바탕으로 수치를 관측, 및 DB에 저장한다. 관측도중 이상이 있을 경우 사용자에게 경고를 실시한다.
 
-pic
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/device_pic.JPG?token=ASX2dQyzUeWwVbtN0o3XOE039wPOpVTDks5YpUNWwA%3D%3D">
 Sensor Device : 온도, 습도, 일산화탄소, 산소센서, Bluetooth 통신 모듈이 하나로 결합되어 산업 현장의 환경 데이터를 측정한다. 측정한 데이터는 Bluetooth 통신 모듈을 통해 1초에 한번씩 스마트 기기로 전송된다.
 
-pic
+
 Smart Device : 센서 기기에서 보내오는 환경 데이터를 전달받아 처리하는 Android Application이 구동된다. 데이터를 DB에 저장하고 관측되는 데이터를 바탕으로 이상이 있을 경우 작업자에게 경고를 실시한다. 센서 기기는 최대 7개까지 연결 가능하다.
 
 ### 2.3 하드웨어 구성
-pic
+
 하드웨어는 센서 기기와 Android Application을 구동하는 스마트 기기로 나누어진다.
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/sensor_pic.JPG?token=ASX2dVXh9O5MrmAw-ql7zXKUzNv7YGPrks5YpUOUwA%3D%3D">
 
 명칭 : Sensor Device
-
-외관 : 가로 110mm x 세로 65mm x 높이 55mm 크기의 3D프린터 출력물
 
 전원 : 5v~12v 2A USB Type-B
 
@@ -224,14 +224,16 @@ pic
 |         MQ-7         	| 일산화탄소 센서. 센서 표면의 일산화탄소 농도를 측정정상적인 조건하에서 20ppm~2000ppm 까지 측정가능https://www.sparkfun.com/datasheets/Sensors/Biometric/MQ-7.pdf     	|
 |        HT-01D        	| 온습도 센서. 온도와 습도를 측정.정상적인 조건하에서 온도 –40~120 / 습도 0~100% 까지 측정가능http://www.micosnp.com/data/HT-01D-140403-DATASHEET.pdf                  	|
 | Winsen Oxygen Sensor 	| 산소농도 센서. 센서 표면의 산소 농도를 측정정상적인 조건하에서 0~25% 측정이 가능http://eleparts.co.kr/data/design/product_file/SENSOR/gas/ME2-O2-20Manual_ver1_2.pdf 	|
+
+
 ### 2.4 소프트웨어 구성 및 주요 알고리즘
 소프트웨어에는 센서 기기 프로그램과 스마트 기기에서 구동되는 Android Application이 있다.
-pic
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/connection_flow.JPG?token=ASX2dUmFqVvYTeO7jhnCmMtMEASr8X9Nks5YpUR5wA%3D%3D">
 
 센서 기기는 스마트 기기로 최소 8Byte에서 최대 20Byte 길이의 환경 데이터를 전송한다. 전송 주기는 미리 1초로 설정되어있다.
-pic
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/sensor_protocol.JPG?token=ASX2dQ-vAPE-Q9J8pbJlkTJzOox8Ul16ks5YpUSXwA%3D%3D">
 
-pic
+
 
 | 명칭         	| 최소    	| 최대      	| 설명                                       	|
 |--------------	|---------	|-----------	|--------------------------------------------	|
@@ -247,7 +249,7 @@ pic
 
 
 ○ 스마트 기기 – Android Application
-pic
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/whole_flow.JPG?token=ASX2dbQ0Masl2HXodrXUh-5AJgdg0VLxks5YpUlHwA%3D%3D">
 
 | 항목                      	| 설명                                                                                                                                               	|
 |---------------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------	|
@@ -259,7 +261,7 @@ pic
 
 
 ○ 센서 기기 Scan & 연결 수립
-pic
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/bluetooth_flow.JPG?token=ASX2ddVp6eM5FKqEvrML-QPcJ7D7EAIDks5YpUkzwA%3D%3D">
 
 | 항목                     	| 설명                                                                                                                          	|
 |--------------------------	|-------------------------------------------------------------------------------------------------------------------------------	|
@@ -270,7 +272,7 @@ pic
 | Byte Process             	| Byte Array를 Data로 변환한다.
 
 ○ Data Process & Warning Service
-pic
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/data_flow.JPG?token=ASX2dRmCOiBTjANO6tdxDWfuA3yXgY4Xks5YpUl0wA%3D%3D">
 
 | 항목            	| 설명                                                                                                                                            	|
 |-----------------	|-------------------------------------------------------------------------------------------------------------------------------------------------	|
@@ -284,7 +286,7 @@ pic
 
 3.1 동작 결과
 
-pic
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/init_pic.JPG?token=ASX2dVHV-xBP04bqpwxYFhBAw0EQlF0Hks5YpUmMwA%3D%3D">
 그림  (좌) Application 초기 화면 (우) Navi Menu
 
 Application을 초기 구동하면 좌측의 화면이 가장 먼저 표시된다. 각 기능을 이용하기 위해서는 좌측 상단의 매뉴 버튼을 눌러 Navi 메뉴를 호출한다. 우측의 메뉴를 통해 각 기능을 사용할 수 있다.
@@ -295,51 +297,36 @@ Application을 초기 구동하면 좌측의 화면이 가장 먼저 표시된�
 
 ○ Connect Sensor
 
-pic
-그림  센서 기기 연결 과정.
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/connect_1.png?token=ASX2dTvebzcNL3_cGV2yym1hiRLJFoZgks5YpUmswA%3D%3D" width="270" height="480" >
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/connect_2.png?token=ASX2dWnsqzTHruIxa1k9dBM4z-ZXti9Wks5YpUm2wA%3D%3D" width="270" height="480" >
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/connect_3.png?token=ASX2dRDVRKO8SjFriKP3KM95BhUU_j8Jks5YpUnDwA%3D%3D" width="270" height="480" >
+센서 기기 연결 과정.
 
 
 스마트 기기의 Bluetooth를 ON/OFF 할 수 있는 스위치를 통해 현재 스마트 기기의 Bluetooth 작동유무를 확인할 수 있다.(좌) SCAN 버튼을 누르면 주변의 센서 기기를 스캔하여 화면에 표시한다.(중) 기기 명을 누르면 해당기기와 연결 및 페어링을 할 것인지 선택할수 있다. 단 연결을 위해서는 페어링이 선행되어야한다. (우) BLE 모듈을 사용하는 센서 기기는 페어링 유무와 상관없이 연결된다.
 
 
-그림  센서 기기와
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/connected.png?token=ASX2dZJ-rBmcxhiHouwuh3b7NgtPgHPVks5YpUnawA%3D%3D" width="270" height="480" >
+
+센서 기기와
 연결이 완료된 상태
 
 
 메인 화면에는 연결된 센서 기기 목록과 해당 데이터가 실시간으로 출력된다.
 ○ Device Info
 
-그림  Device Info 실행 화면
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/device_info_1.png?token=ASX2dfi1yiXGaSlYEwqeyAPXwgPB2XCHks5YpUn5wA%3D%3D" width="270" height="480" >
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/device_info_2.png?token=ASX2dSIpjECCiojf8P6yzOfJe1IOpUhhks5YpUjowA%3D%3D" width="270" height="480" >
+
+Device Info 실행 화면
 
 Device Info를 통해 연결되었던 센서 기기의 로그를 확인할수 있다.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ○ Stats
 
-그림  Stats 선택 화면
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/stats_pic.JPG?token=ASX2dRQlXycbO95Ta-stJRF6gFWZR92Rks5YpUoKwA%3D%3D">
+
+Stats 선택 화면
 (좌) Chart 옵션 (우) 실제 표시된 Chart
 
 
@@ -347,25 +334,12 @@ DB에 저장된 데이터를 바탕으로 시각화를 할 수 있다. 그래프
  그래프로 확인하고자 하는 요소와 센서 기기, 기간을 설정하면(좌) 그래프로 표시해준다.(우)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ○ AlertConfig
 
-그림  (좌) 경고 설정 (우) Notification이 동작한 화면
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/alert_2.png?token=ASX2dfXNfLINPcBOXOZAYIBjR-26htzzks5YpUoswA%3D%3D" width="270" height="480" >
+<img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/alert_1.png?token=ASX2dd2-uXZwcorqQXfCJB173hfaLUGsks5YpUocwA%3D%3D" width="270" height="480" >
+
+(좌) 경고 설정 (우) Notification이 동작한 화면
 
 TTS(Text to Speech) 경고 및 Notification 경고 둘 다 선택하거나 별도로 선택가능하다. (좌)각 항목별로 임계치를 설정해 줄 수 있으며 필요에 따라 요소에 대한 모니터링을 활성화 / 비활성화가 가능하다. 임계치를 넘게 되면 (우)경고가 동작된다.
 
@@ -393,6 +367,5 @@ TTS(Text to Speech) 경고 및 Notification 경고 둘 다 선택하거나 별�
 ### 4.1 앞으로의 연구방향
 
 
-본 솔루션을 통해 수집된 RAW 데이터이기 때문에 의미가 있는 데이터는 아니다. 빅 데이터 처리 기술을 활용하여 장기간 데이터를 축적 및 분석할 필요가 있다. 또한 UX를 연구하여 사용하는데에 최대한 불편함이 없게끔 UI를 구성하는 것도 필요하다.
+본 솔루션을 통해 수집된 데이터는 RAW 데이터이기 때문에 의미가 있는 데이터는 아니다. 빅 데이터 처리 기술을 활용하여 장기간 데이터를 축적 및 분석할 필요가 있다. 또한 UX를 연구하여 사용하는데에 최대한 불편함이 없게끔 UI를 구성하는 것도 필요하다.
 
-## 5. 부록
