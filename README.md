@@ -299,6 +299,7 @@ Application을 초기 구동하면 좌측의 화면이 가장 먼저 표시된�
 <img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/connect_1.png?token=ASX2dTvebzcNL3_cGV2yym1hiRLJFoZgks5YpUmswA%3D%3D" width="270" height="480" >
 <img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/connect_2.png?token=ASX2dWnsqzTHruIxa1k9dBM4z-ZXti9Wks5YpUm2wA%3D%3D" width="270" height="480" >
 <img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/connect_3.png?token=ASX2dRDVRKO8SjFriKP3KM95BhUU_j8Jks5YpUnDwA%3D%3D" width="270" height="480" >
+
 센서 기기 연결 과정.
 
 
