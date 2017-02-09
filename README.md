@@ -313,6 +313,7 @@ Application을 초기 구동하면 좌측의 화면이 가장 먼저 표시된�
 
 
 메인 화면에는 연결된 센서 기기 목록과 해당 데이터가 실시간으로 출력된다.
+
 ○ Device Info
 
 <img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/device_info_1.png?token=ASX2dfi1yiXGaSlYEwqeyAPXwgPB2XCHks5YpUn5wA%3D%3D" width="270" height="480" >
@@ -331,7 +332,8 @@ Stats 선택 화면
 
 
 DB에 저장된 데이터를 바탕으로 시각화를 할 수 있다. 그래프 라이브러리를 이용하여 구현하였으며 https://github.com/PhilJay/MPAndroidChart
- 그래프로 확인하고자 하는 요소와 센서 기기, 기간을 설정하면(좌) 그래프로 표시해준다.(우)
+
+그래프로 확인하고자 하는 요소와 센서 기기, 기간을 설정하면(좌) 그래프로 표시해준다.(우)
 
 
 ○ AlertConfig
