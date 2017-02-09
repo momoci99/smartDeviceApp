@@ -294,9 +294,6 @@ Smart Device : 센서 기기에서 보내오는 환경 데이터를 전달받아
 Application을 초기 구동하면 좌측의 화면이 가장 먼저 표시된다. 각 기능을 이용하기 위해서는 좌측 상단의 매뉴 버튼을 눌러 Navi 메뉴를 호출한다. 우측의 메뉴를 통해 각 기능을 사용할 수 있다.
 
 
-
-
-
 ○ Connect Sensor
 
 <img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/connect_1.png?token=ASX2dTvebzcNL3_cGV2yym1hiRLJFoZgks5YpUmswA%3D%3D" width="270" height="480" >
