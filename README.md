@@ -212,6 +212,7 @@ Smart Device : 센서 기기에서 보내오는 환경 데이터를 전달받아
 ### 2.3 하드웨어 구성
 
 하드웨어는 센서 기기와 Android Application을 구동하는 스마트 기기로 나누어진다.
+
 <img src="https://raw.githubusercontent.com/momoci99/smartDeviceApp/master/READMEpic/sensor_pic.JPG?token=ASX2dVXh9O5MrmAw-ql7zXKUzNv7YGPrks5YpUOUwA%3D%3D">
 
 명칭 : Sensor Device
